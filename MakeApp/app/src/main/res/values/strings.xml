@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Make App</string>
+
+
+    <string name="skinType">Skin Type</string>
+    <string name="skinConcern">Skin Concern</string>
+    <string name="skinTone">Skin Tone</string>
+    <string name="interest">Interest</string>
+
+    <string-array name="skin_tone">
+        <item> </item>
+        <item>Fair</item>
+        <item>Natural</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="interest">
+        <item>Product Purchase</item>
+        <item>Hostess Program</item>
+        <item>Mary Kay Business</item>
+        <item>Skin Care Class</item>
+        <item>Beauty Class</item>
+        <item>Skin Analyzer Device</item>
+    </string-array>
+
+
+    <string-array name="skin_type">
+        <item> </item>
+        <item>Dry Skin</item>
+        <item>Normal Skin</item>
+        <item>Oily Skin</item>
+        <item>Combination Skin</item>
+    </string-array>
+
+    <string-array name="skin_concern">
+        <item>Daily Care</item>
+        <item>Acne / Breakouts</item>
+        <item>Dark Spots / Uneven Skin Tone</item>
+        <item>Lines / Wrinkles</item>
+        <item>Firming Lifting</item>
+        <item>Eye Area</item>
+        <item>Dullness</item>
+        <item>Pores</item>
+
+    </string-array>
+
+</resources>
+
+

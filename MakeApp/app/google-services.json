@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "388172334714",
+    "firebase_url": "https://mk-app-a28f5.firebaseio.com",
+    "project_id": "mk-app-a28f5",
+    "storage_bucket": "mk-app-a28f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388172334714:android:99c02a41e313e4fd0eddc3",
+        "android_client_info": {
+          "package_name": "com.irvin.makeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388172334714-6o73gf0l5idcafr2tuicdg7ot4ake2qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVPASNz9RjACo7_7Ug_NzXEeaP2t-hW4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388172334714-6o73gf0l5idcafr2tuicdg7ot4ake2qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
