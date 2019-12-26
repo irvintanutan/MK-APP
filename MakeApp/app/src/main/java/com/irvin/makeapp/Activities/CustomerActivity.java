@@ -1,31 +1,35 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Adapters.CustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
-import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerActivity extends AppCompatActivity {
+public class CustomerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     FloatingActionButton fab;
@@ -123,6 +127,7 @@ public class CustomerActivity extends AppCompatActivity {
 
     private void loadList(){
         customerModelList = databaseHelper.getAllCustomer();
+        ModGlobal.customerModelList = customerModelList;
 
         Log.e("size" , Integer.toString(customerModelList.size()));
 
@@ -138,6 +143,17 @@ public class CustomerActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -148,5 +164,37 @@ public class CustomerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void filter(String text){
+
+        List<CustomerModel> temp = new ArrayList();
+
+        if (text.equals(""))
+            temp = ModGlobal.customerModelList;
+        else {
+            for (CustomerModel p : ModGlobal.customerModelList) {
+                //or use .contains(text)
+                if (p.getFirstName().toLowerCase().contains(text.toLowerCase()) ||
+                        p.getLastName().toLowerCase().contains(text.toLowerCase())) {
+                    temp.add(p);
+                }
+            }
+        }
+        //update recyclerview
+        customerAdapter.update(temp);
+
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        filter(newText);
+        return false;
     }
 }

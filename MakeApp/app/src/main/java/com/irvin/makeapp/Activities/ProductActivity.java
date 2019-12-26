@@ -3,12 +3,15 @@ package com.irvin.makeapp.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +28,7 @@ import com.irvin.makeapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     RecyclerView recyclerView, recyclerView2;
@@ -149,6 +152,26 @@ public class ProductActivity extends AppCompatActivity {
 
     }
 
+    private void filter(String text){
+
+        List<Products> temp = new ArrayList();
+
+        if (text.equals(""))
+            temp = ModGlobal.ProductModelList;
+        else {
+            for (Products p : ModGlobal.ProductModelList) {
+                //or use .contains(text)
+                if (p.getProduct_category().toLowerCase().contains(text.toLowerCase()) ||
+                        p.getProduct_name().toLowerCase().contains(text.toLowerCase())) {
+                    temp.add(p);
+                }
+            }
+        }
+        //update recyclerview
+        productAdapter.update(temp);
+
+    }
+
     private void loadList() {
         products = databaseHelper.getAllProducts();
         ModGlobal.ProductModelList = products;
@@ -167,6 +190,16 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
@@ -176,5 +209,17 @@ public class ProductActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        filter(newText);
+        return false;
     }
 }

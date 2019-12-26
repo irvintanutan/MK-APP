@@ -41,7 +41,7 @@ public class Products {
     private String product_name;
     private String product_price;
     private String product_category;
-
+    private String product_quantity;
 
     public Products(String product_id, String product_name, String product_price, String product_category) {
         this.product_id = product_id;
