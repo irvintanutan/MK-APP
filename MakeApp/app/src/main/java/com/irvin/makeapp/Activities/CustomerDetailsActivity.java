@@ -147,7 +147,12 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         if (!ModGlobal.isCreateNew) {
 
             customerModel = databaseHelper.getAllCustomer(ModGlobal.customerId);
-            Glide.with(this).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
+            if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
+                Log.e("asd" , customerModel.getPhotoUrl());
+                Glide.with(getApplicationContext()).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
+            }else {
+                Glide.with(getApplicationContext()).load(getApplication().getResources().getDrawable(R.drawable.user_img)).into(profilePicture);
+            }
             mCurrentPhotoPath = customerModel.getPhotoUrl();
             firstName.setText(customerModel.getFirstName());
             lastName.setText(customerModel.getLastName());
@@ -201,6 +206,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Warning");
+        builder.setIcon(getResources().getDrawable(R.drawable.warning));
         builder.setMessage("Are you sure you want to Quit ? Your progress will not be saved.");
 
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -259,6 +265,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle("Confirm");
+            builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
             builder.setMessage("Are you sure you want to save customer data ?");
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 

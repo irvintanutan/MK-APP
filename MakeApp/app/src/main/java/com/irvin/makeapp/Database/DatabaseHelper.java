@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String skinConcern = "skinConcern";
     private static final String skinTone = "skinTone";
     private static final String interests = "interests";
-    private static final String photoUrl= "photoUrl";
+    private static final String photoUrl = "photoUrl";
 
     //table name
     private static final String tbl_product = "tbl_product";
@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String productName = "productName";
     private static final String productPrice = "productPrice";
     private static final String productCategory = "productCategory";
-
+    private static final String productQuantity = "productQuantity";
 
 
     public DatabaseHelper(Context context) {
@@ -80,7 +80,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + tbl_product + "( productId TEXT primary key  , "
                 + productName + " TEXT , "
                 + productPrice + " TEXT , "
-                + productCategory + " TEXT );";
+                + productCategory + " TEXT , "
+                + productQuantity + " TEXT );";
         db.execSQL(CREATE_PRODUCT_TABLE);
 
     }
@@ -89,9 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
-
-
 
 
     public void addCustomer(CustomerModel customerModel) {
@@ -115,7 +113,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(skinTone, customerModel.getSkinTone());
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
-
 
 
         // Inserting Row
@@ -170,7 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public CustomerModel getAllCustomer(int id) {
         CustomerModel c = new CustomerModel();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_customer + " where id ="  + id ;
+        String selectQuery = "SELECT  * FROM " + tbl_customer + " where id =" + id;
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -198,7 +195,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.setPhotoUrl(cursor.getString(16));
 
 
-
             } while (cursor.moveToNext());
         }
 
@@ -206,13 +202,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public void deleteCustomer(int id){
+    public void deleteCustomer(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tbl_customer,"id=?",new String[]{Integer.toString(id)});
+        db.delete(tbl_customer, "id=?", new String[]{Integer.toString(id)});
         db.close();
     }
 
-    public void updateCustomer(CustomerModel customerModel , int id){
+    public void updateCustomer(CustomerModel customerModel, int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -233,13 +229,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
 
-        db.update(tbl_customer,values,"id= ?", new String[]{Integer.toString(id)});
+        db.update(tbl_customer, values, "id= ?", new String[]{Integer.toString(id)});
         db.close();
 
     }
 
 
-    public void addProduct (Products products) {
+    public void addProduct(Products products) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -248,8 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(productName, products.getProduct_name());
         values.put(productPrice, products.getProduct_price());
         values.put(productCategory, products.getProduct_category());
-
-
+        values.put(productQuantity , products.getProduct_quantity());
 
         // Inserting Row
         db.insert(tbl_product, null, values);
@@ -274,8 +269,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 p.setProduct_id(cursor.getString(0));
                 p.setProduct_name(cursor.getString(1));
-                p.setProduct_price(cursor.getString(2).replace("PHP" , ""));
+                p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
+                p.setProduct_quantity(cursor.getString(4));
 
                 products.add(p);
             } while (cursor.moveToNext());

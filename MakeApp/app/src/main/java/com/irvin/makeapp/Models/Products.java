@@ -37,17 +37,27 @@ public class Products {
         this.product_category = product_category;
     }
 
+    public String getProduct_quantity() {
+        return product_quantity;
+    }
+
+    public void setProduct_quantity(String product_quantity) {
+        this.product_quantity = product_quantity;
+    }
+
     private String product_id;
     private String product_name;
     private String product_price;
     private String product_category;
+
     private String product_quantity;
 
-    public Products(String product_id, String product_name, String product_price, String product_category) {
+    public Products(String product_id, String product_name, String product_price, String product_category , String product_quantity) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_price = product_price;
         this.product_category = product_category;
+        this.product_quantity = product_quantity;
     }
 
 

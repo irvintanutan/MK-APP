@@ -10,11 +10,13 @@
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
+
     <LinearLayout
 
         android:layout_below="@id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/action"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -33,5 +35,11 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/action"
+        layout="@layout/layout_action"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

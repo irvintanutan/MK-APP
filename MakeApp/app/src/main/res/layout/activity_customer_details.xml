@@ -6,7 +6,7 @@
     tools:context=".Activities.CustomerDetailsActivity">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,10 +36,10 @@
                         android:id="@+id/profilePicture"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
                         android:maxWidth="39dip"
-                        android:src="@drawable/user_img"
                         android:scaleType="fitXY"
-                        android:adjustViewBounds ="true"/>
+                        android:src="@drawable/user_img" />
 
                     <LinearLayout
                         android:orientation="horizontal"

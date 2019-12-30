@@ -1,6 +1,6 @@
 <androidx.cardview.widget.CardView android:id="@+id/cvSettings"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_100sdp"
+    android:layout_height="@dimen/_105sdp"
     android:layout_margin="10dp"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="48dp"

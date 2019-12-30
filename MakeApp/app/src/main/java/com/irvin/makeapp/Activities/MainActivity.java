@@ -104,9 +104,11 @@ public class MainActivity extends AppCompatActivity {
                             products();
                             //tickets(true);
                             break;
-
                         case 2:
                             logout();
+                            break;
+                        case 3:
+                            stockIn();
                             break;
 
                         default:
@@ -165,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
+    private void stockIn() {
+        Intent i = new Intent(MainActivity.this, StockInActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+    }
+
 
 
     private void logout() {
