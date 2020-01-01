@@ -52,7 +52,7 @@ public class GetProductTask extends AsyncTask<String, String, String> {
         progressDialog.setProgress((int) (prog * 100 / max));
 
 
-        progressDialog.setMessage("Downloading Sites " + ((int) (prog * 100 / max) + "%"));
+        progressDialog.setMessage("Downloading Products " + ((int) (prog * 100 / max) + "%"));
 
     }
 

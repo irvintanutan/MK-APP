@@ -82,7 +82,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
                 if (ModGlobal.stockIns.size() > 0) {
 
-                   Intent intent = new Intent(StockInActivity.this, StockInDetailsActivity.class);
+                    Intent intent = new Intent(StockInActivity.this, StockInDetailsActivity.class);
                     startActivity(intent);
                     finish();
 
@@ -113,7 +113,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         recyclerView2.setLayoutManager(layoutManager2);
 
         categories = new ArrayList<>();
-        categories.add(new Category("ALL" , false));
+        categories.add(new Category("ALL", false));
         categories.add(new Category("SKIN CARE TIMEWISE-3D", false));
         categories.add(new Category("TIMEWISE", false));
         categories.add(new Category("TIMEWISE REPAIR", false));
@@ -141,7 +141,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         ModGlobal.categories = categories;
 
 
-        categoryAdapter = new CategoryAdapter(categories , this);
+        categoryAdapter = new CategoryAdapter(categories, this);
         recyclerView2.setAdapter(categoryAdapter);
         recyclerView2.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
 
@@ -170,7 +170,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
     }
 
-    private void filter(String text){
+    private void filter(String text) {
 
         List<Products> temp = new ArrayList();
 
@@ -216,7 +216,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
                     int position = rv.getChildAdapterPosition(child);
 
 
-                    if (ModGlobal.itemIsDuplicate(ModGlobal.ProductModelList.get(position).getProduct_id())){
+                    if (ModGlobal.itemIsDuplicate(ModGlobal.ProductModelList.get(position).getProduct_id())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
                         builder.setTitle("Alert");
                         builder.setIcon(getResources().getDrawable(R.drawable.warning));
@@ -237,7 +237,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
                     } else {
 
                         StockIn stockIn = new StockIn(ModGlobal.ProductModelList.get(position).getProduct_name()
-                                ,ModGlobal.ProductModelList.get(position).getProduct_id(), "1" ,
+                                , ModGlobal.ProductModelList.get(position).getProduct_id(), "1",
                                 ModGlobal.ProductModelList.get(position).getProduct_price());
 
                         ModGlobal.stockIns.add(stockIn);
@@ -264,8 +264,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
     }
 
-    private void RunAnimation()
-    {
+    private void RunAnimation() {
         Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
         a.reset();
         itemCount.setText("" + ModGlobal.stockIns.size());
@@ -274,20 +273,20 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         itemCount.startAnimation(a);
     }
 
-    private void updateCategory(int position){
+    private void updateCategory(int position) {
         categories = new ArrayList<>();
         categories = ModGlobal.categories;
 
-        for (int a = 0 ; a < categories.size() ; a++)
-            categories.set(a , new Category(categories.get(a).getName() , false));
+        for (int a = 0; a < categories.size(); a++)
+            categories.set(a, new Category(categories.get(a).getName(), false));
 
 
-        categories.set(position , new Category(categories.get(position).getName() , true));
+        categories.set(position, new Category(categories.get(position).getName(), true));
         categoryAdapter.update(categories);
 
     }
 
-    private void searchCategories(String text){
+    private void searchCategories(String text) {
 
         List<Products> temp = new ArrayList();
 
@@ -307,9 +306,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
 
-    @Override
-    public void onBackPressed() {
-
+    private void goBack() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Confirm");
@@ -320,7 +317,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
             public void onClick(DialogInterface dialog, int which) {
 
 
-                startActivity(new Intent(StockInActivity.this, MainActivity.class));
+                startActivity(new Intent(StockInActivity.this, StockInMainActivity.class));
                 finish();
                 ModGlobal.stockIns.clear();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
@@ -341,6 +338,11 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     @Override
+    public void onBackPressed() {
+        goBack();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -354,10 +356,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(StockInActivity.this, MainActivity.class));
-            finish();
-            ModGlobal.stockIns.clear();
-            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+            goBack();
         }
 
         return super.onOptionsItemSelected(item);

@@ -16,10 +16,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.StockInDetailsActivity"></activity>
+        <activity android:name=".Activities.StockInMainActivity"></activity>
+        <activity android:name=".Activities.StockInDetailsActivity" />
         <activity android:name=".Activities.StockInActivity" />
         <activity android:name=".Activities.ProductActivity" />
         <activity android:name=".Activities.CustomerDetailsActivity" />

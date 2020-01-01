@@ -3,14 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
-
-
+    tools:context=".Activities.StockInMainActivity">
 
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/stock_in_view"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar"
+        android:padding="@dimen/_5sdp"
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:id="@+id/nothing"
@@ -40,28 +46,21 @@
 
     </LinearLayout>
 
-    <LinearLayout
-
-        android:layout_below="@id/app_bar"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/category_view"
-            android:layout_width="match_parent"
+        <!-- Main content -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:scrollbars="none" />
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:onClick="stockIn"
+            android:src="@drawable/add_stock_in" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/_10sdp"
-            android:scrollbars="none" />
-
-    </LinearLayout>
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

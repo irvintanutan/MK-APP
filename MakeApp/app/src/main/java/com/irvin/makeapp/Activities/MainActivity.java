@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stockIn() {
-        Intent i = new Intent(MainActivity.this, StockInActivity.class);
+        Intent i = new Intent(MainActivity.this, StockInMainActivity.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -183,4 +185,37 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
     }
+
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Confirm");
+        builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+        builder.setMessage("Are you sure you want to exit application ?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+
+             System.exit(0);
+
+            }
+
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
 }

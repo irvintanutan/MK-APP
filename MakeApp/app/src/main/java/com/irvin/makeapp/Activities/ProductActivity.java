@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
     CategoryAdapter categoryAdapter;
     List<Category> categories;
     List<Products> products;
+    LinearLayout nothing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     private void init() {
+        nothing = findViewById(R.id.nothing);
+
 
         recyclerView2 = findViewById(R.id.category_view);
         recyclerView2.setHasFixedSize(true);
@@ -174,6 +178,11 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
     private void loadList() {
         products = databaseHelper.getAllProducts();
+
+        if (products.size()  > 0){
+            nothing.setVisibility(View.GONE);
+        }
+
         ModGlobal.ProductModelList = products;
         Log.e("size", Integer.toString(products.size()));
 
