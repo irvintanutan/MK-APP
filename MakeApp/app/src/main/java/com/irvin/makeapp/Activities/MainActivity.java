@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
         form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
         form.add(new MenuForm("Products", R.drawable.product , "View Products"));
+        form.add(new MenuForm("Purchase Order", R.drawable.box, "Manage Inventory"));
+        form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
+        form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
         form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
-        form.add(new MenuForm("Stock In", R.drawable.box, "Manage Inventory"));
 
 
 
@@ -106,13 +108,18 @@ public class MainActivity extends AppCompatActivity {
                             products();
                             //tickets(true);
                             break;
-                        case 2:
+                        case 5:
                             logout();
                             break;
-                        case 3:
+                        case 2:
                             stockIn();
                             break;
-
+                        case 3:
+                            invoice();
+                            break;
+                        case 4:
+                            reports();
+                            break;
                         default:
                     }
 
@@ -176,8 +183,18 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
-
-
+    private void invoice() {
+        Intent i = new Intent(MainActivity.this, SalesInvoiceActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+    }
+    private void reports() {
+        /*Intent i = new Intent(MainActivity.this, StockInMainActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+    }
 
     private void logout() {
      /*   Intent i = new Intent(MainActivity.this, AttendanceActivity.class);

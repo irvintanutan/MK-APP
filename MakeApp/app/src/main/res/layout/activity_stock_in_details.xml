@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.irvin.makeapp.Activities.StockInDetailsActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.irvin.makeapp.Activities.StockInDetailsActivity">
 
-        <include
-            android:id="@+id/app_bar"
-            layout="@layout/app_bar" />
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/product_view"
-        android:layout_below="@id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/_10sdp"
         android:layout_above="@+id/stockIn"
+        android:layout_below="@id/app_bar"
+        android:padding="@dimen/_10sdp"
         android:scrollbars="none" />
 
 
     <LinearLayout
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:id="@+id/stockIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/_10sdp"
         android:background="@drawable/round_quantity"
         android:clickable="true"
-        android:onClick="stockIn"
         android:gravity="center_vertical"
+        android:onClick="stockIn"
         android:padding="10dp">
 
         <ImageView
@@ -50,4 +50,55 @@
 
     </LinearLayout>
 
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:clickable="false"
+        android:orientation="horizontal"
+        android:weightSum="0">
+
+        <LinearLayout
+            android:id="@+id/btnView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingStart="2dp"
+                android:text="   Total amount : "
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingStart="2dp"
+                android:text="0.00"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

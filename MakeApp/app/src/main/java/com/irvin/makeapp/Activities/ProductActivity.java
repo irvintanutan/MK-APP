@@ -8,14 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Adapters.CategoryAdapter;
 import com.irvin.makeapp.Adapters.ProductAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
@@ -28,6 +20,14 @@ import com.irvin.makeapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -69,35 +69,37 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         recyclerView2.setLayoutManager(layoutManager2);
 
         categories = new ArrayList<>();
-        categories.add(new Category("ALL" , false));
-        categories.add(new Category("SKIN CARE TIMEWISE-3D", false));
-        categories.add(new Category("TIMEWISE", false));
-        categories.add(new Category("TIMEWISE REPAIR", false));
-        categories.add(new Category("LUMIVIE", false));
-        categories.add(new Category("CLEARPROOF", false));
-        categories.add(new Category("BOTANICAL EFFECTS", false));
-        categories.add(new Category("MK MEN", false));
-        categories.add(new Category("SKIN SUPPLEMENTS", false));
-        categories.add(new Category("COLOR FOUNDATION", false));
-        categories.add(new Category("POWDER", false));
-        categories.add(new Category("Concealer", false));
-        categories.add(new Category("LIP COLOR", false));
-        categories.add(new Category("BLUSH", false));
-        categories.add(new Category("Contour & Highlight", false));
-        categories.add(new Category("EYE COLOR", false));
-        categories.add(new Category("Eyeliner", false));
-        categories.add(new Category("BROWS", false));
-        categories.add(new Category("MASCARA", false));
-        categories.add(new Category("Finishing Spray PRIMER", false));
+        categories.add(new Category("ALL", false));
         categories.add(new Category("Accessories", false));
+        categories.add(new Category("BLUSH", false));
         categories.add(new Category("BODY CARE Satin Body", false));
         categories.add(new Category("BODY CARE Satin Hands", false));
         categories.add(new Category("BODY CARE Satin Lips", false));
         categories.add(new Category("BODY CARE Sun Care", false));
+        categories.add(new Category("BROWS", false));
+        categories.add(new Category("BOTANICAL EFFECTS", false));
+        categories.add(new Category("Contour & Highlight", false));
+        categories.add(new Category("CLEARPROOF", false));
+        categories.add(new Category("COLOR FOUNDATION", false));
+        categories.add(new Category("Concealer", false));
+        categories.add(new Category("EYE COLOR", false));
+        categories.add(new Category("Eyeliner", false));
+        categories.add(new Category("Finishing Spray PRIMER", false));
+        categories.add(new Category("LIP COLOR", false));
+        categories.add(new Category("LUMIVIE", false));
+        categories.add(new Category("MK MEN", false));
+        categories.add(new Category("MASCARA", false));
+        categories.add(new Category("POWDER", false));
+        categories.add(new Category("SKIN SUPPLEMENTS", false));
+        categories.add(new Category("SKIN CARE TIMEWISE-3D", false));
+        categories.add(new Category("TIMEWISE", false));
+        categories.add(new Category("TIMEWISE REPAIR", false));
+
+
         ModGlobal.categories = categories;
 
 
-        categoryAdapter = new CategoryAdapter(categories , this);
+        categoryAdapter = new CategoryAdapter(categories, this);
         recyclerView2.setAdapter(categoryAdapter);
         recyclerView2.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
 
@@ -114,7 +116,6 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
             }
 
-
         }));
 
         recyclerView = findViewById(R.id.product_view);
@@ -124,20 +125,20 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         loadList();
     }
 
-    private void updateCategory(int position){
+    private void updateCategory(int position) {
         categories = new ArrayList<>();
         categories = ModGlobal.categories;
 
-        for (int a = 0 ; a < categories.size() ; a++)
-            categories.set(a , new Category(categories.get(a).getName() , false));
+        for (int a = 0; a < categories.size(); a++)
+            categories.set(a, new Category(categories.get(a).getName(), false));
 
 
-        categories.set(position , new Category(categories.get(position).getName() , true));
+        categories.set(position, new Category(categories.get(position).getName(), true));
         categoryAdapter.update(categories);
 
     }
 
-    private void searchCategories(String text){
+    private void searchCategories(String text) {
 
         List<Products> temp = new ArrayList();
 
@@ -156,7 +157,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
     }
 
-    private void filter(String text){
+    private void filter(String text) {
 
         List<Products> temp = new ArrayList();
 
@@ -179,7 +180,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
     private void loadList() {
         products = databaseHelper.getAllProducts();
 
-        if (products.size()  > 0){
+        if (products.size() > 0) {
             nothing.setVisibility(View.GONE);
         }
 

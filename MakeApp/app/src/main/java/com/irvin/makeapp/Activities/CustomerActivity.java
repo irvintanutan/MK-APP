@@ -88,9 +88,9 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                databaseHelper.deleteCustomer(customerModelList.get(position).getId());
+                              /*  databaseHelper.deleteCustomer(customerModelList.get(position).getId());
                                 customerModelList = databaseHelper.getAllCustomer();
-                                customerAdapter.update(customerModelList);
+                                customerAdapter.update(customerModelList);*/
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -99,9 +99,9 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
                     }
                 };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+               /* AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setMessage("Are you sure you want to delete " + customerModelList.get(position).getFullName().toUpperCase()).setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
-            }
+            */}
         }));
 
 

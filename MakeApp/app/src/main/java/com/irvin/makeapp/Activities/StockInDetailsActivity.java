@@ -19,6 +19,7 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +43,9 @@ public class StockInDetailsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     StockInDetailsAdapter stockInAdapter;
-
+    LinearLayout btnView , layoutBottom;
+    boolean indicator = false;
+    TextView totalAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +53,17 @@ public class StockInDetailsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_stock_in_details);
         Toolbar tb = findViewById(R.id.app_bar);
+
+        indicator = ModGlobal.indicator;
+
+
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("Stock In Details");
+        if (indicator)
+            ab.setTitle("Purchase Order Summary");
+        else
+            ab.setTitle("Purchase Order Details");
         ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
@@ -61,10 +71,19 @@ public class StockInDetailsActivity extends AppCompatActivity {
 
         init();
 
-
+        calculateTotal();
     }
 
-    private void init(){
+    private void init() {
+        btnView = findViewById(R.id.btnView);
+        totalAmount = findViewById(R.id.totalAmount);
+        layoutBottom = findViewById(R.id.layoutBottom);
+        LinearLayout stockIn = findViewById(R.id.stockIn);
+
+        if (indicator)
+            stockIn.setVisibility(View.GONE);
+        else
+            layoutBottom.setVisibility(View.GONE);
 
 
         recyclerView = findViewById(R.id.product_view);
@@ -111,20 +130,29 @@ public class StockInDetailsActivity extends AppCompatActivity {
 
     }
 
+    void goBack() {
+        if (indicator) {
+            startActivity(new Intent(StockInDetailsActivity.this, StockInMainActivity.class));
+            ModGlobal.stockIns.clear();
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else {
+            startActivity(new Intent(StockInDetailsActivity.this, StockInActivity.class));
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(StockInDetailsActivity.this, StockInActivity.class));
-        finish();
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        goBack();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(StockInDetailsActivity.this, StockInActivity.class));
-            finish();
-            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+            goBack();
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,14 +216,12 @@ public class StockInDetailsActivity extends AppCompatActivity {
         }
 
 
-
-
         @Override
         protected String doInBackground(String... params) {
 
-            for (int a = 0 ; a < ModGlobal.stockIns.size() ; a++){
+            for (int a = 0; a < ModGlobal.stockIns.size(); a++) {
 
-                Log.e(ModGlobal.stockIns.get(a).getProductCode() , ModGlobal.stockIns.get(a).getQuantity());
+                Log.e(ModGlobal.stockIns.get(a).getProductCode(), ModGlobal.stockIns.get(a).getQuantity());
 
                 databaseHelper.stockIn(ModGlobal.stockIns.get(a).getProductCode()
                         , ModGlobal.stockIns.get(a).getQuantity());
@@ -223,7 +249,8 @@ public class StockInDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    startActivity(new Intent(StockInDetailsActivity.this, MainActivity.class));
+                    ModGlobal.stockIns.clear();
+                    startActivity(new Intent(StockInDetailsActivity.this, StockInMainActivity.class));
                     finish();
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                 }
@@ -233,11 +260,25 @@ public class StockInDetailsActivity extends AppCompatActivity {
             alert.show();
 
 
-
         }
 
 
     }
 
+
+    void calculateTotal()
+    {
+        DecimalFormat dec=new DecimalFormat("#,##0.00");
+        double total = 0;
+
+        for (StockIn stockIn : ModGlobal.stockIns){
+
+            total += Double.parseDouble(stockIn.getPrice().replace(",","")) * Integer.parseInt(stockIn.getQuantity());
+
+        }
+
+
+        totalAmount.setText("₱ " + dec.format(total));
+    }
 
 }

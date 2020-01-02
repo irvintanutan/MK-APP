@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.irvin.makeapp.Models.Products;
+import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 
@@ -27,7 +27,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
 
     @Override
     public StockInDetailsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.product_details_card_view, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.stock_in_details_card_view, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -86,11 +86,14 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
         TextView product_code, productName, productPrice, productQuantity;
         LinearLayout container;
         ImageView add , minus;
+        LinearLayout rightSideContainer , leftSideContainer;
 
 
         public ViewHolder(View view) {
             super(view);
 
+            rightSideContainer = view.findViewById(R.id.rightSideContainer);
+            leftSideContainer = view.findViewById(R.id.leftSideContainer);
             container = view.findViewById(R.id.container);
             product_code = view.findViewById(R.id.product_code);
             productName = view.findViewById(R.id.productName);
@@ -98,6 +101,17 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
             productQuantity = view.findViewById(R.id.productQuantity);
             add = view.findViewById(R.id.plus);
             minus = view.findViewById(R.id.minus);
+
+            if (ModGlobal.indicator){
+                add.setVisibility(View.GONE);
+                minus.setVisibility(View.GONE);
+                rightSideContainer.setVisibility(View.GONE);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        1.0f);
+                leftSideContainer.setLayoutParams(params);
+            }
 
         }
     }

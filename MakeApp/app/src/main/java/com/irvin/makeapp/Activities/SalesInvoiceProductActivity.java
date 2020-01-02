@@ -12,25 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.irvin.makeapp.Adapters.CategoryAdapter;
-import com.irvin.makeapp.Adapters.ProductAdapter;
+import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Adapters.StockInAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Category;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
@@ -38,41 +45,43 @@ import com.irvin.makeapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockInActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class SalesInvoiceProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    List<CustomerModel> customerModelList;
+    List<CustomerModel> tempCust = new ArrayList<>();
     RecyclerView recyclerView, recyclerView2;
     StockInAdapter stockInAdapter;
     CategoryAdapter categoryAdapter;
     List<Category> categories;
     List<Products> products;
-    TextView itemCount, itemView;
+    TextView itemCount, itemView, customerName;
     LinearLayout btnView;
     List<Products> temp = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stockin);
+        setContentView(R.layout.activity_sales_invioce_product);
 
         Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("Purchase Order");
+        ab.setTitle("Production Selection");
         ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
         init();
-        itemCount.setText("" + ModGlobal.stockIns.size());
-
-
+        customerName.setText(ModGlobal.customerName);
+        searchCustomer();
     }
 
-    private void init() {
+    void init() {
 
+        customerName = findViewById(R.id.customerName);
         itemCount = findViewById(R.id.itemCount);
         itemView = findViewById(R.id.itemView);
         btnView = findViewById(R.id.btnView);
@@ -83,13 +92,13 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
                 if (ModGlobal.stockIns.size() > 0) {
 
-                    Intent intent = new Intent(StockInActivity.this, StockInDetailsActivity.class);
+                /*    Intent intent = new Intent(SalesInvoiceProductActivity.this, StockInDetailsActivity.class);
                     ModGlobal.indicator = false;
                     startActivity(intent);
-                    finish();
+                    finish();*/
 
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
                     builder.setTitle("Alert");
                     builder.setIcon(getResources().getDrawable(R.drawable.warning));
                     builder.setMessage("There is/are no item/s in the cart");
@@ -115,7 +124,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         recyclerView2.setLayoutManager(layoutManager2);
 
         categories = new ArrayList<>();
-        categories.add(new Category("ALL" , false));
+        categories.add(new Category("ALL", false));
         categories.add(new Category("Accessories", false));
         categories.add(new Category("BLUSH", false));
         categories.add(new Category("BODY CARE Satin Body", false));
@@ -169,12 +178,114 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         recyclerView.setLayoutManager(layoutManager);
         loadList();
 
+    }
+
+    void searchCustomer() {
+
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.layout_search_customer, null);
+
+
+        final SearchCustomerAdapter customerAdapter;
+        RecyclerView recyclerView;
+        final EditText searchCustomer = alertLayout.findViewById(R.id.search);
+        ImageView done = alertLayout.findViewById(R.id.done);
+
+        recyclerView = alertLayout.findViewById(R.id.customer_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        customerModelList = databaseHelper.getAllCustomer();
+        ModGlobal.customerModelList = customerModelList;
+        tempCust = customerModelList;
+
+        Log.e("size", Integer.toString(customerModelList.size()));
+
+        customerAdapter = new SearchCustomerAdapter(customerModelList, this);
+        recyclerView.setAdapter(customerAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+                ModGlobal.position = position;
+                customerAdapter.notifyDataSetChanged();
+
+                ModGlobal.customerId = tempCust.get(position).getId();
+                ModGlobal.customerName = tempCust.get(position).getFirstName() + " " + tempCust.get(position).getMiddleName()
+                        + " " + tempCust.get(position).getLastName();
+
+
+            }
+
+            @Override
+            public void onLongClick(View view, final int position) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                };
+
+            }
+        }));
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        final AlertDialog dialog = alert.create();
+        dialog.show();
+
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerName.setText(ModGlobal.customerName);
+                dialog.dismiss();
+            }
+        });
+
+        searchCustomer.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                tempCust = new ArrayList();
+                String text = searchCustomer.getText().toString();
+                if (text.equals(""))
+                    tempCust = ModGlobal.customerModelList;
+                else {
+                    for (CustomerModel p : ModGlobal.customerModelList) {
+                        //or use .contains(text)
+                        if (p.getFirstName().toLowerCase().contains(text.toLowerCase()) ||
+                                p.getLastName().toLowerCase().contains(text.toLowerCase())) {
+                            tempCust.add(p);
+                        }
+                    }
+                }
+                //update recyclerview
+                customerAdapter.update(tempCust);
+            }
+        });
 
     }
 
+
     private void filter(String text) {
 
-         temp = new ArrayList();
+        temp = new ArrayList();
 
         if (text.equals(""))
             temp = ModGlobal.ProductModelList;
@@ -220,7 +331,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
 
                     if (ModGlobal.itemIsDuplicate(ModGlobal.ProductModelList.get(position).getProduct_id())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
                         builder.setTitle("Alert");
                         builder.setIcon(getResources().getDrawable(R.drawable.warning));
                         builder.setMessage(ModGlobal.ProductModelList.get(position).getProduct_id() + "  " +
@@ -320,10 +431,11 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
             public void onClick(DialogInterface dialog, int which) {
 
 
-                startActivity(new Intent(StockInActivity.this, StockInMainActivity.class));
+                startActivity(new Intent(SalesInvoiceProductActivity.this, SalesInvoiceActivity.class));
                 finish();
                 ModGlobal.stockIns.clear();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                ModGlobal.customerName = "";
 
             }
 
@@ -374,5 +486,10 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
     public boolean onQueryTextChange(String newText) {
         filter(newText);
         return false;
+    }
+
+
+    public void customer(View view) {
+        searchCustomer();
     }
 }

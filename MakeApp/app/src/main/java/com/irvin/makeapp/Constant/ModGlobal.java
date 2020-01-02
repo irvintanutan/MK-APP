@@ -14,11 +14,14 @@ public class ModGlobal {
 
     public static boolean isCreateNew = false;
     public static int customerId;
+    public static String customerName = "";
     public static DataSnapshot dataSnapshot;
     public static List<Products> ProductModelList = new ArrayList<>();
     public static List<CustomerModel> customerModelList = new ArrayList<>();
     public static List<Category> categories = new ArrayList<>();
     public static List<StockIn> stockIns = new ArrayList<>();
+    public static boolean indicator = false;
+    public static int  position = -1;
 
 
     public static boolean itemIsDuplicate(String prodCode) {

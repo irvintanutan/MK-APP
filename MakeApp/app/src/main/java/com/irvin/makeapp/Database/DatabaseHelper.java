@@ -65,6 +65,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String stockInDetail = "stockInDetail";
     private static final String dateCreated = "dateCreated";
 
+
+    //table name
+    private static final String tbl_invoice = "tbl_invoice";
+
+    private static final String invoiceId = "invoiceId";
+    private static final String invoiceDetail = "invoiceDetail";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -103,6 +110,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + stockInDetail + " TEXT , "
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_STOCK_IN_TABLE);
+
+        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId TEXT primary key  , "
+                + invoiceDetail + " TEXT , "
+                + dateCreated + " TEXT );";
+        db.execSQL(CREATE_INVOICE_TABLE);
 
     }
 
@@ -303,6 +315,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void stockIn(String code, String qty) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -332,7 +345,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        values.put(stockInId , formatter.format(date));
+        values.put(stockInId, formatter.format(date));
         values.put(stockInDetail, details);
         values.put(dateCreated, getDateToday());
 
@@ -362,10 +375,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 StockInList p = new StockInList();
 
-                 p.setId(cursor.getString(0));
-                 p.setDetails(cursor.getString(1));
-                 p.setDateCreated(cursor.getString(2));
+                p.setId(cursor.getString(0));
+                p.setDetails(cursor.getString(1));
+                p.setDateCreated(cursor.getString(2));
                 products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
+
+    public StockInList getAllStockIn(String id) {
+        StockInList products = new StockInList();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_stockIn + " where " + stockInId + " ='" + id + "'" ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                products.setId(cursor.getString(0));
+                products.setDetails(cursor.getString(1));
+                products.setDateCreated(cursor.getString(2));
             } while (cursor.moveToNext());
         }
         // return quote list

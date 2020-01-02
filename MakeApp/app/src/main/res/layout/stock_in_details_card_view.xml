@@ -24,9 +24,10 @@
             android:weightSum="10">
 
             <LinearLayout
-                android:layout_weight="7"
+                android:id="@+id/leftSideContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="7"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -100,31 +101,29 @@
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_weight="3"
+                android:id="@+id/rightSideContainer"
                 android:layout_width="0dp"
-               android:gravity="center|bottom"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|bottom"
+                android:orientation="horizontal">
 
 
                 <ImageView
-                    android:layout_margin="@dimen/_7sdp"
                     android:id="@+id/minus"
-                    android:background="@drawable/round_quantity"
-                    android:src="@drawable/minus"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"/>
-
-                <ImageView
-                    android:layout_margin="@dimen/_7sdp"
-                    android:id="@+id/plus"
-                    android:background="@drawable/round_quantity"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-                    android:src="@drawable/add"
-                    />
+                    android:layout_margin="@dimen/_7sdp"
+                    android:background="@drawable/round_quantity"
+                    android:src="@drawable/minus" />
 
-
+                <ImageView
+                    android:id="@+id/plus"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_margin="@dimen/_7sdp"
+                    android:background="@drawable/round_quantity"
+                    android:src="@drawable/add" />
 
 
             </LinearLayout>
