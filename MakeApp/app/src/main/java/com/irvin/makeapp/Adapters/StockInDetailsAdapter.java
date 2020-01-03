@@ -36,7 +36,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
 
         viewHolder.productName.setText(products.get(position).getProductName());
         viewHolder.product_code.setText(products.get(position).getProductCode());
-        viewHolder.productPrice.setText(products.get(position).getPrice());
+        viewHolder.productPrice.setText("₱ "+products.get(position).getPrice());
         viewHolder.productQuantity.setText(products.get(position).getQuantity());
 
         viewHolder.add.setOnClickListener(new View.OnClickListener() {

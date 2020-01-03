@@ -42,13 +42,13 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer);
 
-
+        ModGlobal.isInSalesInvoice = false;
 
         Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("Customer Profiles");
+        ab.setTitle("Customer Profile");
         ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout

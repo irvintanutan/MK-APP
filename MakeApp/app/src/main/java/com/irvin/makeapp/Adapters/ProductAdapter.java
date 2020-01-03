@@ -37,7 +37,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             viewHolder.skinType.setText("QTY: " + products.get(position).getProduct_quantity());
         else
             viewHolder.skinType.setText("QTY: 0");
-            viewHolder.contactNumber.setText("PHP " + products.get(position).getProduct_price());
+            viewHolder.contactNumber.setText("₱ " + products.get(position).getProduct_price());
     }
 
     public void update(List<Products> products) {

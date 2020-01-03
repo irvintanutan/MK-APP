@@ -70,7 +70,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String tbl_invoice = "tbl_invoice";
 
     private static final String invoiceId = "invoiceId";
+    private static final String customerId = "customerId";
+    private static final String customerName = "customerName";
+    private static final String totalAmount = "totalAmount";
+    private static final String status = "status";
     private static final String invoiceDetail = "invoiceDetail";
+
+
+    //table name
+    private static final String tbl_payment = "tbl_payment";
+
+    private static final String paymentId = "paymentId";
+    private static final String amount = "amount";
+
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -111,10 +124,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_STOCK_IN_TABLE);
 
-        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId TEXT primary key  , "
+        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId TEXT primary key autoincrement , "
+                + customerId + " TEXT , "
+                + customerName + " TEXT , "
+                + totalAmount + " TEXT , "
+                + status + " TEXT , "
                 + invoiceDetail + " TEXT , "
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_INVOICE_TABLE);
+
+        String CREATE_PAYMENT_TABLE = "CREATE TABLE " + tbl_payment + "( paymentId TEXT primary key autoincrement , "
+                + amount + " TEXT , "
+                + invoiceId + " TEXT , "
+                + dateCreated + " TEXT );";
+        db.execSQL(CREATE_PAYMENT_TABLE);
 
     }
 
@@ -158,7 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<CustomerModel> getAllCustomer() {
         List<CustomerModel> personList = new ArrayList<CustomerModel>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_customer;
+        String selectQuery = "SELECT  * FROM " + tbl_customer + " order by id DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -314,6 +337,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    public List<Products> getAllProductsWithQuantity() {
+        List<Products> products = new ArrayList<Products>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_product + " where " + productQuantity + " > 0";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Products p = new Products();
+
+                p.setProduct_id(cursor.getString(0));
+                p.setProduct_name(cursor.getString(1));
+                p.setProduct_price(cursor.getString(2).replace("PHP", ""));
+                p.setProduct_category(cursor.getString(3));
+                p.setProduct_quantity(cursor.getString(4));
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
     public void stockIn(String code, String qty) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -388,11 +440,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     public StockInList getAllStockIn(String id) {
         StockInList products = new StockInList();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_stockIn + " where " + stockInId + " ='" + id + "'" ;
+        String selectQuery = "SELECT  * FROM " + tbl_stockIn + " where " + stockInId + " ='" + id + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

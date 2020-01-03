@@ -148,9 +148,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             customerModel = databaseHelper.getAllCustomer(ModGlobal.customerId);
             if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
-                Log.e("asd" , customerModel.getPhotoUrl());
+                Log.e("asd", customerModel.getPhotoUrl());
                 Glide.with(getApplicationContext()).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
-            }else {
+            } else {
                 Glide.with(getApplicationContext()).load(getApplication().getResources().getDrawable(R.drawable.user_img)).into(profilePicture);
             }
             mCurrentPhotoPath = customerModel.getPhotoUrl();
@@ -216,9 +216,15 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 // Do nothing
                 dialog.dismiss();
 
-                startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
-                finish();
-                overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                if (ModGlobal.isInSalesInvoice) {
+                    startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else {
+                    startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                }
 
 
             }
@@ -318,7 +324,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         startActivity(intent);
     }
 
-    private void messageCustomer(){
+    private void messageCustomer() {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
@@ -338,13 +344,12 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             }
             startActivity(sendIntent);
 
-        }
-        else // For early versions, do what worked for you before.
+        } else // For early versions, do what worked for you before.
         {
             Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
             smsIntent.setType("vnd.android-dir/mms-sms");
             smsIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, customerModel.getContactNumber());
-            smsIntent.putExtra("sms_body","");
+            smsIntent.putExtra("sms_body", "");
             startActivity(smsIntent);
         }
 
@@ -376,10 +381,15 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         else
             databaseHelper.updateCustomer(customerModel, ModGlobal.customerId);
 
-
-        startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
-        finish();
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        if (ModGlobal.isInSalesInvoice) {
+            startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else {
+            startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        }
     }
 
     public void dateTime(View view) {
@@ -458,10 +468,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Glide.with(this).load(new File(mCurrentPhotoPath)).into(profilePicture);
-        }
-        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);

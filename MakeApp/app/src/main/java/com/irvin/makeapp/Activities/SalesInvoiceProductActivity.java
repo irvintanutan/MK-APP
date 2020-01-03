@@ -1,16 +1,9 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,8 +20,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Adapters.CategoryAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Adapters.StockInAdapter;
@@ -76,7 +78,9 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
         init();
         customerName.setText(ModGlobal.customerName);
-        searchCustomer();
+        itemCount.setText("" + ModGlobal.stockIns.size());
+        if (ModGlobal.customerName.isEmpty())
+            searchCustomer();
     }
 
     void init() {
@@ -92,10 +96,10 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
                 if (ModGlobal.stockIns.size() > 0) {
 
-                /*    Intent intent = new Intent(SalesInvoiceProductActivity.this, StockInDetailsActivity.class);
+                    Intent intent = new Intent(SalesInvoiceProductActivity.this, SalesInvoiceProductDetailsActivity.class);
                     ModGlobal.indicator = false;
                     startActivity(intent);
-                    finish();*/
+                    finish();
 
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
@@ -189,6 +193,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         final SearchCustomerAdapter customerAdapter;
         RecyclerView recyclerView;
         final EditText searchCustomer = alertLayout.findViewById(R.id.search);
+        final FloatingActionButton fab = alertLayout.findViewById(R.id.floating_action_button);
         ImageView done = alertLayout.findViewById(R.id.done);
 
         recyclerView = alertLayout.findViewById(R.id.customer_view);
@@ -236,14 +241,34 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         // disallow cancel of AlertDialog on click of back button and outside touch
         alert.setCancelable(false);
         final AlertDialog dialog = alert.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customerName.setText(ModGlobal.customerName);
-                dialog.dismiss();
+                if (ModGlobal.customerName.isEmpty()) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
+                    builder.setTitle("Alert");
+                    builder.setIcon(getResources().getDrawable(R.drawable.warning));
+                    builder.setMessage("No Customer Selected");
+
+                    builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    customerName.setText(ModGlobal.customerName);
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -280,6 +305,19 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
             }
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ModGlobal.isInSalesInvoice = true;
+                ModGlobal.isCreateNew = true;
+                Intent i = new Intent(SalesInvoiceProductActivity.this, CustomerDetailsActivity.class);
+                i.putExtra("toolBarTitle", "Add New Customer");
+                startActivity(i);
+                finish();
+                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+            }
+        });
+
     }
 
 
@@ -304,7 +342,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
     }
 
     private void loadList() {
-        products = databaseHelper.getAllProducts();
+        products = databaseHelper.getAllProductsWithQuantity();
         ModGlobal.ProductModelList = products;
         temp = products;
         Log.e("size", Integer.toString(products.size()));
@@ -436,6 +474,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
                 ModGlobal.stockIns.clear();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                 ModGlobal.customerName = "";
+                ModGlobal.position = -1;
 
             }
 

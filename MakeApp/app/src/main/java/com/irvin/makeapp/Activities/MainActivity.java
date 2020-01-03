@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        //Log.e("RECEIPT NUMBER ", String.format("%0" + ModGlobal.receiptLimit.length() + "d", 234));
 
     }
 

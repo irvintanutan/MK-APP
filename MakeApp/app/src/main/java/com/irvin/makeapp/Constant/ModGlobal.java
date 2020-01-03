@@ -22,7 +22,8 @@ public class ModGlobal {
     public static List<StockIn> stockIns = new ArrayList<>();
     public static boolean indicator = false;
     public static int  position = -1;
-
+    public static boolean isInSalesInvoice = false;
+    public static String receiptLimit = "999999";
 
     public static boolean itemIsDuplicate(String prodCode) {
         boolean ind = false;
