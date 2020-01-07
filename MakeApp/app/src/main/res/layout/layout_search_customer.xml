@@ -80,8 +80,7 @@
             android:layout_height="@dimen/_300sdp"
             android:layout_below="@id/container"
             android:layout_marginTop="@dimen/_10sdp"
-            android:padding="@dimen/_5sdp"
-            android:scrollbars="vertical" />
+            android:scrollbars="none" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_below="@id/customer_view"

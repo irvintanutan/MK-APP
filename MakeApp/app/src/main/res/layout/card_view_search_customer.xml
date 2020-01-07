@@ -4,10 +4,11 @@
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="0dp"
     android:clickable="true"
-    android:layout_margin="@dimen/_2sdp"
-    app:cardElevation="@dimen/_1sdp">
+    app:cardCornerRadius="@dimen/corner_radius"
+    android:layout_marginTop="@dimen/card_view_margin"
+    android:layout_marginLeft="@dimen/card_view_margin"
+    android:layout_marginRight="@dimen/card_view_margin" >
 
 
     <LinearLayout

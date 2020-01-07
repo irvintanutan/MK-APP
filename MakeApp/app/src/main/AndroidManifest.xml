@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:configChanges="orientation"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +22,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.PaymentActivity"></activity>
+        <activity android:name=".Activities.ReportActivity"></activity>
+        <activity android:name=".Activities.PaymentActivity" />
         <activity android:name=".Activities.SalesInvoiceProductDetailsActivity" />
         <activity
             android:name=".Activities.SalesInvoiceProductActivity"

@@ -12,12 +12,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customer_view"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar"
-        android:padding="@dimen/_5sdp"
-        android:scrollbars="vertical" />
+        android:scrollbars="none" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

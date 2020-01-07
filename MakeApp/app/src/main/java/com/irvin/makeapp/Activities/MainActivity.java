@@ -191,10 +191,10 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
     private void reports() {
-        /*Intent i = new Intent(MainActivity.this, StockInMainActivity.class);
+        Intent i = new Intent(MainActivity.this, ReportActivity.class);
         startActivity(i);
         finish();
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     private void logout() {

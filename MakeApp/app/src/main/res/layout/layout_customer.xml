@@ -4,8 +4,11 @@
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_80sdp"
-    app:cardCornerRadius="2dp"
-    android:layout_marginBottom="@dimen/_3sdp" >
+    app:cardCornerRadius="@dimen/corner_radius"
+    android:layout_marginTop="@dimen/card_view_margin"
+    android:layout_marginLeft="@dimen/card_view_margin"
+    android:layout_marginRight="@dimen/card_view_margin"
+    >
 
 
     <LinearLayout

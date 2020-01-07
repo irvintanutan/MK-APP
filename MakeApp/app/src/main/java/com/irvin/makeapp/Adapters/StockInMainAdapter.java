@@ -46,7 +46,7 @@ public class StockInMainAdapter extends RecyclerView.Adapter<StockInMainAdapter.
     public void onBindViewHolder(StockInMainAdapter.ViewHolder viewHolder, final int position) {
 
         try {
-            viewHolder.stockInId.setText("STC-"+products.get(position).getId());
+            viewHolder.stockInId.setText("#STC-"+products.get(position).getId());
 
 
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(products.get(position).getDateCreated());

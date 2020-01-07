@@ -59,7 +59,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapte
 
             viewHolder.customerName.setText(invoices.get(position).getCustomerName());
 
-            viewHolder.invoiceId.setText("INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoices.get(position).getInvoiceId())));
+            viewHolder.invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoices.get(position).getInvoiceId())));
 
             if (invoices.get(position).getStatus().equals(TranStatus.PAID.toString())){
                 Log.e("asd" , "Im here");

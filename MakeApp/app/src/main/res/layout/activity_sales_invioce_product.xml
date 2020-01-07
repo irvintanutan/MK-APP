@@ -32,7 +32,6 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:layoutAnimation="@anim/layout_animation"
-            android:padding="@dimen/_10sdp"
             android:scrollbars="none" />
 
     </LinearLayout>

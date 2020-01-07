@@ -18,4 +18,9 @@
     <dimen name="form_et_textsize">14dp</dimen>
     <dimen name="row_padding">10dp</dimen>
     <dimen name="activity_margin">16dp</dimen>
+
+
+    <dimen name="corner_radius">3dp</dimen>
+    <dimen name="card_view_margin">@dimen/_5sdp</dimen>
+
 </resources>
