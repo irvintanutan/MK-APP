@@ -224,7 +224,7 @@ public class StockInDetailsActivity extends AppCompatActivity {
                 Log.e(ModGlobal.stockIns.get(a).getProductCode(), ModGlobal.stockIns.get(a).getQuantity());
 
                 databaseHelper.stockIn(ModGlobal.stockIns.get(a).getProductCode()
-                        , ModGlobal.stockIns.get(a).getQuantity());
+                        , ModGlobal.stockIns.get(a).getQuantity(), true);
             }
 
             String json = new Gson().toJson(ModGlobal.stockIns);

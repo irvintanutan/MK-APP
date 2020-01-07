@@ -71,7 +71,6 @@ public class StockInMainActivity extends AppCompatActivity {
             nothing.setVisibility(View.GONE);
         }
 
-        stockInListList = databaseHelper.getAllStockIn();
 
         recyclerView = findViewById(R.id.stock_in_view);
         recyclerView.setHasFixedSize(true);

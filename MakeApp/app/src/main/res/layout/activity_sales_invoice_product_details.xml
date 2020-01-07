@@ -22,82 +22,87 @@
 
     <LinearLayout
         android:id="@+id/stockIn"
-        android:layout_width="wrap_content"
+        android:weightSum="3"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/round_quantity"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:onClick="stockIn"
-        android:padding="10dp">
+        android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginRight="7dp"
-            android:src="@drawable/payment" />
 
-        <TextView
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:text="Check Out"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            <LinearLayout
+                android:id="@+id/btnView"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/round_quantity"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:padding="10dp">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:paddingStart="2dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:text="Total : "
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp" />
 
-    <LinearLayout
-        android:id="@+id/layoutBottom"
-        android:layout_width="match_parent"
-        android:layout_height="60dip"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:clickable="false"
-        android:orientation="horizontal"
-        android:weightSum="0">
+                <TextView
+                    android:id="@+id/totalAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:paddingStart="2dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:text="0.00"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btnView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/checkOut"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/round_quantity2"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:onClick="checkOut"
+            android:padding="@dimen/_5sdp">
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
-                android:paddingStart="2dp"
-                android:text="   Total amount : "
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp" />
+            <ImageView
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginRight="7dp"
+                android:src="@drawable/payment" />
 
             <TextView
-                android:id="@+id/totalAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
-                android:paddingStart="2dp"
-                android:text="0.00"
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp"
-                android:textStyle="bold" />
 
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="left|center_vertical"
+                android:text="PAY"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

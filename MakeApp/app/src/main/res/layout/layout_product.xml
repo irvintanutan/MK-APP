@@ -44,15 +44,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/contactNumber"
-                        android:layout_weight="3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textColor="#2e7d32"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-                    android:text="Price" />
+                <TextView
+                    android:id="@+id/contactNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Price"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+                    android:textColor="@color/green"
+                    android:textStyle="bold" />
 
 
                     <TextView

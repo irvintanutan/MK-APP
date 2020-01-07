@@ -55,11 +55,11 @@
 
             <TextView
                 android:id="@+id/productPrice"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="10.00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#2e7d32"
+                android:textColor="@color/green"
                 android:textStyle="bold" />
 
 

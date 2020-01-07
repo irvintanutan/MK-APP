@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Invoice;
+import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockInList;
 
@@ -70,6 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String tbl_invoice = "tbl_invoice";
 
     private static final String invoiceId = "invoiceId";
+    private static final String discount = "discount";
     private static final String customerId = "customerId";
     private static final String customerName = "customerName";
     private static final String totalAmount = "totalAmount";
@@ -82,7 +85,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String paymentId = "paymentId";
     private static final String amount = "amount";
-
 
 
     public DatabaseHelper(Context context) {
@@ -124,7 +126,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_STOCK_IN_TABLE);
 
-        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId TEXT primary key autoincrement , "
+        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId integer primary key autoincrement , "
+                + discount + " TEXT , "
                 + customerId + " TEXT , "
                 + customerName + " TEXT , "
                 + totalAmount + " TEXT , "
@@ -133,7 +136,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_INVOICE_TABLE);
 
-        String CREATE_PAYMENT_TABLE = "CREATE TABLE " + tbl_payment + "( paymentId TEXT primary key autoincrement , "
+        String CREATE_PAYMENT_TABLE = "CREATE TABLE " + tbl_payment + "( paymentId integer primary key autoincrement , "
                 + amount + " TEXT , "
                 + invoiceId + " TEXT , "
                 + dateCreated + " TEXT );";
@@ -337,6 +340,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    public List<Products> getAllProducts(String id) {
+        List<Products> products = new ArrayList<Products>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_product + " WHERE " + productId + " = '" + id + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Products p = new Products();
+
+                p.setProduct_id(cursor.getString(0));
+                p.setProduct_name(cursor.getString(1));
+                p.setProduct_price(cursor.getString(2).replace("PHP", ""));
+                p.setProduct_category(cursor.getString(3));
+                p.setProduct_quantity(cursor.getString(4));
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
     public List<Products> getAllProductsWithQuantity() {
         List<Products> products = new ArrayList<Products>();
         // Select All Query
@@ -366,7 +397,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void stockIn(String code, String qty) {
+    public void stockIn(String code, String qty, boolean isAdd) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -381,7 +412,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         if (cursor.getString(0) != null) {
-            quantity = q1 + Integer.parseInt(cursor.getString(0));
+
+            if (isAdd)
+                quantity = q1 + Integer.parseInt(cursor.getString(0));
+            else
+                quantity = Integer.parseInt(cursor.getString(0)) - q1;
+
         } else {
             quantity = q1;
         }
@@ -455,6 +491,90 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 products.setId(cursor.getString(0));
                 products.setDetails(cursor.getString(1));
                 products.setDateCreated(cursor.getString(2));
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
+    public void addPayment(Payment payment) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(amount, payment.getAmount());
+        values.put(invoiceId, payment.getInvoiceId());
+        values.put(dateCreated, getDateToday());
+
+        // Inserting Row
+        db.insert(tbl_payment, null, values);
+        db.close(); // Closing database connection
+    }
+
+
+    public void addInvoice(Invoice invoice) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(customerId, invoice.getCustomerId());
+        values.put(customerName, invoice.getCustomerName());
+        values.put(totalAmount, invoice.getTotalAmount());
+        values.put(discount, invoice.getDiscount());
+        values.put(status, invoice.getStatus());
+        values.put(invoiceDetail, invoice.getInvoiceDetail());
+        values.put(dateCreated, getDateToday());
+
+        // Inserting Row
+        db.insert(tbl_invoice, null, values);
+        db.close(); // Closing database connection
+    }
+
+
+    public String getLastInvoiceId() {
+
+        String id = "1";
+        // Select All Query
+        String selectQuery = "SELECT  invoiceId FROM " + tbl_invoice + " ORDER BY invoiceId DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst())
+            id = Integer.toString(cursor.getInt(0) + 1);
+
+        return id;
+
+    }
+
+
+    public List<Invoice> getAllInvoices() {
+        List<Invoice> products = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_invoice + " ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Invoice p = new Invoice();
+
+                p.setInvoiceId(cursor.getString(0));
+                p.setDiscount(cursor.getString(1));
+                p.setCustomerId(cursor.getString(2));
+                p.setCustomerName(cursor.getString(3));
+                p.setTotalAmount(cursor.getString(4));
+                p.setStatus(cursor.getString(5));
+                p.setInvoiceDetail(cursor.getString(6));
+                p.setDateCreated(cursor.getString(7));
+
+                Log.e("INVOICES" , p.getTotalAmount());
+
+                products.add(p);
             } while (cursor.moveToNext());
         }
         // return quote list
