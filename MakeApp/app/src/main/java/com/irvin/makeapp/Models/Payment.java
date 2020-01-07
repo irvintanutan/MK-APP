@@ -2,12 +2,15 @@ package com.irvin.makeapp.Models;
 
 public class Payment {
 
-    public Payment(String paymentId, String amount, String invoiceId, String dateCreated) {
+
+    public Payment(String paymentId, String amount, String invoiceId, String dateCreated, String balance) {
         this.paymentId = paymentId;
         this.amount = amount;
         this.invoiceId = invoiceId;
         this.dateCreated = dateCreated;
+        this.balance = balance;
     }
+
 
     public Payment(){
 
@@ -45,9 +48,19 @@ public class Payment {
         this.dateCreated = dateCreated;
     }
 
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+
     String paymentId;
     String amount;
     String invoiceId;
     String dateCreated;
+    String balance;
 
 }

@@ -4,9 +4,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,10 +24,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.material.tabs.TabLayout;
 import com.irvin.makeapp.Adapters.CustomerAdapter;
 import com.irvin.makeapp.Adapters.SalesInvoiceAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Adapters.StockInMainAdapter;
+import com.irvin.makeapp.Adapters.ViewPagerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
@@ -44,6 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SalesInvoiceActivity extends AppCompatActivity {
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
@@ -80,53 +88,106 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         if (invoices.size() > 0) {
             nothing.setVisibility(View.GONE);
         }
+        tabLayout = findViewById(R.id.tabs);
+        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        viewPager = findViewById(R.id.viewpager);
+        //tabLayout.setupWithViewPager(viewPager);
 
-        recyclerView = findViewById(R.id.invoice_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(layoutManager);
-        salesInvoiceAdapter = new SalesInvoiceAdapter(invoices, this);
-        recyclerView.setAdapter(salesInvoiceAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
 
+        /*
+        Creating Adapter and setting that adapter to the viewPager
+        setSupportActionBar method takes the toolbar and sets it as
+        the default action bar thus making the toolbar work like a normal
+        action bar.
+         */
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+
+        /*
+        TabLayout.newTab() method creates a tab view, Now a Tab view is not the view
+        which is below the tabs, its the tab itself.
+         */
+
+        final TabLayout.Tab pending = tabLayout.newTab();
+        final TabLayout.Tab verified = tabLayout.newTab();
+
+        /*
+        Setting Title text for our tabs respectively
+         */
+        verified.setText("Paid");
+        verified.setIcon(R.drawable.like);
+
+        pending.setText("Pending");
+        pending.setIcon(R.drawable.hand);
+
+
+
+
+        /*
+        Adding the tab view to our tablayout at appropriate positions
+        As I want home at first position I am passing home and 0 as argument to
+        the tablayout and like wise for other tabs as well
+         */
+        tabLayout.addTab(verified, 0);
+        tabLayout.addTab(pending, 1);
+
+
+
+
+        /*
+        TabTextColor sets the color for the title of the tabs, passing a ColorStateList here makes
+        tab change colors in different situations such as selected, active, inactive etc
+
+        TabIndicatorColor sets the color for the indiactor below the tabs
+         */
+
+        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.colorAccent));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
+
+
+        /*
+        Adding a onPageChangeListener to the viewPager
+        1st we add the PageChangeListener and pass a TabLayoutPageChangeListener so that Tabs Selection
+        changes when a viewpager page changes.
+         */
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View view, int position) {
-                /*try {
-                    StockInList stockInList = databaseHelper.getAllStockIn(stockInListList.get(position).getId());
-
-
-                    JSONArray jsonArray = new JSONArray(stockInList.getDetails());
-                    ArrayList<StockIn> stockIns = new ArrayList<>();
-                    for (int a = 0 ; a < jsonArray.length() ; a++){
-
-                        JSONObject object = jsonArray.getJSONObject(a);
-                        StockIn stockIn = new StockIn(object.getString("productName")
-                                ,object.getString("productCode") , object.getString("quantity")
-                                , object.getString("price"));
-
-                        stockIns.add(stockIn);
-                    }
-
-                    ModGlobal.stockIns = stockIns;
-
-                    Intent intent = new Intent(StockInMainActivity.this, StockInDetailsActivity.class);
-                    ModGlobal.indicator = true;
-                    startActivity(intent);
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-*/
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onLongClick(View view, int position) {
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-        }));
+            }
+
+        });
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
     }
 

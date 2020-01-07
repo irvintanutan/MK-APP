@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,7 +60,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_invoice_product_details);
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
 
         indicator = ModGlobal.indicator;
 
@@ -559,13 +560,15 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
             String json = new Gson().toJson(ModGlobal.stockIns);
 
-            databaseHelper.addPayment(new Payment("",Double.toString(finalCash),databaseHelper.getLastInvoiceId(),""));
+            databaseHelper.addPayment(new Payment("",Double.toString(finalCash),databaseHelper.getLastInvoiceId(),"" ,
+                    Double.toString(finalTotal)));
 
             Invoice invoice = new Invoice();
             invoice.setCustomerId(Integer.toString(ModGlobal.customerId));
             invoice.setCustomerName(ModGlobal.customerName);
             invoice.setTotalAmount(Double.toString(finalTotal));
             invoice.setDiscount(Double.toString(finalDiscount));
+            invoice.setDueDate("");
 
             if (finalCash < finalTotal)
                  invoice.setStatus(TranStatus.PENDING.toString());

@@ -3,6 +3,7 @@ package com.irvin.makeapp.Constant;
 import com.google.firebase.database.DataSnapshot;
 import com.irvin.makeapp.Models.Category;
 import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 
@@ -24,6 +25,11 @@ public class ModGlobal {
     public static int  position = -1;
     public static boolean isInSalesInvoice = false;
     public static String receiptLimit = "999999";
+    public static String paymentId = "";
+    public static Invoice invoice = new Invoice();
+
+    ////please beware of changing value of database version
+    public static int DATABASE_VERSION = 2;
 
     public static boolean itemIsDuplicate(String prodCode) {
         boolean ind = false;

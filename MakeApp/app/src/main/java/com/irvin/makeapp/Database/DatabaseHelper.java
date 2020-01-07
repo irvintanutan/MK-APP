@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = ModGlobal.DATABASE_VERSION;
     ///database name
     private static final String DATABASE_NAME = "mkdb";
 
@@ -78,12 +78,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String totalAmount = "totalAmount";
     private static final String status = "status";
     private static final String invoiceDetail = "invoiceDetail";
+    private static final String dueDate = "dueDate";
 
 
     //table name
     private static final String tbl_payment = "tbl_payment";
 
     private static final String paymentId = "paymentId";
+    private static final String balance = "balance";
     private static final String amount = "amount";
 
 
@@ -133,19 +135,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + totalAmount + " TEXT , "
                 + status + " TEXT , "
                 + invoiceDetail + " TEXT , "
-                + dateCreated + " TEXT );";
+                + dateCreated + " TEXT , "
+                + dueDate + " TEXT );";
         db.execSQL(CREATE_INVOICE_TABLE);
 
         String CREATE_PAYMENT_TABLE = "CREATE TABLE " + tbl_payment + "( paymentId integer primary key autoincrement , "
                 + amount + " TEXT , "
                 + invoiceId + " TEXT , "
-                + dateCreated + " TEXT );";
+                + dateCreated + " TEXT , "
+                + balance + " TEXT );";
         db.execSQL(CREATE_PAYMENT_TABLE);
 
     }
 
+    private static final String INVOICE_ADD_COLUMN = "ALTER TABLE " + tbl_invoice +
+            " ADD COLUMN " + dueDate + " TEXT DEFAULT ''";
+
+    private static final String PAYMENT_ADD_COLUMN = "ALTER TABLE " + tbl_payment +
+            " ADD COLUMN " + balance + " TEXT DEFAULT ''";
+
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        if (oldVersion < 2) {
+            db.execSQL(INVOICE_ADD_COLUMN);
+            db.execSQL(PAYMENT_ADD_COLUMN);
+        }
 
     }
 
@@ -260,11 +276,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public void deleteCustomer(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tbl_customer, "id=?", new String[]{Integer.toString(id)});
-        db.close();
-    }
 
     public void updateCustomer(CustomerModel customerModel, int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -554,6 +565,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Invoice> products = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + tbl_invoice + " ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Invoice p = new Invoice();
+
+                p.setInvoiceId(cursor.getString(0));
+                p.setDiscount(cursor.getString(1));
+                p.setCustomerId(cursor.getString(2));
+                p.setCustomerName(cursor.getString(3));
+                p.setTotalAmount(cursor.getString(4));
+                p.setStatus(cursor.getString(5));
+                p.setInvoiceDetail(cursor.getString(6));
+                p.setDateCreated(cursor.getString(7));
+
+                Log.e("INVOICES" , p.getTotalAmount());
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
+
+    public List<Invoice> getAllInvoices(String status) {
+        List<Invoice> products = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = '" + status + "' ORDER BY dateCreated DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

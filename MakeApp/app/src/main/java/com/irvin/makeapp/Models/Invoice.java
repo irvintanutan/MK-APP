@@ -67,8 +67,16 @@ public class Invoice {
         this.dateCreated = dateCreated;
     }
 
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public Invoice(String invoiceId, String customerId, String customerName, String totalAmount, String disCount, String status, String invoiceDetail,
-                   String dateCreated) {
+                   String dateCreated , String dueDate) {
 
         this.invoiceId = invoiceId;
         this.customerId = customerId;
@@ -78,6 +86,7 @@ public class Invoice {
         this.status = status;
         this.invoiceDetail = invoiceDetail;
         this.dateCreated = dateCreated;
+        this.dueDate = dueDate;
 
     }
 
@@ -93,5 +102,6 @@ public class Invoice {
     String status;
     String invoiceDetail;
     String dateCreated;
+    String dueDate;
 
 }

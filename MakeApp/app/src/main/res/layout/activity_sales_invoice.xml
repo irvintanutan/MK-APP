@@ -9,13 +9,21 @@
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/invoice_view"
-        android:layout_marginTop="@dimen/_10sdp"
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/app_bar"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar"
-        android:scrollbars="none" />
+        android:layout_below="@+id/tabs" />
 
     <LinearLayout
         android:id="@+id/nothing"
