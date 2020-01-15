@@ -148,20 +148,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private static final String INVOICE_ADD_COLUMN = "ALTER TABLE " + tbl_invoice +
-            " ADD COLUMN " + dueDate + " TEXT DEFAULT ''";
-
-    private static final String PAYMENT_ADD_COLUMN = "ALTER TABLE " + tbl_payment +
-            " ADD COLUMN " + balance + " TEXT DEFAULT ''";
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        if (oldVersion < 2) {
-            db.execSQL(INVOICE_ADD_COLUMN);
-            db.execSQL(PAYMENT_ADD_COLUMN);
-        }
 
     }
 

@@ -10,10 +10,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.R;
 
 public class PaymentActivity extends AppCompatActivity {
+
+    LinearLayout checkOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,12 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void init() {
 
+        checkOut = findViewById(R.id.checkOut);
+
+        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())){
+            checkOut.setVisibility(View.GONE);
+        }
+
     }
     @Override
     public void onBackPressed() {
@@ -55,5 +68,8 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkOut(View view) {
     }
 }

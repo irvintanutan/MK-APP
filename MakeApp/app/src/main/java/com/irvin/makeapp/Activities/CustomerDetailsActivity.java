@@ -319,11 +319,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             alert.show();
         } else if (item.getItemId() == R.id.action_call) {
 
-            callCustomer();
+            //callCustomer();
 
         } else if (item.getItemId() == R.id.action_message) {
 
-            messageCustomer();
+           //messageCustomer();
 
         }
 
