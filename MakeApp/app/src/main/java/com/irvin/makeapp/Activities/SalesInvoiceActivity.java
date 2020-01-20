@@ -57,8 +57,6 @@ public class SalesInvoiceActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     List<Invoice> invoices;
     LinearLayout nothing;
-    RecyclerView recyclerView;
-    SalesInvoiceAdapter salesInvoiceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +139,8 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         TabIndicatorColor sets the color for the indiactor below the tabs
          */
 
-        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.colorAccent));
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
+        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.white));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.white));
 
 
         /*

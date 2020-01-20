@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:text="Save Transaction"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -78,7 +78,7 @@
                 android:paddingRight="2dp"
                 android:paddingStart="2dp"
                 android:text="   Total amount : "
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textSize="17sp" />
 
             <TextView
@@ -90,7 +90,7 @@
                 android:paddingRight="2dp"
                 android:paddingStart="2dp"
                 android:text="0.00"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 

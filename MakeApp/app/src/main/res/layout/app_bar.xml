@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     app:theme="@style/MyCustomToolbar"
-    app:titleTextColor="@color/colorAccent"
+    app:titleTextColor="@color/white"
     android:elevation="10dp"
     >
 </androidx.appcompat.widget.Toolbar>

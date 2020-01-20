@@ -38,7 +38,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text=" # of items in cart : "
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="0"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 

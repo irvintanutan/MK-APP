@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="9"
                 android:text="Select Customer"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold"/>
 

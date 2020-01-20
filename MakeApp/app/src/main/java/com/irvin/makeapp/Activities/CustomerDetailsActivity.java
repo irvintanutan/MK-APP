@@ -317,7 +317,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             AlertDialog alert = builder.create();
             alert.show();
-        } else if (item.getItemId() == R.id.action_call) {
+       } /* else if (item.getItemId() == R.id.action_call) {
 
             //callCustomer();
 
@@ -325,7 +325,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
            //messageCustomer();
 
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
