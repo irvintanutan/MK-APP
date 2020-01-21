@@ -128,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + dateCreated + " TEXT );";
         db.execSQL(CREATE_STOCK_IN_TABLE);
 
-        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId integer primary key autoincrement , " 
+        String CREATE_INVOICE_TABLE = "CREATE TABLE " + tbl_invoice + "( invoiceId integer primary key autoincrement , "
                 + discount + " TEXT , "
                 + customerId + " TEXT , "
                 + customerName + " TEXT , "
