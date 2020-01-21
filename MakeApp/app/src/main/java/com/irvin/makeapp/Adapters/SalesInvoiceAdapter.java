@@ -48,28 +48,37 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapte
     @Override
     public void onBindViewHolder(SalesInvoiceAdapter.ViewHolder viewHolder, final int position) {
         try {
-            Date date = null;
+            Date date = null, date2 = null;
 
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(invoices.get(position).getDateCreated());
+            DateFormat formatter = new SimpleDateFormat("E. MMM dd, yyyy HH:mm:ss");
 
-            DateFormat formatter = new SimpleDateFormat("E, MMM dd, yyyy HH:mm:ss");
-            viewHolder.dateCreated.setText(formatter.format(date));
 
-            Log.e("asd" , invoices.get(position).getStatus());
+            if (invoices.get(position).getStatus().equals(TranStatus.PENDING.toString())) {
+                DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
+                date2 = new SimpleDateFormat("yyyy-MM-dd").parse(invoices.get(position).getDueDate());
+                viewHolder.dateCreated.setText("DUE DATE : " + formatter2.format(date2));
+
+                Log.e("asd", invoices.get(position).getDueDate());
+
+            } else
+                viewHolder.dateCreated.setText(formatter.format(date));
+
+            Log.e("asd", invoices.get(position).getStatus());
 
             viewHolder.customerName.setText(invoices.get(position).getCustomerName());
 
             viewHolder.invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoices.get(position).getInvoiceId())));
 
-            if (invoices.get(position).getStatus().equals(TranStatus.PAID.toString())){
-                Log.e("asd" , "Im here");
+            if (invoices.get(position).getStatus().equals(TranStatus.PAID.toString())) {
+                Log.e("asd", "Im here");
                 viewHolder.status.setBackground(mContext.getResources().getDrawable(R.drawable.paid));
                 viewHolder.status.setText("COMPLETED");
             }
 
-            DecimalFormat dec=new DecimalFormat("#,##0.00");
+            DecimalFormat dec = new DecimalFormat("#,##0.00");
 
-            viewHolder.total.setText("₱ " +dec.format(Double.parseDouble(invoices.get(position).getTotalAmount())));
+            viewHolder.total.setText("₱ " + dec.format(Double.parseDouble(invoices.get(position).getTotalAmount())));
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -89,7 +98,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView customerName, invoiceId, dateCreated, status , total;
+        TextView customerName, invoiceId, dateCreated, status, total;
 
 
         public ViewHolder(View view) {

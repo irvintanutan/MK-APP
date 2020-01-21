@@ -6,6 +6,8 @@
     <string name="skinConcern">Skin Concern</string>
     <string name="skinTone">Skin Tone</string>
     <string name="interest">Interest</string>
+    <string name="channel_name">CUSTOMER</string>
+    <string name="channel_description">REMINDER</string>
 
     <string-array name="skin_tone">
         <item> </item>

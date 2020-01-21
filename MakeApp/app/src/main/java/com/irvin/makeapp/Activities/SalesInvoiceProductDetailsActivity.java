@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
     private double finalCash = 0.00;
     private double finalChange = 0.00;
     private double finalDiscount = 0.00;
+    String dueDate = "";
 
 
     @Override
@@ -274,7 +276,13 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
                             public void onClick(DialogInterface dialog, int which) {
 
-                                new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
+                                if (finalCash < finalTotal){
+                                    dueDateTime();
+                                }else {
+                                    new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
+                                }
+
+
 
 
                             }
@@ -561,14 +569,14 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             String json = new Gson().toJson(ModGlobal.stockIns);
 
             databaseHelper.addPayment(new Payment("",Double.toString(finalCash),databaseHelper.getLastInvoiceId(),"" ,
-                    Double.toString(finalTotal)));
+                    Double.toString(finalChange)));
 
             Invoice invoice = new Invoice();
             invoice.setCustomerId(Integer.toString(ModGlobal.customerId));
             invoice.setCustomerName(ModGlobal.customerName);
             invoice.setTotalAmount(Double.toString(finalTotal));
             invoice.setDiscount(Double.toString(finalDiscount));
-            invoice.setDueDate("");
+            invoice.setDueDate(dueDate);
 
             if (finalCash < finalTotal)
                  invoice.setStatus(TranStatus.PENDING.toString());
@@ -614,6 +622,49 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    public void dueDateTime() {
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View alertLayout = inflater.inflate(R.layout.duedatetime, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final DatePicker datePicker = alertLayout.findViewById(R.id.date_picker);
+
+        builder.setView(alertLayout);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Set", null);
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String append = "";
+                String appendMonth = "";
+                int day = datePicker.getDayOfMonth();
+                int month = datePicker.getMonth() + 1;
+                int year = datePicker.getYear();
+
+                if (month < 10) appendMonth = "0";
+
+                String date = year + "-" + appendMonth + month + "-" + day;
+                dueDate = date;
+
+                new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
+
+            }
+        });
+
+        builder.show();
     }
 
 

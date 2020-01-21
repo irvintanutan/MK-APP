@@ -17,19 +17,97 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:cardCornerRadius="@dimen/corner_radius"
+        android:layout_below="@id/app_bar"
         android:layout_marginTop="@dimen/card_view_margin"
         android:layout_marginLeft="@dimen/card_view_margin"
         android:layout_marginRight="@dimen/card_view_margin" >
 
 
+        <LinearLayout
+            android:weightSum="5"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/customerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:gravity="clip_horizontal"
+                        android:text="asdsdas"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/invoiceId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="clip_horizontal"
+                        android:text="asdasd"
+                        android:textSize="10dp" />
+
+                    <TextView
+                        android:id="@+id/dateCreated"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="clip_horizontal"
+                        android:text="asdasd"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Amount Paid"
+                    android:textSize="@dimen/_8sdp"
+                    />
+
+                <TextView
+                    android:id="@+id/totalAmountPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10.00"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/product_view"
+        android:id="@+id/payment_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/stockIn"
-        android:layout_below="@id/app_bar"
+        android:layout_below="@id/cv"
         android:scrollbars="none" />
 
 
@@ -64,9 +142,9 @@
                 android:paddingStart="2dp"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
-                android:text="Total : "
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp" />
+                android:text="Balance : "
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10ssp" />
 
             <TextView
                 android:id="@+id/totalAmount"
@@ -77,8 +155,8 @@
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:text="0.00"
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15ssp"
                 android:textStyle="bold" />
 
 

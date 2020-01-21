@@ -508,10 +508,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(amount, payment.getAmount());
         values.put(invoiceId, payment.getInvoiceId());
         values.put(dateCreated, getDateToday());
+        values.put(balance , payment.getBalance());
 
         // Inserting Row
         db.insert(tbl_payment, null, values);
         db.close(); // Closing database connection
+    }
+
+
+    public List<Payment> getPaymentPerInvoice(String invoiceId) {
+        List<Payment> payments = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_payment + " WHERE invoiceId = '" + invoiceId + "' ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Payment p = new Payment();
+
+                p.setPaymentId(cursor.getString(0));
+                p.setAmount(cursor.getString(1));
+                p.setInvoiceId(cursor.getString(2));
+                p.setDateCreated(cursor.getString(3));
+                p.setBalance(cursor.getString(4));
+
+                payments.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return payments;
     }
 
 
@@ -526,6 +556,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(status, invoice.getStatus());
         values.put(invoiceDetail, invoice.getInvoiceDetail());
         values.put(dateCreated, getDateToday());
+        values.put(dueDate , invoice.getDueDate());
 
         // Inserting Row
         db.insert(tbl_invoice, null, values);
@@ -572,6 +603,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setStatus(cursor.getString(5));
                 p.setInvoiceDetail(cursor.getString(6));
                 p.setDateCreated(cursor.getString(7));
+                p.setDueDate(cursor.getString(8));
 
                 Log.e("INVOICES" , p.getTotalAmount());
 
@@ -607,6 +639,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setStatus(cursor.getString(5));
                 p.setInvoiceDetail(cursor.getString(6));
                 p.setDateCreated(cursor.getString(7));
+                p.setDueDate(cursor.getString(8));
 
                 Log.e("INVOICES" , p.getTotalAmount());
 

@@ -1,10 +1,14 @@
 package com.irvin.makeapp.Activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -12,6 +16,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    String CHANNEL_ID = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +50,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        FirebaseApp.initializeApp(this);
+      /*  createNotificationChannel();
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("My notification")
+                .setContentText("Much longer text that cannot fit one line...")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+// notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, builder.build());*/
+
+        FirebaseApp.initializeApp(this);
+        if (databaseHelper.getAllProducts().size() == 0) {  final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("products");
+            Query query = ref.orderByChild("products");
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ModGlobal.dataSnapshot = dataSnapshot;
+                    new GetProductTask(MainActivity.this).execute("");
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("aaa", "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
+
+        }
 
         Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
@@ -139,26 +181,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (databaseHelper.getAllProducts().size() == 0) {  final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("products");
-            Query query = ref.orderByChild("products");
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ModGlobal.dataSnapshot = dataSnapshot;
-                    new GetProductTask(MainActivity.this).execute("");
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.e("aaa", "loadPost:onCancelled", databaseError.toException());
-                    // ...
-                }
-            });
-
-        }
-
         //Log.e("RECEIPT NUMBER ", String.format("%0" + ModGlobal.receiptLimit.length() + "d", 234));
 
     }
@@ -233,6 +255,58 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Confirm");
+            builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+            builder.setMessage("Are you sure you want to exit application ?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+
+
+                    System.exit(0);
+
+                }
+
+            });
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 

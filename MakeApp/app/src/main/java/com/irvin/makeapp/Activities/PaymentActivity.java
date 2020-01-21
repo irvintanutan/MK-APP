@@ -1,26 +1,76 @@
 package com.irvin.makeapp.Activities;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.irvin.makeapp.Adapters.PaymentAdapter;
+import com.irvin.makeapp.Adapters.StockInMainAdapter;
+import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Constant.TranStatus;
+import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.Invoice;
+import com.irvin.makeapp.Models.Payment;
+import com.irvin.makeapp.Models.StockIn;
+import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentActivity extends AppCompatActivity {
 
     LinearLayout checkOut;
+    RecyclerView recyclerView;
+    PaymentAdapter paymentAdapter;
+    List<Payment> payments;
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    TextView customerName;
+    TextView totalAmountPaid;
+    TextView invoiceId;
+    TextView dateCreated;
+    public static TextView totalAmount;
 
+    private AlertDialog finalDialog = null;
+    DecimalFormat dec = new DecimalFormat("#,##0.00");
+    private static double finalSubTotal = 0.00;
+    private double finalTotal = 0.00;
+    private double finalCash = 0.00;
+    private double finalChange = 0.00;
+    private double finalDiscount = 0.00;
+    String dueDate = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +90,521 @@ public class PaymentActivity extends AppCompatActivity {
 
         init();
 
+
     }
 
     private void init() {
 
-        checkOut = findViewById(R.id.checkOut);
+        customerName = findViewById(R.id.customerName);
+        totalAmountPaid = findViewById(R.id.totalAmountPaid);
+        invoiceId = findViewById(R.id.invoiceId);
+        dateCreated = findViewById(R.id.dateCreated);
 
-        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())){
+
+        checkOut = findViewById(R.id.checkOut);
+        totalAmount = findViewById(R.id.totalAmount);
+        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())) {
             checkOut.setVisibility(View.GONE);
         }
 
+
+        payments = new ArrayList<>();
+        payments = databaseHelper.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
+
+        recyclerView = findViewById(R.id.payment_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(layoutManager);
+        paymentAdapter = new PaymentAdapter(payments, this);
+        recyclerView.setAdapter(paymentAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+
+
+        }));
+
+
+        double total = 0.00;
+        for (Payment payment : payments) {
+
+            total += Double.parseDouble(payment.getAmount());
+
+        }
+
+        customerName.setText(ModGlobal.invoice.getCustomerName());
+        dateCreated.setText(ModGlobal.invoice.getDateCreated());
+        invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId())));
+        totalAmountPaid.setText("₱ " + dec.format(total));
+
+        total = Double.parseDouble(ModGlobal.invoice.getTotalAmount()) - total;
+
+        finalSubTotal = total;
+        totalAmount.setText("₱ " + dec.format(total));
+
     }
+
+
+    public void checkOut(View view) {
+
+
+        finalTotal = finalSubTotal;
+        finalCash = 0.00;
+        finalChange = 0.00;
+
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.payment_view, null);
+
+
+        final CardView pay1 = alertLayout.findViewById(R.id.pay1);
+        final CardView pay5 = alertLayout.findViewById(R.id.pay5);
+        final CardView pay10 = alertLayout.findViewById(R.id.pay10);
+        final CardView pay20 = alertLayout.findViewById(R.id.pay20);
+        final CardView pay50 = alertLayout.findViewById(R.id.pay50);
+        final CardView pay100 = alertLayout.findViewById(R.id.pay100);
+        final CardView pay200 = alertLayout.findViewById(R.id.pay200);
+        final CardView pay500 = alertLayout.findViewById(R.id.pay500);
+        final CardView pay1000 = alertLayout.findViewById(R.id.pay1000);
+
+
+        final CardView clear = alertLayout.findViewById(R.id.clear);
+        final CardView clearDiscount = alertLayout.findViewById(R.id.clearDiscount);
+        final CardView discount = alertLayout.findViewById(R.id.discount);
+        final CardView checkOut = alertLayout.findViewById(R.id.checkOut);
+        final CardView close = alertLayout.findViewById(R.id.close);
+
+        final EditText subTotalValue = alertLayout.findViewById(R.id.subTotalValue);
+        final EditText discountValue = alertLayout.findViewById(R.id.discountValue);
+        final EditText totalValue = alertLayout.findViewById(R.id.totalValue);
+        final EditText cashValue = alertLayout.findViewById(R.id.cashValue);
+        final EditText changeValue = alertLayout.findViewById(R.id.changeValue);
+
+
+        discount.setVisibility(View.GONE);
+        clearDiscount.setVisibility(View.GONE);
+
+
+        subTotalValue.setFocusable(false);
+        discountValue.setFocusable(false);
+        totalValue.setFocusable(false);
+        cashValue.setFocusable(false);
+        changeValue.setFocusable(false);
+
+        subTotalValue.setText("₱ " + dec.format(finalTotal));
+        discountValue.setText("₱ " + 0.00);
+        totalValue.setText("₱ " + dec.format(finalTotal));
+        cashValue.setText("₱ " + dec.format(finalCash));
+        double ch = finalCash - finalTotal;
+        finalChange = ch;
+        changeValue.setText("₱ " + dec.format(ch));
+        changeValue.setTextColor(Color.RED);
+
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalTotal = finalSubTotal;
+                finalCash = 0.00;
+                finalChange = 0.00;
+
+                subTotalValue.setText("₱ " + dec.format(finalTotal));
+                discountValue.setText("₱ " + 0.00);
+                totalValue.setText("₱ " + dec.format(finalTotal));
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+                changeValue.setTextColor(Color.RED);
+
+            }
+        });
+
+        checkOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(PaymentActivity.this);
+
+                builder.setTitle("Processing Payment");
+                builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+                builder.setMessage("Are you sure you want to place the order ?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (finalCash < finalTotal) {
+                            dueDateTime();
+                        } else {
+                            new PaymentActivity.PaymentTask(PaymentActivity.this).execute("");
+                        }
+
+
+                    }
+
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finalDialog.dismiss();
+            }
+        });
+
+
+        clearDiscount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //  ModGlobal.discount = 0.00;
+                //  ModGlobal.discType = 0;
+                //  discountValue.setText(dec.format(ModGlobal.discount));
+                discountValue.setTextColor(Color.BLACK);
+
+            }
+        });
+
+
+        discount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+        pay1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 1;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+            }
+        });
+
+
+        pay5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 5;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+        pay10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 10;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+
+        pay20.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 20;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+        pay50.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 50;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+        pay100.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 100;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+        pay200.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 200;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+        pay500.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 500;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+
+        pay1000.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finalCash += 1000;
+                cashValue.setText("₱ " + dec.format(finalCash));
+                double ch = finalCash - finalTotal;
+                finalChange = ch;
+                changeValue.setText("₱ " + dec.format(ch));
+
+                if (ch < 0) {
+                    changeValue.setTextColor(Color.RED);
+                } else {
+                    changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                }
+
+
+            }
+        });
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        finalDialog = alert.create();
+        finalDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        finalDialog.show();
+
+    }
+
+
+    public void dueDateTime() {
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View alertLayout = inflater.inflate(R.layout.duedatetime, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final DatePicker datePicker = alertLayout.findViewById(R.id.date_picker);
+
+        builder.setView(alertLayout);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Set", null);
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String append = "";
+                String appendMonth = "";
+                int day = datePicker.getDayOfMonth();
+                int month = datePicker.getMonth() + 1;
+                int year = datePicker.getYear();
+
+                if (month < 10) appendMonth = "0";
+
+                String date = year + "-" + appendMonth + month + "-" + day;
+                dueDate = date;
+
+                new PaymentActivity.PaymentTask(PaymentActivity.this).execute("");
+
+            }
+        });
+
+        builder.show();
+    }
+
+
+    public class PaymentTask extends AsyncTask<String, String, String> {
+        boolean warning_indicator = true;
+        private DatabaseHelper databaseHelper;
+        Context serviceContext;
+        ProgressDialog progressDialog;
+
+        public PaymentTask(Context serviceContext) {
+            this.serviceContext = serviceContext;
+            databaseHelper = new DatabaseHelper(serviceContext);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(serviceContext);
+            progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setTitle("Processing");
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            databaseHelper.addPayment(new Payment("", Double.toString(finalCash), ModGlobal.invoice.getInvoiceId(), "",
+                    Double.toString(finalChange)));
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String strFromDoInBg) {
+
+            finalDialog.dismiss();
+            progressDialog.dismiss();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(PaymentActivity.this);
+            builder.setTitle("Success");
+            builder.setIcon(getResources().getDrawable(R.drawable.check));
+            builder.setMessage("Transaction Successful");
+
+            builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    ModGlobal.stockIns.clear();
+                    startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+
+        }
+
+
+    }
+
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
@@ -70,6 +624,4 @@ public class PaymentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkOut(View view) {
-    }
 }

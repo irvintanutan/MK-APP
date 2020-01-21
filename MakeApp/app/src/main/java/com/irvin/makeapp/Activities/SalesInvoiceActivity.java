@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.irvin.makeapp.Adapters.CustomerAdapter;
@@ -113,11 +114,18 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         Setting Title text for our tabs respectively
          */
         verified.setText("Paid");
-        verified.setIcon(R.drawable.like);
+        verified.setIcon(R.drawable.paid);
 
-        pending.setText("Pending");
-        pending.setIcon(R.drawable.hand);
+        pending.setText("Outstanding");
+        pending.setIcon(R.drawable.pending);
+/*
+        //set custom view
+        pending.setCustomView(R.layout.notification_badge);
 
+        TextView textView = pending.getCustomView().findViewById(R.id.text);
+        textView.setText("5");
+        TextView textView2 = pending.getCustomView().findViewById(R.id.textTab);
+        textView2.setText("Outstanding");*/
 
 
 
@@ -140,7 +148,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
          */
 
         tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.white));
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.white));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
 
 
         /*
