@@ -28,9 +28,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         switch (position) {
-            case 0:
-                return new TabFragmentPaid();
             case 1:
+                return new TabFragmentPaid();
+            case 0:
                 return new TabFragmentPending();
             default:
                 return null;

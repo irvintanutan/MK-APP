@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
@@ -64,7 +65,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_invoice);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -134,8 +135,9 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         As I want home at first position I am passing home and 0 as argument to
         the tablayout and like wise for other tabs as well
          */
-        tabLayout.addTab(verified, 0);
-        tabLayout.addTab(pending, 1);
+        tabLayout.addTab(pending, 0);
+        tabLayout.addTab(verified, 1);
+
 
 
 

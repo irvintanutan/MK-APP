@@ -563,6 +563,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
+    public void updateInvoice(Invoice invoice, String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(customerId, invoice.getCustomerId());
+        values.put(customerName, invoice.getCustomerName());
+        values.put(totalAmount, invoice.getTotalAmount());
+        values.put(discount, invoice.getDiscount());
+        values.put(status, invoice.getStatus());
+        values.put(invoiceDetail, invoice.getInvoiceDetail());
+        values.put(dateCreated, getDateToday());
+        values.put(dueDate , invoice.getDueDate());
+
+        db.update(tbl_invoice, values, "invoiceId= ?", new String[]{id});
+        db.close();
+
+    }
+
 
     public String getLastInvoiceId() {
 

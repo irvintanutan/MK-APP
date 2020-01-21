@@ -9,6 +9,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ public class StockInMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_in_main);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -145,6 +146,7 @@ public class StockInMainActivity extends AppCompatActivity {
     }
 
     public void stockIn(View view) {
+        ModGlobal.stockIns.clear();
         Intent intent = new Intent(StockInMainActivity.this, StockInActivity.class);
         startActivity(intent);
         finish();

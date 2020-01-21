@@ -26,10 +26,13 @@ public class ModGlobal {
     public static boolean isInSalesInvoice = false;
     public static String receiptLimit = "999999";
     public static String paymentId = "";
+    public static String totalAmountPaid = "";
     public static Invoice invoice = new Invoice();
 
     ////please beware of changing value of database version
     public static int DATABASE_VERSION = 1;
+    public static String imageFilePath;
+    public static String totalBalance;
 
     public static boolean itemIsDuplicate(String prodCode) {
         boolean ind = false;

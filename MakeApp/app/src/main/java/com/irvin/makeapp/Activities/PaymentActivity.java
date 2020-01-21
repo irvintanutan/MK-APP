@@ -1,23 +1,17 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.TransactionTooLargeException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,9 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.irvin.makeapp.Adapters.PaymentAdapter;
-import com.irvin.makeapp.Adapters.StockInMainAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
@@ -39,16 +31,37 @@ import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.StockIn;
-import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -61,7 +74,9 @@ public class PaymentActivity extends AppCompatActivity {
     TextView totalAmountPaid;
     TextView invoiceId;
     TextView dateCreated;
+    TextView balance;
     public static TextView totalAmount;
+    String status = "";
 
     private AlertDialog finalDialog = null;
     DecimalFormat dec = new DecimalFormat("#,##0.00");
@@ -71,13 +86,28 @@ public class PaymentActivity extends AppCompatActivity {
     private double finalChange = 0.00;
     private double finalDiscount = 0.00;
     String dueDate = "";
+    int maxWidth;
+    int maxHeight;
+    int width;
+    int height;
+    int newWidth;
+    int newHeight;
+    Double scale;
+    Bitmap resizedImage;
+    Image image;
+    PdfWriter pdfWriter;
+
+    FileOutputStream outFile;
+
+    private static String FILE = Environment.getExternalStorageDirectory()
+            + "/HelloWorld.pdf";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -95,21 +125,44 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void init() {
 
+        balance = findViewById(R.id.balance);
         customerName = findViewById(R.id.customerName);
         totalAmountPaid = findViewById(R.id.totalAmountPaid);
         invoiceId = findViewById(R.id.invoiceId);
         dateCreated = findViewById(R.id.dateCreated);
-
-
         checkOut = findViewById(R.id.checkOut);
         totalAmount = findViewById(R.id.totalAmount);
-        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())) {
-            checkOut.setVisibility(View.GONE);
-        }
 
 
         payments = new ArrayList<>();
         payments = databaseHelper.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
+
+
+        double total = 0.00;
+        for (Payment payment : payments) {
+
+            total += Double.parseDouble(payment.getAmount());
+
+        }
+
+        customerName.setText(ModGlobal.invoice.getCustomerName());
+        dateCreated.setText(ModGlobal.invoice.getDateCreated());
+        invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId())));
+        totalAmountPaid.setText("₱ " + dec.format(total));
+        ModGlobal.totalAmountPaid = dec.format(total);
+        total = Double.parseDouble(ModGlobal.invoice.getTotalAmount()) - total;
+
+        finalSubTotal = total;
+        ModGlobal.totalBalance = dec.format(total);
+        totalAmount.setText("₱ " + dec.format(total));
+
+
+        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())) {
+
+            checkOut.setVisibility(View.GONE);
+            balance.setText("INV Amount:");
+            totalAmount.setText("₱ " + dec.format(Double.parseDouble(ModGlobal.invoice.getTotalAmount())));
+        }
 
         recyclerView = findViewById(R.id.payment_view);
         recyclerView.setHasFixedSize(true);
@@ -133,23 +186,6 @@ public class PaymentActivity extends AppCompatActivity {
 
         }));
 
-
-        double total = 0.00;
-        for (Payment payment : payments) {
-
-            total += Double.parseDouble(payment.getAmount());
-
-        }
-
-        customerName.setText(ModGlobal.invoice.getCustomerName());
-        dateCreated.setText(ModGlobal.invoice.getDateCreated());
-        invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId())));
-        totalAmountPaid.setText("₱ " + dec.format(total));
-
-        total = Double.parseDouble(ModGlobal.invoice.getTotalAmount()) - total;
-
-        finalSubTotal = total;
-        totalAmount.setText("₱ " + dec.format(total));
 
     }
 
@@ -245,8 +281,10 @@ public class PaymentActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         if (finalCash < finalTotal) {
+                            status = TranStatus.PENDING.toString();
                             dueDateTime();
                         } else {
+                            status = TranStatus.PAID.toString();
                             new PaymentActivity.PaymentTask(PaymentActivity.this).execute("");
                         }
 
@@ -514,7 +552,6 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String append = "";
                 String appendMonth = "";
                 int day = datePicker.getDayOfMonth();
                 int month = datePicker.getMonth() + 1;
@@ -535,7 +572,6 @@ public class PaymentActivity extends AppCompatActivity {
 
 
     public class PaymentTask extends AsyncTask<String, String, String> {
-        boolean warning_indicator = true;
         private DatabaseHelper databaseHelper;
         Context serviceContext;
         ProgressDialog progressDialog;
@@ -568,7 +604,14 @@ public class PaymentActivity extends AppCompatActivity {
             databaseHelper.addPayment(new Payment("", Double.toString(finalCash), ModGlobal.invoice.getInvoiceId(), "",
                     Double.toString(finalChange)));
 
+            Invoice invoice = ModGlobal.invoice;
+            invoice.setStatus(status);
 
+            if (status.equals(TranStatus.PENDING.toString())){
+                invoice.setDueDate(dueDate);
+            }
+
+            databaseHelper.updateInvoice(invoice , invoice.getInvoiceId());
             return null;
         }
 
@@ -613,15 +656,141 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.payment_view, menu);
+
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
             startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else if (item.getItemId() == R.id.action_report) {
+                    generatePDF();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void generatePDF() {
+        maxHeight = 5000;
+        maxWidth = 600;
+
+        String downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+
+        Document doc = new Document();
+        try {
+
+
+            outFile = new FileOutputStream(downloadsPath + File.separator + "Notes.pdf");
+            pdfWriter = PdfWriter.getInstance(doc, outFile);
+            doc.open();
+            String invoiceNumber = "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +
+                    "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId()));
+            Paragraph title = new Paragraph(new Phrase(ModGlobal.invoice.getCustomerName() + "( " +
+                    ModGlobal.invoice.getStatus() + " )" + "\n" + invoiceNumber,
+                    new Font(Font.FontFamily.TIMES_ROMAN, 30, Font.BOLD)));
+            title.setAlignment(Paragraph.ALIGN_CENTER);
+            doc.add(title);
+
+
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ModGlobal.invoice.getDateCreated());
+            DateFormat formatter = new SimpleDateFormat("E. MMM dd, yyyy HH:mm:ss");
+            Paragraph transactionDate = new Paragraph(new Phrase("Transaction Date : " + formatter.format(date),
+                    new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL)));
+            transactionDate.setAlignment(Paragraph.ALIGN_CENTER);
+            doc.add(transactionDate);
+
+            Paragraph dueDate = null;
+
+
+            if (ModGlobal.invoice.getStatus().equals(TranStatus.PENDING.toString())) {
+                DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
+                Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(ModGlobal.invoice.getDueDate());
+                dueDate = new Paragraph(new Phrase("Due Date : " + formatter2.format(date2),
+                        new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL)));
+                dueDate.setAlignment(Paragraph.ALIGN_CENTER);
+                doc.add(dueDate);
+            }
+
+            String details = "\n\n";
+            details += "Item/s                        QTY         AMOUNT             TOTAL\n";
+
+            JSONArray jsonArray = new JSONArray(ModGlobal.invoice.getInvoiceDetail());
+            ArrayList<StockIn> stockIns = new ArrayList<>();
+            for (int a = 0; a < jsonArray.length(); a++) {
+
+                JSONObject object = jsonArray.getJSONObject(a);
+                StockIn stockIn = new StockIn(object.getString("productName")
+                        , object.getString("productCode"), object.getString("quantity")
+                        , object.getString("price"));
+
+                stockIns.add(stockIn);
+            }
+            ModGlobal.stockIns = stockIns;
+            DecimalFormat dec = new DecimalFormat("#,##0.00");
+
+            details += "------------------------------------------------------------------------------\n";
+            double finalTotalPrice = 0.00;
+            for (StockIn stockIn : ModGlobal.stockIns) {
+                details += stockIn.getProductName() + "\n";
+
+                String qty = stockIn.getQuantity();
+                String price = stockIn.getPrice();
+                double totalPriceDouble = Integer.parseInt(qty) * Double.parseDouble(price.replace(",", ""));
+                finalTotalPrice += totalPriceDouble;
+                String totalPrice = dec.format(totalPriceDouble);
+                String lineItems = "                                   X" + qty;
+                lineItems += "          @" + price;
+
+                for (int a = 1; a <= 20 - price.length(); a++)
+                    lineItems += " ";
+
+                lineItems += "Php" + totalPrice;
+                details += lineItems + "\n\n";
+
+            }
+            details += "------------------------------------------------------------------------------\n";
+
+            details += "                                                "
+                    + " Total Amount    -   Php " + dec.format(finalTotalPrice) + "\n";
+
+            details += "                                                "
+                    + " Total Cash         -   Php " + ModGlobal.totalAmountPaid + "\n";
+            details += "                                              -------------------------------------------\n";
+
+            if (Double.parseDouble(ModGlobal.totalBalance.replace(",", "")) <= 0) {
+                details += "                                                "
+                        + " Balance              -  Php 0.00\n";
+            } else {
+                details += "                                                "
+                        + " Balance              -  Php " + ModGlobal.totalBalance + "\n";
+            }
+
+            Paragraph parDetails = new Paragraph(new Phrase(details,
+                    new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL)));
+            doc.add(parDetails);
+
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+            Log.e("Exists", e.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            doc.close();
+            pdfWriter.close();
+            Log.e("Exists", "No errors.");
         }
 
-        return super.onOptionsItemSelected(item);
+        ModGlobal.imageFilePath = downloadsPath + File.separator + "Notes.pdf";
+
+        startActivity(new Intent(PaymentActivity.this, PDFViewActivity.class));
     }
 
 }
