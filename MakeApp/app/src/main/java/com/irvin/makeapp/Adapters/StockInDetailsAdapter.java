@@ -71,8 +71,9 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
             @Override
             public void onClick(View view) {
 
+                ModGlobal.insertProduct(products.get(position).getProductCode());
                 products.remove(position);
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
 
             }
         });

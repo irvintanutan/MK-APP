@@ -52,13 +52,12 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
                 StockIn stockIn = products.get(position);
                 int qty = Integer.parseInt(stockIn.getQuantity()) + 1;
 
-                if (qty <= Integer.parseInt(databaseHelper.getAllProducts(products.get(position).getProductCode()).get(0).getProduct_quantity()))
-                {
+                if (qty <= Integer.parseInt(databaseHelper.getAllProducts(products.get(position).getProductCode()).get(0).getProduct_quantity())) {
                     stockIn.setQuantity(Integer.toString(qty));
                     products.set(position, stockIn);
                     notifyDataSetChanged();
                     SalesInvoiceProductDetailsActivity.calculateTotal();
-                }else {
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     builder.setTitle("Warning");
                     builder.setIcon(mContext.getResources().getDrawable(R.drawable.warning));
@@ -99,9 +98,10 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
             @Override
             public void onClick(View view) {
 
-                    products.remove(position);
-                    notifyDataSetChanged();
-                    SalesInvoiceProductDetailsActivity.calculateTotal();
+                ModGlobal.insertProduct(products.get(position).getProductCode());
+                products.remove(position);
+                notifyItemRemoved(position);
+                SalesInvoiceProductDetailsActivity.calculateTotal();
 
             }
         });

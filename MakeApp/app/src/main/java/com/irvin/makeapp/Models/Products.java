@@ -45,14 +45,32 @@ public class Products {
         this.product_quantity = product_quantity;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+
     private String product_id;
     private String product_name;
     private String product_price;
     private String product_category;
-
     private String product_quantity;
+    private int position;
+    private boolean isSelected;
 
-    public Products(String product_id, String product_name, String product_price, String product_category , String product_quantity) {
+    public Products(String product_id, String product_name, String product_price, String product_category, String product_quantity) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_price = product_price;
@@ -61,6 +79,7 @@ public class Products {
     }
 
 
-    public  Products(){}
+    public Products() {
+    }
 
 }

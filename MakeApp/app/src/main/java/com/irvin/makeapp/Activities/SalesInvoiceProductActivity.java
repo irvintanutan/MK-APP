@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,7 +60,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
     List<Category> categories;
     List<Products> products;
     TextView itemCount, itemView, customerName;
-    LinearLayout btnView;
+    CardView btnView;
     List<Products> temp = new ArrayList();
 
     @Override
@@ -78,7 +80,6 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
         init();
         customerName.setText(ModGlobal.customerName);
-        itemCount.setText("" + ModGlobal.stockIns.size());
         if (ModGlobal.customerName.isEmpty())
             searchCustomer();
     }
@@ -86,8 +87,6 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
     void init() {
 
         customerName = findViewById(R.id.customerName);
-        itemCount = findViewById(R.id.itemCount);
-        itemView = findViewById(R.id.itemView);
         btnView = findViewById(R.id.btnView);
 
         btnView.setOnClickListener(new View.OnClickListener() {
@@ -342,14 +341,20 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
     }
 
     private void loadList() {
-        products = databaseHelper.getAllProductsWithQuantity();
-        ModGlobal.ProductModelList = products;
+        ModGlobal.ProductModelListCopy = databaseHelper.getAllProductsWithQuantity();
+        if (ModGlobal.stockIns.isEmpty()) {
+            products = ModGlobal.ProductModelListCopy;
+            ModGlobal.ProductModelList = products;
+            ModGlobal.ProductModelListCopy = products;
+        } else {
+            ModGlobal.removeProduct();
+            products = ModGlobal.ProductModelList;
+        }
         temp = products;
         Log.e("size", Integer.toString(products.size()));
 
         stockInAdapter = new StockInAdapter(products, this);
         recyclerView.setAdapter(stockInAdapter);
-
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 
@@ -367,35 +372,14 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
 
+                    StockIn stockIn = new StockIn(temp.get(position).getProduct_name()
+                            , temp.get(position).getProduct_id(), "1",
+                            temp.get(position).getProduct_price());
 
-                    if (ModGlobal.itemIsDuplicate(ModGlobal.ProductModelList.get(position).getProduct_id())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
-                        builder.setTitle("Alert");
-                        builder.setIcon(getResources().getDrawable(R.drawable.warning));
-                        builder.setMessage(ModGlobal.ProductModelList.get(position).getProduct_id() + "  " +
-                                ModGlobal.ProductModelList.get(position).getProduct_name()
-                                + " is already in cart");
+                    ModGlobal.stockIns.add(stockIn);
 
-                        builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    } else {
-
-                        StockIn stockIn = new StockIn(temp.get(position).getProduct_name()
-                                , temp.get(position).getProduct_id(), "1",
-                                temp.get(position).getProduct_price());
-
-                        ModGlobal.stockIns.add(stockIn);
-                        RunAnimation();
-
-                    }
+                    stockInAdapter.removeItem(position);
+                    ModGlobal.removeProduct();
 
 
                 }
@@ -416,14 +400,6 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
     }
 
-    private void RunAnimation() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
-        a.reset();
-        itemCount.setText("" + ModGlobal.stockIns.size());
-
-        itemCount.clearAnimation();
-        itemCount.startAnimation(a);
-    }
 
     private void updateCategory(int position) {
         categories = new ArrayList<>();

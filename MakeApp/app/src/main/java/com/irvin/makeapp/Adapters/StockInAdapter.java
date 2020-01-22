@@ -13,6 +13,7 @@ import com.irvin.makeapp.R;
 
 import java.util.List;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class StockInAdapter extends RecyclerView.Adapter<StockInAdapter.ViewHolder> {
@@ -33,15 +34,20 @@ public class StockInAdapter extends RecyclerView.Adapter<StockInAdapter.ViewHold
     @Override
     public void onBindViewHolder(StockInAdapter.ViewHolder viewHolder, int position) {
 
-           viewHolder.productName.setText(products.get(position).getProduct_name());
-           viewHolder.product_code.setText(products.get(position).getProduct_id());
-           viewHolder.productPrice.setText("₱ " + products.get(position).getProduct_price());
+            viewHolder.productName.setText(products.get(position).getProduct_name());
+            viewHolder.product_code.setText(products.get(position).getProduct_id());
+            viewHolder.productPrice.setText("₱ " + products.get(position).getProduct_price());
 
     }
 
     public void update(List<Products> products) {
         this.products = products;
         notifyDataSetChanged();
+    }
+
+    public void removeItem(int position) {
+        products.remove(position);
+        notifyItemRemoved(position);
     }
 
 
@@ -52,7 +58,8 @@ public class StockInAdapter extends RecyclerView.Adapter<StockInAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView product_code , productName , productPrice;
+        TextView product_code, productName, productPrice;
+        CardView cv;
         LinearLayout container;
 
 
@@ -62,7 +69,7 @@ public class StockInAdapter extends RecyclerView.Adapter<StockInAdapter.ViewHold
             product_code = view.findViewById(R.id.product_code);
             productName = view.findViewById(R.id.productName);
             productPrice = view.findViewById(R.id.productPrice);
-
+            cv = view.findViewById(R.id.cv);
 
 
         }

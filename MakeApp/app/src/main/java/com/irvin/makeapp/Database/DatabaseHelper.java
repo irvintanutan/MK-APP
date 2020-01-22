@@ -378,6 +378,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
+        int counter = 0;
         if (cursor.moveToFirst()) {
             do {
                 Products p = new Products();
@@ -387,8 +388,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
                 p.setProduct_quantity(cursor.getString(4));
+                p.setPosition(counter);
+                p.setSelected(false);
 
                 products.add(p);
+                counter++;
             } while (cursor.moveToNext());
         }
         // return quote list

@@ -193,8 +193,15 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     private void loadList() {
-        products = databaseHelper.getAllProducts();
-        ModGlobal.ProductModelList = products;
+        ModGlobal.ProductModelListCopy = databaseHelper.getAllProducts();
+        if (ModGlobal.stockIns.isEmpty()) {
+            products = ModGlobal.ProductModelListCopy;
+            ModGlobal.ProductModelList = products;
+            ModGlobal.ProductModelListCopy = products;
+        } else {
+            ModGlobal.removeProduct();
+            products = ModGlobal.ProductModelList;
+        }
         temp = products;
         Log.e("size", Integer.toString(products.size()));
 
@@ -219,34 +226,15 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
                     int position = rv.getChildAdapterPosition(child);
 
 
-                    if (ModGlobal.itemIsDuplicate(ModGlobal.ProductModelList.get(position).getProduct_id())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
-                        builder.setTitle("Alert");
-                        builder.setIcon(getResources().getDrawable(R.drawable.warning));
-                        builder.setMessage(ModGlobal.ProductModelList.get(position).getProduct_id() + "  " +
-                                ModGlobal.ProductModelList.get(position).getProduct_name()
-                                + " is already in cart");
+                    StockIn stockIn = new StockIn(temp.get(position).getProduct_name()
+                            , temp.get(position).getProduct_id(), "1",
+                            temp.get(position).getProduct_price());
 
-                        builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                    ModGlobal.stockIns.add(stockIn);
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                    stockInAdapter.removeItem(position);
+                    ModGlobal.removeProduct();
 
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    } else {
-
-                        StockIn stockIn = new StockIn(temp.get(position).getProduct_name()
-                                , temp.get(position).getProduct_id(), "1",
-                                temp.get(position).getProduct_price());
-
-                        ModGlobal.stockIns.add(stockIn);
-                        RunAnimation();
-
-                    }
 
 
                 }
