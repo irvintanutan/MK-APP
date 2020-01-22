@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -210,13 +211,14 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             final CardView pay200 = alertLayout.findViewById(R.id.pay200);
             final CardView pay500 = alertLayout.findViewById(R.id.pay500);
             final CardView pay1000 = alertLayout.findViewById(R.id.pay1000);
+            final CardView pay0 = alertLayout.findViewById(R.id.pay0);
 
 
             final CardView clear = alertLayout.findViewById(R.id.clear);
             final CardView clearDiscount = alertLayout.findViewById(R.id.clearDiscount);
             final CardView discount = alertLayout.findViewById(R.id.discount);
             final CardView checkOut = alertLayout.findViewById(R.id.checkOut);
-            final CardView close = alertLayout.findViewById(R.id.close);
+            final ImageView close = alertLayout.findViewById(R.id.close);
 
             final EditText subTotalValue = alertLayout.findViewById(R.id.subTotalValue);
             final EditText discountValue = alertLayout.findViewById(R.id.discountValue);
@@ -333,7 +335,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    finalCash *= 10;
                     finalCash += 1;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
@@ -353,8 +355,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay5.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 5;
+                    finalCash *= 10;
+                    finalCash += 2;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -373,8 +375,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay10.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 10;
+                    finalCash *= 10;
+                    finalCash += 3;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -394,8 +396,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay20.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 20;
+                    finalCash *= 10;
+                    finalCash += 4;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -414,8 +416,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay50.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 50;
+                    finalCash *= 10;
+                    finalCash += 5;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -434,8 +436,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay100.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 100;
+                    finalCash *= 10;
+                    finalCash += 6;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -454,8 +456,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay200.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 200;
+                    finalCash *= 10;
+                    finalCash += 7;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -474,8 +476,8 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay500.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    finalCash += 500;
+                    finalCash *= 10;
+                    finalCash += 8;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
@@ -495,8 +497,27 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             pay1000.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    finalCash *= 10;
+                    finalCash += 9;
+                    cashValue.setText("₱ " + dec.format(finalCash));
+                    double ch = finalCash - finalTotal;
+                    finalChange = ch;
+                    changeValue.setText("₱ " + dec.format(ch));
 
-                    finalCash += 1000;
+                    if (ch < 0) {
+                        changeValue.setTextColor(Color.RED);
+                    } else {
+                        changeValue.setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+                    }
+
+
+                }
+            });
+
+            pay0.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finalCash *= 10;
                     cashValue.setText("₱ " + dec.format(finalCash));
                     double ch = finalCash - finalTotal;
                     finalChange = ch;
