@@ -56,7 +56,6 @@ public class ModGlobal {
     public static void insertProduct(String productCode){
 
             for (int a = 0 ; a < ProductModelListCopy.size() ; a++){
-                Log.e(productCode , "i lovey ou " + ProductModelListCopy.get(a).getProduct_id());
                 if (ProductModelListCopy.get(a).getProduct_id().equals(productCode)){
                     Log.e(productCode , "i lovey ou " + ProductModelListCopy.get(a).getProduct_id());
                     ProductModelList.add(ProductModelListCopy.get(a));

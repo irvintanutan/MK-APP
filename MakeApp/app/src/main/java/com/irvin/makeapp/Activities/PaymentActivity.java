@@ -33,12 +33,17 @@ import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONArray;
@@ -628,11 +633,11 @@ public class PaymentActivity extends AppCompatActivity {
             Invoice invoice = ModGlobal.invoice;
             invoice.setStatus(status);
 
-            if (status.equals(TranStatus.PENDING.toString())){
+            if (status.equals(TranStatus.PENDING.toString())) {
                 invoice.setDueDate(dueDate);
             }
 
-            databaseHelper.updateInvoice(invoice , invoice.getInvoiceId());
+            databaseHelper.updateInvoice(invoice, invoice.getInvoiceId());
             return null;
         }
 
@@ -692,7 +697,7 @@ public class PaymentActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
         } else if (item.getItemId() == R.id.action_report) {
-                    generatePDF();
+            generatePDF();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -704,10 +709,10 @@ public class PaymentActivity extends AppCompatActivity {
         String downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
         Document doc = new Document();
-        try {
+        //try {
 
 
-            outFile = new FileOutputStream(downloadsPath + File.separator + "Notes.pdf");
+           /* outFile = new FileOutputStream(downloadsPath + File.separator + "Notes.pdf");
             pdfWriter = PdfWriter.getInstance(doc, outFile);
             doc.open();
             String invoiceNumber = "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +
@@ -729,12 +734,33 @@ public class PaymentActivity extends AppCompatActivity {
             Paragraph dueDate = null;
 
 
+            //specify column widths
+            float[] columnWidths = {1.5f, 2f, 5f, 2f};
+            //create PDF table with the given widths
+            PdfPTable table = new PdfPTable(columnWidths);
+            // set table width a percentage of the page width
+            table.setWidthPercentage(90f);
+
+
+            //special font sizes
+            Font bfBold12 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0));
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+
+            //insert column headings
+            insertCell(table, "Order No", Element.ALIGN_RIGHT, 1, bfBold12);
+            insertCell(table, "Account No", Element.ALIGN_LEFT, 1, bfBold12);
+            insertCell(table, "Account Name", Element.ALIGN_LEFT, 1, bfBold12);
+            insertCell(table, "Order Total", Element.ALIGN_RIGHT, 1, bfBold12);
+            table.setHeaderRows(1);
+
+
             if (ModGlobal.invoice.getStatus().equals(TranStatus.PENDING.toString())) {
                 DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
                 Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(ModGlobal.invoice.getDueDate());
                 dueDate = new Paragraph(new Phrase("Due Date : " + formatter2.format(date2),
                         new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL)));
                 dueDate.setAlignment(Paragraph.ALIGN_CENTER);
+                dueDate.add(table);
                 doc.add(dueDate);
             }
 
@@ -797,9 +823,10 @@ public class PaymentActivity extends AppCompatActivity {
 
               parDetails = new Paragraph(new Phrase(details,
                     new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD)));
-            doc.add(parDetails);
+            doc.add(parDetails);*/
 
-        } catch (DocumentException | IOException e) {
+
+        /*} catch (DocumentException | IOException e) {
             e.printStackTrace();
             Log.e("Exists", e.toString());
         } catch (ParseException e) {
@@ -810,11 +837,172 @@ public class PaymentActivity extends AppCompatActivity {
             doc.close();
             pdfWriter.close();
             Log.e("Exists", "No errors.");
-        }
+        }*/
+
+        createPDF(downloadsPath + File.separator + "Notes.pdf");
 
         ModGlobal.imageFilePath = downloadsPath + File.separator + "Notes.pdf";
 
         startActivity(new Intent(PaymentActivity.this, PDFViewActivity.class));
+    }
+
+
+    private void createPDF(String pdfFilename) {
+
+        Document doc = new Document();
+        PdfWriter docWriter = null;
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        try {
+
+            //special font sizes
+            Font mainFont = new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.BOLD, new BaseColor(0, 0, 0));
+
+            Font mainFont2 = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL, new BaseColor(0, 0, 0));
+            Font mainFont3 = new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL, new BaseColor(0, 0, 0));
+
+            Font bfBold12 = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD, new BaseColor(0, 0, 0));
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 18);
+            Font bfBold20 = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD, new BaseColor(0, 0, 0));
+
+
+            //file path
+            String path = pdfFilename;
+            docWriter = PdfWriter.getInstance(doc, new FileOutputStream(path));
+
+            //document header attributes
+            doc.addAuthor("PinkHeart");
+            doc.addCreationDate();
+            doc.addProducer();
+            doc.addCreator("PinkHeart.com");
+            doc.addTitle("Sale Invoice");
+            doc.setPageSize(PageSize.LETTER);
+
+            //open document
+            doc.open();
+
+            //create a paragraph
+            Paragraph paragraph = new Paragraph("Sales Invoice");
+
+
+            //specify column widths
+            float[] columnWidths = {1.5f, 5f, 1f, 2f, 2.5f};
+            //create PDF table with the given widths
+            PdfPTable table = new PdfPTable(columnWidths);
+            // set table width a percentage of the page width
+            table.setWidthPercentage(100f);
+
+
+            String invoiceNumber = "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +
+                    "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId()));
+            insertCell(table, ModGlobal.invoice.getCustomerName(), Element.ALIGN_LEFT, 3, mainFont);
+            insertCell(table, invoiceNumber, Element.ALIGN_LEFT, 2, mainFont3);
+            insertCell(table, "Date : " + ModGlobal.invoice.getDateCreated(), Element.ALIGN_LEFT, 3, mainFont2);
+            String dueDate = "";
+
+            if (ModGlobal.invoice.getStatus().equals(TranStatus.PENDING.toString())) {
+                dueDate = ModGlobal.invoice.getDueDate();
+            }
+
+            insertCell(table, "Due Date : " + dueDate, Element.ALIGN_LEFT, 2, mainFont2);
+
+            insertCell(table, ModGlobal.invoice.getStatus(), Element.ALIGN_RIGHT, 5, mainFont2);
+            //insert column headings
+
+            insertCell(table, "", Element.ALIGN_RIGHT, 5, bfBold12);
+            insertCell(table, "", Element.ALIGN_RIGHT, 5, bfBold12);
+            insertCell(table, "code", Element.ALIGN_LEFT, 1, bfBold12);
+            insertCell(table, "description", Element.ALIGN_LEFT, 1, bfBold12);
+            insertCell(table, "qty", Element.ALIGN_CENTER, 1, bfBold12);
+            insertCell(table, "price", Element.ALIGN_LEFT, 1, bfBold12);
+            insertCell(table, "Total Price", Element.ALIGN_RIGHT, 1, bfBold12);
+            table.setHeaderRows(1);
+
+            JSONArray jsonArray = new JSONArray(ModGlobal.invoice.getInvoiceDetail());
+            ArrayList<StockIn> stockIns = new ArrayList<>();
+            for (int a = 0; a < jsonArray.length(); a++) {
+
+                JSONObject object = jsonArray.getJSONObject(a);
+                StockIn stockIn = new StockIn(object.getString("productName")
+                        , object.getString("productCode"), object.getString("quantity")
+                        , object.getString("price"));
+
+                stockIns.add(stockIn);
+            }
+            ModGlobal.stockIns = stockIns;
+            DecimalFormat dec = new DecimalFormat("#,##0.00");
+
+            double finalTotalPrice = 0.00;
+            for (StockIn stockIn : ModGlobal.stockIns) {
+
+                String description = stockIn.getProductName();
+                String productCode = stockIn.getProductCode();
+                String qty = stockIn.getQuantity();
+                String price = stockIn.getPrice();
+                double totalPriceDouble = Integer.parseInt(qty) * Double.parseDouble(price.replace(",", ""));
+                finalTotalPrice += totalPriceDouble;
+                String totalPrice = dec.format(totalPriceDouble);
+
+                insertCell(table, productCode, Element.ALIGN_LEFT, 1, bf12);
+                insertCell(table, description, Element.ALIGN_LEFT, 1, bf12);
+                insertCell(table, qty, Element.ALIGN_CENTER, 1, bf12);
+                insertCell(table, "₱" + price, Element.ALIGN_LEFT, 1, bf12);
+                insertCell(table, "₱" + totalPrice, Element.ALIGN_RIGHT, 1, bf12);
+
+            }
+            insertCell(table, "Total Amount", Element.ALIGN_RIGHT, 4, bf12);
+            insertCell(table, dec.format(finalTotalPrice), Element.ALIGN_RIGHT, 1, bfBold20);
+            insertCell(table, "Cash", Element.ALIGN_RIGHT, 4, bf12);
+            insertCell(table, ModGlobal.totalAmountPaid, Element.ALIGN_RIGHT, 1, bfBold20);
+
+            String balance = "";
+            if (Double.parseDouble(ModGlobal.totalBalance.replace(",", "")) <= 0) {
+                balance="0.00";
+            } else {
+                balance = ModGlobal.totalBalance;
+            }
+            insertCell(table, "Balance", Element.ALIGN_RIGHT, 4, bf12);
+            insertCell(table, balance, Element.ALIGN_RIGHT, 1, bfBold20);
+
+
+            //add the PDF table to the paragraph
+            paragraph.add(table);
+            // add the paragraph to the document
+            doc.add(paragraph);
+
+        } catch (DocumentException dex) {
+            dex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (doc != null) {
+                //close the document
+                doc.close();
+            }
+            if (docWriter != null) {
+                //close the writer
+                docWriter.close();
+            }
+        }
+    }
+
+    private void insertCell(PdfPTable table, String text, int align, int colspan, Font font) {
+
+        //create a new cell with the specified Text and Font
+        PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+        //set the cell alignment
+        cell.setHorizontalAlignment(align);
+        //set the cell column span in case you want to merge two or more cells
+        cell.setColspan(colspan);
+        cell.setPadding(5);
+        //in case there is no text and you wan to create an empty row
+        if (text.trim().equalsIgnoreCase("")) {
+            cell.setMinimumHeight(10f);
+        }
+        //add the call to the table
+        table.addCell(cell);
+
     }
 
 }

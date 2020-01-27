@@ -225,5 +225,9 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+        ModGlobal.ProductModelListCopy.clear();
+        ModGlobal.stockIns.clear();
+        ModGlobal.ProductModelList.clear();
+
     }
 }

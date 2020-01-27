@@ -9,6 +9,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stockin);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -73,102 +74,106 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
 
     private void init() {
 
-        itemCount = findViewById(R.id.itemCount);
-        itemView = findViewById(R.id.itemView);
-        btnView = findViewById(R.id.btnView);
+        try {
 
-        btnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            itemCount = findViewById(R.id.itemCount);
+            itemView = findViewById(R.id.itemView);
+            btnView = findViewById(R.id.btnView);
 
-                if (ModGlobal.stockIns.size() > 0) {
+            btnView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                    Intent intent = new Intent(StockInActivity.this, StockInDetailsActivity.class);
-                    ModGlobal.indicator = false;
-                    startActivity(intent);
-                    finish();
+                    if (ModGlobal.stockIns.size() > 0) {
 
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
-                    builder.setTitle("Alert");
-                    builder.setIcon(getResources().getDrawable(R.drawable.warning));
-                    builder.setMessage("There is/are no item/s in the cart");
+                        Intent intent = new Intent(StockInActivity.this, StockInDetailsActivity.class);
+                        ModGlobal.indicator = false;
+                        startActivity(intent);
+                        finish();
 
-                    builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StockInActivity.this);
+                        builder.setTitle("Alert");
+                        builder.setIcon(getResources().getDrawable(R.drawable.warning));
+                        builder.setMessage("There is/are no item/s in the cart");
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                        builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
 
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+
+                }
+            });
+
+            recyclerView2 = findViewById(R.id.category_view);
+            recyclerView2.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView2.setLayoutManager(layoutManager2);
+
+            categories = new ArrayList<>();
+            categories.add(new Category("ALL", false));
+            categories.add(new Category("Accessories", false));
+            categories.add(new Category("BLUSH", false));
+            categories.add(new Category("BODY CARE Satin Body", false));
+            categories.add(new Category("BODY CARE Satin Hands", false));
+            categories.add(new Category("BODY CARE Satin Lips", false));
+            categories.add(new Category("BODY CARE Sun Care", false));
+            categories.add(new Category("BROWS", false));
+            categories.add(new Category("BOTANICAL EFFECTS", false));
+            categories.add(new Category("Contour & Highlight", false));
+            categories.add(new Category("CLEARPROOF", false));
+            categories.add(new Category("COLOR FOUNDATION", false));
+            categories.add(new Category("Concealer", false));
+            categories.add(new Category("EYE COLOR", false));
+            categories.add(new Category("Eyeliner", false));
+            categories.add(new Category("Finishing Spray PRIMER", false));
+            categories.add(new Category("LIP COLOR", false));
+            categories.add(new Category("LUMIVIE", false));
+            categories.add(new Category("MK MEN", false));
+            categories.add(new Category("MASCARA", false));
+            categories.add(new Category("POWDER", false));
+            categories.add(new Category("SKIN SUPPLEMENTS", false));
+            categories.add(new Category("SKIN CARE TIMEWISE-3D", false));
+            categories.add(new Category("TIMEWISE", false));
+            categories.add(new Category("TIMEWISE REPAIR", false));
+            ModGlobal.categories = categories;
+
+
+            categoryAdapter = new CategoryAdapter(categories, this);
+            recyclerView2.setAdapter(categoryAdapter);
+            recyclerView2.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+                @Override
+                public void onClick(View view, int position) {
+
+                    searchCategories(categories.get(position).getName());
+                    updateCategory(position);
+
                 }
 
-            }
-        });
+                @Override
+                public void onLongClick(View view, int position) {
 
-        recyclerView2 = findViewById(R.id.category_view);
-        recyclerView2.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView2.setLayoutManager(layoutManager2);
-
-        categories = new ArrayList<>();
-        categories.add(new Category("ALL" , false));
-        categories.add(new Category("Accessories", false));
-        categories.add(new Category("BLUSH", false));
-        categories.add(new Category("BODY CARE Satin Body", false));
-        categories.add(new Category("BODY CARE Satin Hands", false));
-        categories.add(new Category("BODY CARE Satin Lips", false));
-        categories.add(new Category("BODY CARE Sun Care", false));
-        categories.add(new Category("BROWS", false));
-        categories.add(new Category("BOTANICAL EFFECTS", false));
-        categories.add(new Category("Contour & Highlight", false));
-        categories.add(new Category("CLEARPROOF", false));
-        categories.add(new Category("COLOR FOUNDATION", false));
-        categories.add(new Category("Concealer", false));
-        categories.add(new Category("EYE COLOR", false));
-        categories.add(new Category("Eyeliner", false));
-        categories.add(new Category("Finishing Spray PRIMER", false));
-        categories.add(new Category("LIP COLOR", false));
-        categories.add(new Category("LUMIVIE", false));
-        categories.add(new Category("MK MEN", false));
-        categories.add(new Category("MASCARA", false));
-        categories.add(new Category("POWDER", false));
-        categories.add(new Category("SKIN SUPPLEMENTS", false));
-        categories.add(new Category("SKIN CARE TIMEWISE-3D", false));
-        categories.add(new Category("TIMEWISE", false));
-        categories.add(new Category("TIMEWISE REPAIR", false));
-        ModGlobal.categories = categories;
+                }
 
 
-        categoryAdapter = new CategoryAdapter(categories, this);
-        recyclerView2.setAdapter(categoryAdapter);
-        recyclerView2.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+            }));
 
-            @Override
-            public void onClick(View view, int position) {
-
-                searchCategories(categories.get(position).getName());
-                updateCategory(position);
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-
-
-        }));
-
-        recyclerView = findViewById(R.id.product_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        loadList();
-
+            recyclerView = findViewById(R.id.product_view);
+            recyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+            loadList();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -199,6 +204,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
             ModGlobal.ProductModelList = products;
             ModGlobal.ProductModelListCopy = products;
         } else {
+            ModGlobal.ProductModelList = ModGlobal.ProductModelListCopy;
             ModGlobal.removeProduct();
             products = ModGlobal.ProductModelList;
         }
@@ -231,9 +237,9 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
                             temp.get(position).getProduct_price());
 
                     ModGlobal.stockIns.add(stockIn);
-
-                    stockInAdapter.removeItem(position);
                     ModGlobal.removeProduct();
+                    stockInAdapter.removeItem(position);
+                    RunAnimation();
 
 
 

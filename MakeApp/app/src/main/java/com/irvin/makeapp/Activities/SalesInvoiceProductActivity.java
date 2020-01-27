@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -68,7 +69,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_invioce_product);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -347,6 +348,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
             ModGlobal.ProductModelList = products;
             ModGlobal.ProductModelListCopy = products;
         } else {
+            ModGlobal.ProductModelList = ModGlobal.ProductModelListCopy;
             ModGlobal.removeProduct();
             products = ModGlobal.ProductModelList;
         }

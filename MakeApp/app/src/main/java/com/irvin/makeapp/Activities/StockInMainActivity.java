@@ -150,6 +150,9 @@ public class StockInMainActivity extends AppCompatActivity {
         Intent intent = new Intent(StockInMainActivity.this, StockInActivity.class);
         startActivity(intent);
         finish();
+        ModGlobal.ProductModelListCopy.clear();
+        ModGlobal.stockIns.clear();
+        ModGlobal.ProductModelList.clear();
 
     }
 }
