@@ -1,13 +1,18 @@
 package com.irvin.makeapp.Activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
+import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.MenuForm;
@@ -49,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
+
+        if (!marshMallowPermission.checkPermissionForCallPhone()){
+            marshMallowPermission.requestPermissionForCallPhone();
+        }
+
+        if (!marshMallowPermission.checkPermissionForSendSms()){
+            marshMallowPermission.requestPermissionForSendSMS();
+        }
+
+
+
 
       /*  createNotificationChannel();
 
@@ -68,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(1, builder.build());*/
 
         FirebaseApp.initializeApp(this);
-        if (databaseHelper.getAllProducts().size() == 0) {  final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if (databaseHelper.getAllProducts().size() == 0) {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference ref = database.getReference("products");
             Query query = ref.orderByChild("products");
             query.addValueEventListener(new ValueEventListener() {
@@ -88,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -109,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
-        form.add(new MenuForm("Products", R.drawable.product , "View Products"));
+        form.add(new MenuForm("Products", R.drawable.product, "View Products"));
         form.add(new MenuForm("Purchase Order", R.drawable.box, "Manage Inventory"));
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
@@ -206,12 +226,14 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
     private void invoice() {
         Intent i = new Intent(MainActivity.this, SalesInvoiceActivity.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
+
     private void reports() {
         Intent i = new Intent(MainActivity.this, ReportActivity.class);
         startActivity(i);
@@ -240,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
 
-             System.exit(0);
+                System.exit(0);
 
             }
 
@@ -257,6 +279,13 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.notification, menu);
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -287,6 +316,9 @@ public class MainActivity extends AppCompatActivity {
 
             AlertDialog alert = builder.create();
             alert.show();
+        } else if (item.getItemId() == R.id.action_notification) {
+
+
         }
 
         return super.onOptionsItemSelected(item);

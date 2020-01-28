@@ -1,6 +1,7 @@
 package com.irvin.makeapp.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -29,12 +30,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -78,7 +81,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         setContentView(R.layout.activity_customer_details);
 
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -317,67 +320,39 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             AlertDialog alert = builder.create();
             alert.show();
-       } /* else if (item.getItemId() == R.id.action_call) {
+       }   else if (item.getItemId() == R.id.action_call) {
 
-            //callCustomer();
+            callCustomer();
 
         } else if (item.getItemId() == R.id.action_message) {
 
-           //messageCustomer();
+           messageCustomer();
 
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void callCustomer() {
-        Intent intent = new Intent(Intent.ACTION_CALL);
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
 
-        intent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    Activity#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for Activity#requestPermissions for more details.
-                return;
-            }
+        if (ActivityCompat.checkSelfPermission(CustomerDetailsActivity.this,
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
         }
-        startActivity(intent);
+        startActivity(callIntent);
     }
 
     private void messageCustomer() {
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
-        {
-            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(this); // Need to change the build to API 19
-
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "text");
-            sendIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, customerModel.getContactNumber());
-
-
-            if (defaultSmsPackageName != null)// Can be null in case that there is no default, then the user would be able to choose
-            // any app that support this intent.
-            {
-                sendIntent.setPackage(defaultSmsPackageName);
-            }
-            startActivity(sendIntent);
-
-        } else // For early versions, do what worked for you before.
-        {
-            Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
-            smsIntent.setType("vnd.android-dir/mms-sms");
-            smsIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, customerModel.getContactNumber());
-            smsIntent.putExtra("sms_body", "");
-            startActivity(smsIntent);
+        try{
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("smsto:"+customerModel.getContactNumber()));
+            startActivity(i);
         }
-
+        catch(Exception e){
+            Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
