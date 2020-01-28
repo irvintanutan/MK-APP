@@ -46,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,9 +138,6 @@ public class SalesInvoiceActivity extends AppCompatActivity {
          */
         tabLayout.addTab(pending, 0);
         tabLayout.addTab(verified, 1);
-
-
-
 
 
         /*

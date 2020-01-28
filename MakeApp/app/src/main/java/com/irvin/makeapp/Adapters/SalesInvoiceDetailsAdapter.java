@@ -1,15 +1,23 @@
 package com.irvin.makeapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
@@ -18,12 +26,14 @@ import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoiceDetailsAdapter.ViewHolder> {
     private List<StockIn> products;
     private Context mContext = null;
     DatabaseHelper databaseHelper;
+    AlertDialog finalDialog = null;
 
     public SalesInvoiceDetailsAdapter(List<StockIn> products, Context mContext) {
         this.products = products;
@@ -43,6 +53,12 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
         viewHolder.productName.setText(products.get(position).getProductName());
         viewHolder.product_code.setText(products.get(position).getProductCode());
         viewHolder.productPrice.setText("₱ " + products.get(position).getPrice());
+        viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editPrice(products.get(position), position);
+            }
+        });
         viewHolder.productQuantity.setText(products.get(position).getQuantity());
 
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +113,15 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ModGlobal.insertProduct(products.get(position).getProductCode());
-                products.remove(position);
-                notifyItemRemoved(position);
-                SalesInvoiceProductDetailsActivity.calculateTotal();
-
+                try {
+                    ModGlobal.insertProduct(products.get(position).getProductCode());
+                    products.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount());
+                    SalesInvoiceProductDetailsActivity.calculateTotal();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -117,6 +136,44 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
     public int getItemCount() {
         return products.size();
     }
+
+
+    private void editPrice(final StockIn stockIn, final int position) {
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View alertLayout = inflater.inflate(R.layout.edit_price, null);
+
+        final EditText price = alertLayout.findViewById(R.id.price);
+        final Button apply = alertLayout.findViewById(R.id.apply);
+
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (price.getText().toString().length() > 0) {
+                    DecimalFormat dec = new DecimalFormat("#,##0.00");
+                    stockIn.setPrice(dec.format(Double.parseDouble(price.getText().toString())));
+                    products.set(position, stockIn);
+                    notifyItemChanged(position);
+                    SalesInvoiceProductDetailsActivity.calculateTotal();
+                }
+                finalDialog.dismiss();
+
+            }
+        });
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        finalDialog = alert.create();
+        finalDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        finalDialog.show();
+
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="SAMPLE TITLE"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/_20sdp"/>
+                android:textSize="@dimen/_15sdp"/>
 
 
             <TextView

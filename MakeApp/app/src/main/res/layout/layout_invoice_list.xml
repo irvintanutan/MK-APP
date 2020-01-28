@@ -30,9 +30,11 @@
             android:id="@+id/customerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" PENDING "
+            android:layout_marginRight="10dp"
+            android:gravity="clip_horizontal"
+            android:text="asdsdas"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/colorAccent">
+            android:textSize="@dimen/_13sdp" >
 
         </TextView>
 

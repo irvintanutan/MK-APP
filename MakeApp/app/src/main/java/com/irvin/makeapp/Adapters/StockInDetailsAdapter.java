@@ -37,7 +37,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
 
         viewHolder.productName.setText(products.get(position).getProductName());
         viewHolder.product_code.setText(products.get(position).getProductCode());
-        viewHolder.productPrice.setText("₱ "+products.get(position).getPrice());
+        viewHolder.productPrice.setText("₱ " + products.get(position).getPrice());
         viewHolder.productQuantity.setText(products.get(position).getQuantity());
 
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +47,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
                 StockIn stockIn = products.get(position);
                 int qty = Integer.parseInt(stockIn.getQuantity()) + 1;
                 stockIn.setQuantity(Integer.toString(qty));
-                products.set(position , stockIn);
+                products.set(position, stockIn);
                 notifyDataSetChanged();
             }
         });
@@ -56,13 +56,13 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
             @Override
             public void onClick(View view) {
 
-                    StockIn stockIn = products.get(position);
-                    int qty = Integer.parseInt(stockIn.getQuantity()) - 1;
-                    if (qty > 0) {
-                        stockIn.setQuantity(Integer.toString(qty));
-                    }
-                    products.set(position, stockIn);
-                    notifyDataSetChanged();
+                StockIn stockIn = products.get(position);
+                int qty = Integer.parseInt(stockIn.getQuantity()) - 1;
+                if (qty > 0) {
+                    stockIn.setQuantity(Integer.toString(qty));
+                }
+                products.set(position, stockIn);
+                notifyDataSetChanged();
 
             }
         });
@@ -70,11 +70,14 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ModGlobal.insertProduct(products.get(position).getProductCode());
-                products.remove(position);
-                notifyItemRemoved(position);
-
+                try {
+                    ModGlobal.insertProduct(products.get(position).getProductCode());
+                    products.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -83,9 +86,6 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
         this.products = products;
         notifyDataSetChanged();
     }
-
-
-
 
 
     @Override
@@ -97,8 +97,8 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
 
         TextView product_code, productName, productPrice, productQuantity;
         LinearLayout container;
-        ImageView add , minus, delete;
-        LinearLayout rightSideContainer , leftSideContainer;
+        ImageView add, minus, delete;
+        LinearLayout rightSideContainer, leftSideContainer;
 
 
         public ViewHolder(View view) {
@@ -115,13 +115,13 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
             minus = view.findViewById(R.id.minus);
             delete = view.findViewById(R.id.delete);
 
-            if (ModGlobal.indicator){
+            if (ModGlobal.indicator) {
                 delete.setVisibility(View.GONE);
                 add.setVisibility(View.GONE);
                 minus.setVisibility(View.GONE);
                 rightSideContainer.setVisibility(View.GONE);
 
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         1.0f);
                 leftSideContainer.setLayoutParams(params);
