@@ -217,8 +217,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
                 customerAdapter.notifyDataSetChanged();
 
                 ModGlobal.customerId = tempCust.get(position).getId();
-                ModGlobal.customerName = tempCust.get(position).getFirstName() + " " + tempCust.get(position).getMiddleName()
-                        + " " + tempCust.get(position).getLastName();
+                ModGlobal.customerName = tempCust.get(position).getFirstName() + " " + tempCust.get(position).getLastName();
 
 
             }

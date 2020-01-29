@@ -42,7 +42,7 @@ public class TabFragmentPaid extends Fragment {
         databaseHelper = new DatabaseHelper(getActivity());
         invoices = databaseHelper.getAllInvoices(TranStatus.PAID.toString());
         if (invoices.size() > 0) {
-            view = inflater.inflate(R.layout.pending_tab, container, false);
+            view = inflater.inflate(R.layout.paid_tab, container, false);
 
             recyclerView = view.findViewById(R.id.pending_card_recycler_view);
             recyclerView.setHasFixedSize(true);

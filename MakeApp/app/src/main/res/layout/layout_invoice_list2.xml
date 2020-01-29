@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cvSettings"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    app:cardCornerRadius="@dimen/corner_radius"
+    android:layout_marginTop="@dimen/card_view_margin"
+    android:layout_marginLeft="@dimen/card_view_margin"
+    android:layout_marginRight="@dimen/card_view_margin"
+    android:foreground="?android:attr/selectableItemBackground"
+    tools:context=".Activities.SalesInvoiceActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp">
+
+
+        <TextView
+            android:id="@+id/invoiceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" PENDING "
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="#424242">
+
+        </TextView>
+
+            <LinearLayout
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="2"
+                    android:gravity="left"
+                    android:id="@+id/dateCreated"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text=" PENDING "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textColor="@color/colorAccent">
+
+                </TextView>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:id="@+id/totalAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="10.00"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

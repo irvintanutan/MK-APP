@@ -1,52 +1,25 @@
 package com.irvin.makeapp.Activities;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.google.android.material.tabs.TabLayout;
-import com.irvin.makeapp.Adapters.CustomerAdapter;
-import com.irvin.makeapp.Adapters.SalesInvoiceAdapter;
-import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
-import com.irvin.makeapp.Adapters.StockInMainAdapter;
 import com.irvin.makeapp.Adapters.ViewPagerAdapter;
-import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
-import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
-import com.irvin.makeapp.Models.StockIn;
-import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,6 +113,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         tabLayout.addTab(verified, 1);
 
 
+
         /*
         TabTextColor sets the color for the title of the tabs, passing a ColorStateList here makes
         tab change colors in different situations such as selected, active, inactive etc
@@ -205,6 +179,14 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
+/*
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.invoice_search, menu);
+
+        return true;
+    }*/
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,6 +195,8 @@ public class SalesInvoiceActivity extends AppCompatActivity {
             startActivity(new Intent(SalesInvoiceActivity.this, MainActivity.class));
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else if (item.getItemId() == R.id.action_search){
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -228,4 +212,6 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         ModGlobal.ProductModelList.clear();
 
     }
+
+
 }

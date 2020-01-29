@@ -13,6 +13,7 @@ import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockInList;
+import com.irvin.makeapp.Models.TransactionModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -149,7 +150,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -227,6 +227,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return personList;
     }
+
+    public List<TransactionModel> getAllCustomerWithDueDates() {
+        List<TransactionModel> personList = new ArrayList<>();
+        // Select All Query
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        String selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
+                "sum (p.amount) as totalAmountPaid , c.id " +
+                "FROM " + tbl_invoice + " i " +
+                "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
+                "INNER JOIN tbl_customer c on i.customerId  = c.id " +
+                "  WHERE i.status = 'PENDING'" +
+                " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
+                " GROUP BY c.id";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TransactionModel c = new TransactionModel();
+
+
+                c.setCustomerName(cursor.getString(1) + " " + cursor.getString(2));
+                c.setPhotoUrl(cursor.getString(0));
+                c.setTotalAmount("100");
+                c.setCustomerId(cursor.getString(4));
+                c.setTotalAmountPaid(cursor.getString(3));
+
+
+                personList.add(c);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return personList;
+    }
+
+
 
     public CustomerModel getAllCustomer(int id) {
         CustomerModel c = new CustomerModel();
@@ -512,7 +554,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(amount, payment.getAmount());
         values.put(invoiceId, payment.getInvoiceId());
         values.put(dateCreated, getDateToday());
-        values.put(balance , payment.getBalance());
+        values.put(balance, payment.getBalance());
 
         // Inserting Row
         db.insert(tbl_payment, null, values);
@@ -560,7 +602,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(status, invoice.getStatus());
         values.put(invoiceDetail, invoice.getInvoiceDetail());
         values.put(dateCreated, getDateToday());
-        values.put(dueDate , invoice.getDueDate());
+        values.put(dueDate, invoice.getDueDate());
 
         // Inserting Row
         db.insert(tbl_invoice, null, values);
@@ -578,7 +620,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(status, invoice.getStatus());
         values.put(invoiceDetail, invoice.getInvoiceDetail());
         values.put(dateCreated, getDateToday());
-        values.put(dueDate , invoice.getDueDate());
+        values.put(dueDate, invoice.getDueDate());
 
         db.update(tbl_invoice, values, "invoiceId= ?", new String[]{id});
         db.close();
@@ -627,7 +669,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
 
-                Log.e("INVOICES" , p.getTotalAmount());
+                Log.e("INVOICES", p.getTotalAmount());
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -637,7 +679,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return products;
     }
-
 
 
     public List<Invoice> getAllInvoices(String status) {
@@ -663,7 +704,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
 
-                Log.e("INVOICES" , p.getTotalAmount());
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+    public List<Invoice> getAllDueInvoices() {
+
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        List<Invoice> products = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = 'PENDING' " +
+                " and date('" + formatter.format(date) + "') >= date(dueDate) " +
+                " ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Invoice p = new Invoice();
+
+                p.setInvoiceId(cursor.getString(0));
+                p.setDiscount(cursor.getString(1));
+                p.setCustomerId(cursor.getString(2));
+                p.setCustomerName(cursor.getString(3));
+                p.setTotalAmount(cursor.getString(4));
+                p.setStatus(cursor.getString(5));
+                p.setInvoiceDetail(cursor.getString(6));
+                p.setDateCreated(cursor.getString(7));
+                p.setDueDate(cursor.getString(8));
+
+                Log.e("INVOICES", p.getDueDate() + " " + p.getInvoiceId());
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -672,6 +751,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.close();
         return products;
+    }
+
+    public String getAllDueInvoices(String customerId) {
+        String result = "";
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        // Select All Query
+        String selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId +  "' and status = 'PENDING' " +
+                " and date('" + formatter.format(date) + "') >= date(dueDate) " +
+                " ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                result = cursor.getString(0);
+
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return result;
     }
 
 

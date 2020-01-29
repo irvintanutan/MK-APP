@@ -8,4 +8,5 @@
     <color name="black">#000000</color>
     <color name="green">#2e7d32</color>
     <color name="cashier_green">#424242</color>
+    <color name="divider">#F5F5F5</color>
 </resources>
