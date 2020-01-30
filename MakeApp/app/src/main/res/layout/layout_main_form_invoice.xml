@@ -11,16 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/_5sdp"
-        android:paddingBottom="@dimen/_5sdp">
+        android:orientation="horizontal" >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePicture"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_60sdp"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_margin="@dimen/_10sdp"
+
             android:src="@drawable/user_img">
 
         </de.hdodenhof.circleimageview.CircleImageView>
@@ -104,7 +102,10 @@
 
         </LinearLayout>
 
-
+        <View
+            android:id="@+id/view"
+            android:layout_width="@dimen/_10sdp"
+            android:layout_height="match_parent"  />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

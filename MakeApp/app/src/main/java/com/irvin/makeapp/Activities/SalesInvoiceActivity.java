@@ -88,7 +88,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         /*
         Setting Title text for our tabs respectively
          */
-        verified.setText("Paid");
+        verified.setText("History");
         verified.setIcon(R.drawable.paid);
 
         pending.setText("Outstanding");

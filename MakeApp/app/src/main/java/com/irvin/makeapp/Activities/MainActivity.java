@@ -1,34 +1,27 @@
 package com.irvin.makeapp.Activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,19 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
-
-        if (!marshMallowPermission.checkPermissionForCallPhone()){
-            marshMallowPermission.requestPermissionForCallPhone();
-        }
-
-        if (!marshMallowPermission.checkPermissionForSendSms()){
-            marshMallowPermission.requestPermissionForSendSMS();
-        }
-
-
-
+        FirebaseApp.initializeApp(this);
 
       /*  createNotificationChannel();
 
@@ -92,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 // notificationId is a unique int for each notification that you must define
         notificationManager.notify(1, builder.build());*/
 
-        FirebaseApp.initializeApp(this);
+
         if (databaseHelper.getAllProducts().size() == 0) {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference ref = database.getReference("products");

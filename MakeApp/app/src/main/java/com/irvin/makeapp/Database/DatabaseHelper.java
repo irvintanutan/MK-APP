@@ -183,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(tbl_customer, null, values);
         db.close(); // Closing database connection
 
-        Log.e("DATABASE", "SUCCESS ADDED : " + customerModel.getFirstName() + " " + customerModel.getLastName());
+
 
     }
 
@@ -228,20 +228,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return personList;
     }
 
-    public List<TransactionModel> getAllCustomerWithDueDates() {
+    public List<TransactionModel> getAllCustomerWithDueDates(boolean isDueDate) {
         List<TransactionModel> personList = new ArrayList<>();
         // Select All Query
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        String selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
-                "sum (p.amount) as totalAmountPaid , c.id " +
-                "FROM " + tbl_invoice + " i " +
-                "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
-                "INNER JOIN tbl_customer c on i.customerId  = c.id " +
-                "  WHERE i.status = 'PENDING'" +
-                " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
-                " GROUP BY c.id";
+        String selectQuery;
+        if (isDueDate) {
+            selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
+                    "sum (p.amount) as totalAmountPaid , c.id " +
+                    "FROM " + tbl_invoice + " i " +
+                    "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
+                    "INNER JOIN tbl_customer c on i.customerId  = c.id " +
+                    "  WHERE i.status = 'PENDING'" +
+                    " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
+                    " GROUP BY c.id";
+        }else {
+            selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
+                    "sum (p.amount) as totalAmountPaid , c.id " +
+                    "FROM " + tbl_invoice + " i " +
+                    "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
+                    "INNER JOIN tbl_customer c on i.customerId  = c.id " +
+                    "  WHERE i.status = 'PENDING'" +
+                    /*     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +*/
+                    " GROUP BY c.id";
+        }
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -351,7 +363,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(tbl_product, null, values);
         db.close(); // Closing database connection
 
-        Log.e("DATABASE", "SUCCESS ADDED : " + products.getProduct_id() + " " + products.getProduct_name());
+
 
     }
 
@@ -669,7 +681,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
 
-                Log.e("INVOICES", p.getTotalAmount());
+
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -742,7 +754,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
 
-                Log.e("INVOICES", p.getDueDate() + " " + p.getInvoiceId());
+
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -753,17 +765,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
-    public String getAllDueInvoices(String customerId) {
+    public String getAllDueInvoices(String customerId , boolean isDueDate) {
         String result = "";
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 
         // Select All Query
-        String selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId +  "' and status = 'PENDING' " +
-                " and date('" + formatter.format(date) + "') >= date(dueDate) " +
-                " ORDER BY dateCreated DESC";
-
+        String selectQuery;
+        if(isDueDate) {
+            selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId + "' and status = 'PENDING' " +
+                    " and date('" + formatter.format(date) + "') >= date(dueDate) " +
+                    " ORDER BY dateCreated DESC";
+        }else {
+            selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId + "' and status = 'PENDING' " +
+                    /*" and date('" + formatter.format(date) + "') >= date(dueDate) " +*/
+                    " ORDER BY dateCreated DESC";
+        }
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -778,6 +796,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // return quote list
 
         db.close();
+
+
         return result;
     }
 

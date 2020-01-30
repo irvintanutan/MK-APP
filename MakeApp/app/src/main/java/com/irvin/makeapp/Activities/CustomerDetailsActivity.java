@@ -40,6 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
+import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.MultiSelectionSpinner;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -67,6 +68,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     Spinner skinType, skinTone;
     MultiSelectionSpinner skinConcern, interest;
     Uri picUri;
+    MarshMallowPermission marshMallowPermission;
 
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -79,6 +81,8 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_details);
+
+        marshMallowPermission = new MarshMallowPermission(this);
 
 
         @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
@@ -103,14 +107,12 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         permissionsToRequest = findUnAskedPermissions(permissions);
 
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
 
             if (permissionsToRequest.size() > 0)
                 requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
-
 
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -320,13 +322,18 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             AlertDialog alert = builder.create();
             alert.show();
-       }   else if (item.getItemId() == R.id.action_call) {
-
-            callCustomer();
+        } else if (item.getItemId() == R.id.action_call) {
+            if (!marshMallowPermission.checkPermissionForCallPhone()) {
+                marshMallowPermission.requestPermissionForCallPhone();
+            } else
+                callCustomer();
 
         } else if (item.getItemId() == R.id.action_message) {
 
-           messageCustomer();
+            if (!marshMallowPermission.checkPermissionForSendSms()) {
+                marshMallowPermission.requestPermissionForSendSMS();
+            } else
+                messageCustomer();
 
         }
 
@@ -345,12 +352,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
     private void messageCustomer() {
 
-        try{
+        try {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("smsto:"+customerModel.getContactNumber()));
+            i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }

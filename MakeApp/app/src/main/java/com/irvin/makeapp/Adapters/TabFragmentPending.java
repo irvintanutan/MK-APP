@@ -2,27 +2,19 @@ package com.irvin.makeapp.Adapters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Activities.PaymentActivity;
-import com.irvin.makeapp.Activities.ReportActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MainForm;
 import com.irvin.makeapp.Models.Payment;
@@ -150,18 +142,18 @@ public class TabFragmentPending extends Fragment {
     private void createCollection() {
         draftCollection = new LinkedHashMap<>();
 
-        List<TransactionModel> customerModels = databaseHelper.getAllCustomerWithDueDates();
+        List<TransactionModel> customerModels = databaseHelper.getAllCustomerWithDueDates(false);
 
         for (TransactionModel customerModel : customerModels) {
 
-            double balance = Double.parseDouble(databaseHelper.getAllDueInvoices(customerModel.getCustomerId())) -
+            double balance = Double.parseDouble(databaseHelper.getAllDueInvoices(customerModel.getCustomerId(), false)) -
                     Double.parseDouble(customerModel.getTotalAmountPaid());
 
 
 
             groupList.add(new MainForm(customerModel.getPhotoUrl(),
-                    customerModel.getCustomerName(), databaseHelper.getAllDueInvoices(customerModel.getCustomerId()), customerModel.getTotalAmountPaid()
-                    , Double.toString(balance)));
+                    customerModel.getCustomerName(), databaseHelper.getAllDueInvoices(customerModel.getCustomerId() , false), customerModel.getTotalAmountPaid()
+                    , Double.toString(balance) , customerModel.getCustomerId()));
         }
 
 
@@ -179,7 +171,8 @@ public class TabFragmentPending extends Fragment {
         childList = new ArrayList<>();
         for (Invoice model : invoices) {
 
-            Log.e(model.getCustomerName(), customerName);
+
+
 
             if (model.getCustomerName().equals(customerName))
                 childList.add(model);

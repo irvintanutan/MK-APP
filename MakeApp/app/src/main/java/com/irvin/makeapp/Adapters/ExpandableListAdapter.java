@@ -2,13 +2,15 @@ package com.irvin.makeapp.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -71,30 +73,42 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView invoiceId, dateCreated, total;
+        CardView cv;
 
+        cv = convertView.findViewById(R.id.cv);
         invoiceId = convertView.findViewById(R.id.invoiceId);
         dateCreated = convertView.findViewById(R.id.dateCreated);
 
         total = convertView.findViewById(R.id.totalAmount);
 
         try {
-            Date date, date2;
+            Date date, date2, now;
 
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(invoices.getDateCreated());
             DateFormat formatter = new SimpleDateFormat("E. MMM dd, yyyy HH:mm:ss");
+            DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
+            date2 = new SimpleDateFormat("yyyy-MM-dd").parse(invoices.getDueDate());
 
+
+            now = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            if (date2.before(now)) {
+
+                Log.e(date2.toString() , now.toString());
+
+                cv.setBackgroundColor(Color.parseColor("#FFCDD2"));
+                cv.setBackgroundResource(R.drawable.round_quantity3);
+            }else {
+                cv.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                cv.setBackgroundResource(R.drawable.round_quantity4);
+            }
 
             if (invoices.getStatus().equals(TranStatus.PENDING.toString())) {
-                DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
-                date2 = new SimpleDateFormat("yyyy-MM-dd").parse(invoices.getDueDate());
                 dateCreated.setText("DUE DATE : " + formatter2.format(date2));
-
-                Log.e("asd", invoices.getDueDate());
 
             } else
                 dateCreated.setText(formatter.format(date));
 
-            Log.e("asd", invoices.getStatus());
 
             invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoices.getInvoiceId())));
 
@@ -138,6 +152,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView fullName, totalAmount, totalAmountPaid, totalBalance;
         HorizontalProgressView progressBar;
+        View view;
         CircleImageView profilePicture;
 
 
@@ -147,11 +162,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         totalBalance = convertView.findViewById(R.id.totalBalance);
         profilePicture = convertView.findViewById(R.id.profilePicture);
         progressBar = convertView.findViewById(R.id.progressBar);
+        view = convertView.findViewById(R.id.view);
+
+        progressBar.setMax((int) Double.parseDouble(formName.get(groupPosition).getTotalAmount()));
+        progressBar.setProgress((int) Double.parseDouble(formName.get(groupPosition).getTotalAmountPaid()));
 
 
-        progressBar.setMax((int)Double.parseDouble(formName.get(groupPosition).getTotalAmount()));
-        progressBar.setProgress((int)Double.parseDouble(formName.get(groupPosition).getTotalAmountPaid()));
-
+        if (db.getAllDueInvoices(formName.get(groupPosition).getCustomerId(), true) != null){
+            view.setBackgroundColor(Color.parseColor("#D50000"));
+        }
 
         if (!formName.get(groupPosition).getPath().isEmpty() && formName.get(groupPosition).getPath() != null) {
             Glide.with(context).load(new File(formName.get(groupPosition).getPath())).into(profilePicture);
