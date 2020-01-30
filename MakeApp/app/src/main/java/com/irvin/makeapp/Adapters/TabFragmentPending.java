@@ -2,6 +2,7 @@ package com.irvin.makeapp.Adapters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,6 +146,8 @@ public class TabFragmentPending extends Fragment {
         List<TransactionModel> customerModels = databaseHelper.getAllCustomerWithDueDates(false);
 
         for (TransactionModel customerModel : customerModels) {
+
+            Log.e("TABFRAGMENT" , customerModel.getTotalAmount() + " " + customerModel.getTotalAmountPaid());
 
             double balance = Double.parseDouble(databaseHelper.getAllDueInvoices(customerModel.getCustomerId(), false)) -
                     Double.parseDouble(customerModel.getTotalAmountPaid());

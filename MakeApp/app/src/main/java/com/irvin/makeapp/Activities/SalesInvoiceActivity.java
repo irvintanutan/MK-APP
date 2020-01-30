@@ -210,6 +210,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         ModGlobal.ProductModelListCopy.clear();
         ModGlobal.stockIns.clear();
         ModGlobal.ProductModelList.clear();
+        ModGlobal.customerName = "";
 
     }
 

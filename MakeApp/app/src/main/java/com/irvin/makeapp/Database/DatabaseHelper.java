@@ -693,6 +693,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public List<Invoice> getInvoiceById(String id) {
+
+        Log.e("DATABASEHELPER" , id);
+
+        List<Invoice> products = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE invoiceId = '" + id + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Invoice p = new Invoice();
+
+                p.setInvoiceId(cursor.getString(0));
+                p.setDiscount(cursor.getString(1));
+                p.setCustomerId(cursor.getString(2));
+                p.setCustomerName(cursor.getString(3));
+                p.setTotalAmount(cursor.getString(4));
+                p.setStatus(cursor.getString(5));
+                p.setInvoiceDetail(cursor.getString(6));
+                p.setDateCreated(cursor.getString(7));
+                p.setDueDate(cursor.getString(8));
+
+
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
     public List<Invoice> getAllInvoices(String status) {
         List<Invoice> products = new ArrayList<>();
         // Select All Query

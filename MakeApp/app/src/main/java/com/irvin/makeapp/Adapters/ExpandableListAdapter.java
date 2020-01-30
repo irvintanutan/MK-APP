@@ -92,7 +92,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
             now = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-            if (date2.before(now)) {
+            if (date2.before(now) || date2.equals(now)) {
 
                 Log.e(date2.toString() , now.toString());
 

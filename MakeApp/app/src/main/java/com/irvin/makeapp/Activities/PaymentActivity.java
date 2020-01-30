@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.irvin.makeapp.Adapters.PaymentAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
@@ -96,10 +97,7 @@ public class PaymentActivity extends AppCompatActivity {
     int maxHeight;
     int width;
     int height;
-    int newWidth;
-    int newHeight;
     Double scale;
-    Bitmap resizedImage;
     Image image;
     PdfWriter pdfWriter;
 
@@ -124,75 +122,83 @@ public class PaymentActivity extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
 
+        Intent intent = getIntent();
+
+        if(intent.hasExtra("invoice"))
+            ModGlobal.invoice = databaseHelper.getInvoiceById(intent.getStringExtra("invoice")).get(0);
+
+
         init();
 
 
     }
 
     private void init() {
-
-        balance = findViewById(R.id.balance);
-        customerName = findViewById(R.id.customerName);
-        totalAmountPaid = findViewById(R.id.totalAmountPaid);
-        invoiceId = findViewById(R.id.invoiceId);
-        dateCreated = findViewById(R.id.dateCreated);
-        checkOut = findViewById(R.id.checkOut);
-        totalAmount = findViewById(R.id.totalAmount);
-
-
-        payments = new ArrayList<>();
-        payments = databaseHelper.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
+        try {
+            balance = findViewById(R.id.balance);
+            customerName = findViewById(R.id.customerName);
+            totalAmountPaid = findViewById(R.id.totalAmountPaid);
+            invoiceId = findViewById(R.id.invoiceId);
+            dateCreated = findViewById(R.id.dateCreated);
+            checkOut = findViewById(R.id.checkOut);
+            totalAmount = findViewById(R.id.totalAmount);
 
 
-        double total = 0.00;
-        for (Payment payment : payments) {
-
-            total += Double.parseDouble(payment.getAmount());
-
-        }
-
-        customerName.setText(ModGlobal.invoice.getCustomerName());
-        dateCreated.setText(ModGlobal.invoice.getDateCreated());
-        invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId())));
-        totalAmountPaid.setText("₱ " + dec.format(total));
-        ModGlobal.totalAmountPaid = dec.format(total);
-        total = Double.parseDouble(ModGlobal.invoice.getTotalAmount()) - total;
-
-        finalSubTotal = total;
-        ModGlobal.totalBalance = dec.format(total);
-        totalAmount.setText("₱ " + dec.format(total));
+            payments = new ArrayList<>();
+            payments = databaseHelper.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
 
 
-        if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())) {
+            double total = 0.00;
+            for (Payment payment : payments) {
 
-            checkOut.setVisibility(View.GONE);
-            balance.setText("INV Amount:");
-            totalAmount.setText("₱ " + dec.format(Double.parseDouble(ModGlobal.invoice.getTotalAmount())));
-        }
-
-        recyclerView = findViewById(R.id.payment_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(layoutManager);
-        paymentAdapter = new PaymentAdapter(payments, this);
-        recyclerView.setAdapter(paymentAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
-
-            @Override
-            public void onClick(View view, int position) {
-
+                total += Double.parseDouble(payment.getAmount());
 
             }
 
-            @Override
-            public void onLongClick(View view, int position) {
+            customerName.setText(ModGlobal.invoice.getCustomerName());
+            dateCreated.setText(ModGlobal.invoice.getDateCreated());
+            invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId())));
+            totalAmountPaid.setText("₱ " + dec.format(total));
+            ModGlobal.totalAmountPaid = dec.format(total);
+            total = Double.parseDouble(ModGlobal.invoice.getTotalAmount()) - total;
 
+            finalSubTotal = total;
+            ModGlobal.totalBalance = dec.format(total);
+            totalAmount.setText("₱ " + dec.format(total));
+
+
+            if (ModGlobal.invoice.getStatus().equals(TranStatus.PAID.toString())) {
+
+                checkOut.setVisibility(View.GONE);
+                balance.setText("INV Amount:");
+                totalAmount.setText("₱ " + dec.format(Double.parseDouble(ModGlobal.invoice.getTotalAmount())));
             }
 
+            recyclerView = findViewById(R.id.payment_view);
+            recyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
+            recyclerView.setLayoutManager(layoutManager);
+            paymentAdapter = new PaymentAdapter(payments, this);
+            recyclerView.setAdapter(paymentAdapter);
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
 
-        }));
+                @Override
+                public void onClick(View view, int position) {
 
 
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+
+
+            }));
+
+        }catch (Exception e ) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -958,7 +964,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             String balance = "";
             if (Double.parseDouble(ModGlobal.totalBalance.replace(",", "")) <= 0) {
-                balance="0.00";
+                balance = "0.00";
             } else {
                 balance = ModGlobal.totalBalance;
             }

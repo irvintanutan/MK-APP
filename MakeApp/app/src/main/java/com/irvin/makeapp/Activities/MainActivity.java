@@ -3,13 +3,16 @@ package com.irvin.makeapp.Activities;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Telephony;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -22,6 +25,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +42,9 @@ import com.irvin.makeapp.Constant.CountDrawable;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MenuForm;
+import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
 
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    String CHANNEL_ID = "1";
+    String CHANNEL_ID = "INVOICES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,22 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
 
-      /*  createNotificationChannel();
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My notification")
-                .setContentText("Much longer text that cannot fit one line...")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Much longer text that cannot fit one line..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-// notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, builder.build());*/
+        createNotificationChannel();
 
 
         if (databaseHelper.getAllProducts().size() == 0) {
@@ -269,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-            getMenuInflater().inflate(R.menu.notification, menu);
+        getMenuInflater().inflate(R.menu.notification, menu);
 
         return true;
     }
@@ -305,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             alert.show();
         } else if (item.getItemId() == R.id.ic_group) {
 
-            Log.e("INVOICES" , Integer.toString(databaseHelper.getAllDueInvoices().size()));
+            Log.e("INVOICES", Integer.toString(databaseHelper.getAllDueInvoices().size()));
         }
 
         return super.onOptionsItemSelected(item);
@@ -314,7 +306,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         int size = databaseHelper.getAllDueInvoices().size();
-        setCount(MainActivity.this, Integer.toString(size) , menu);
+        setCount(MainActivity.this, Integer.toString(size), menu);
+
 
         return true;
     }
@@ -354,6 +347,36 @@ public class MainActivity extends AppCompatActivity {
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+
+        List<Invoice> invoices;
+        invoices = databaseHelper.getAllDueInvoices();
+
+        for (Invoice invoice : invoices) {
+
+            // Create an explicit intent for an Activity in your app
+            Intent intent = new Intent(this, PaymentActivity.class);
+            intent.putExtra("invoice" , invoice.getInvoiceId());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(invoice.getInvoiceId()), intent, 0);
+
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setTicker("PLEASE")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(invoice.getCustomerName())
+                    .setContentText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoice.getInvoiceId())) + "" +
+                            " is already DUE")
+                    .setSubText("Tap To Resolve Invoice")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+            notificationManager.notify( Integer.parseInt(invoice.getInvoiceId()) , builder.build());
         }
     }
 
