@@ -184,7 +184,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
 
 
-
     }
 
     public List<CustomerModel> getAllCustomer() {
@@ -244,7 +243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "  WHERE i.status = 'PENDING'" +
                     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
                     " GROUP BY c.id";
-        }else {
+        } else {
             selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
                     "sum (p.amount) as totalAmountPaid , c.id " +
                     "FROM " + tbl_invoice + " i " +
@@ -264,7 +263,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TransactionModel c = new TransactionModel();
 
 
-                c.setCustomerName(cursor.getString(1) + " " + cursor.getString(2));
+                c.setCustomerName(ModGlobal.toTitleCase(cursor.getString(1) + " " + cursor.getString(2)));
                 c.setPhotoUrl(cursor.getString(0));
                 c.setTotalAmount("100");
                 c.setCustomerId(cursor.getString(4));
@@ -279,7 +278,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return personList;
     }
-
 
 
     public CustomerModel getAllCustomer(int id) {
@@ -362,7 +360,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(tbl_product, null, values);
         db.close(); // Closing database connection
-
 
 
     }
@@ -682,7 +679,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setDueDate(cursor.getString(8));
 
 
-
                 products.add(p);
             } while (cursor.moveToNext());
         }
@@ -695,7 +691,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Invoice> getInvoiceById(String id) {
 
-        Log.e("DATABASEHELPER" , id);
+        Log.e("DATABASEHELPER", id);
 
         List<Invoice> products = new ArrayList<>();
         // Select All Query
@@ -718,7 +714,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setInvoiceDetail(cursor.getString(6));
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
-
 
 
                 products.add(p);
@@ -744,10 +739,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Invoice p = new Invoice();
 
+                CustomerModel
+                        customer = getAllCustomer(Integer.parseInt(cursor.getString(2)));
+
                 p.setInvoiceId(cursor.getString(0));
                 p.setDiscount(cursor.getString(1));
                 p.setCustomerId(cursor.getString(2));
-                p.setCustomerName(cursor.getString(3));
+                p.setCustomerName(ModGlobal.toTitleCase(customer.getFirstName() + " " + customer.getLastName()));
                 p.setTotalAmount(cursor.getString(4));
                 p.setStatus(cursor.getString(5));
                 p.setInvoiceDetail(cursor.getString(6));
@@ -781,17 +779,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Invoice p = new Invoice();
-
+                CustomerModel
+                        customer = getAllCustomer(Integer.parseInt(cursor.getString(2)));
                 p.setInvoiceId(cursor.getString(0));
                 p.setDiscount(cursor.getString(1));
                 p.setCustomerId(cursor.getString(2));
-                p.setCustomerName(cursor.getString(3));
+                p.setCustomerName(ModGlobal.toTitleCase(customer.getFirstName() + " " + customer.getLastName()));
                 p.setTotalAmount(cursor.getString(4));
                 p.setStatus(cursor.getString(5));
                 p.setInvoiceDetail(cursor.getString(6));
                 p.setDateCreated(cursor.getString(7));
                 p.setDueDate(cursor.getString(8));
-
 
 
                 products.add(p);
@@ -803,7 +801,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
-    public String getAllDueInvoices(String customerId , boolean isDueDate) {
+    public String getAllDueInvoices(String customerId, boolean isDueDate) {
         String result = "";
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -811,11 +809,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery;
-        if(isDueDate) {
+        if (isDueDate) {
             selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId + "' and status = 'PENDING' " +
                     " and date('" + formatter.format(date) + "') >= date(dueDate) " +
                     " ORDER BY dateCreated DESC";
-        }else {
+        } else {
             selectQuery = "SELECT  sum(totalAmount) as totalAmount FROM " + tbl_invoice + " WHERE customerId = '" + customerId + "' and status = 'PENDING' " +
                     /*" and date('" + formatter.format(date) + "') >= date(dueDate) " +*/
                     " ORDER BY dateCreated DESC";

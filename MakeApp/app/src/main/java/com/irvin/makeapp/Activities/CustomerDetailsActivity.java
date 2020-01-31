@@ -330,9 +330,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         } else if (item.getItemId() == R.id.action_message) {
 
-            if (!marshMallowPermission.checkPermissionForSendSms()) {
-                marshMallowPermission.requestPermissionForSendSMS();
-            } else
                 messageCustomer();
 
         }
@@ -354,6 +351,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setType("vnd.android-dir/mms-sms");
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
         } catch (Exception e) {

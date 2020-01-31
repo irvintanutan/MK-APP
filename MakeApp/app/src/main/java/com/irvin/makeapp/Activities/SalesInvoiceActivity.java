@@ -1,7 +1,12 @@
 package com.irvin.makeapp.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +15,8 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
@@ -28,7 +35,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-
+    String CHANNEL_ID = "INVOICES";
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     List<Invoice> invoices;
@@ -49,8 +56,10 @@ public class SalesInvoiceActivity extends AppCompatActivity {
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
-        init();
 
+        createNotificationChannel();
+
+        init();
 
     }
 
@@ -195,7 +204,7 @@ public class SalesInvoiceActivity extends AppCompatActivity {
             startActivity(new Intent(SalesInvoiceActivity.this, MainActivity.class));
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
-        } else if (item.getItemId() == R.id.action_search){
+        } else if (item.getItemId() == R.id.action_search) {
 
         }
 
@@ -214,5 +223,50 @@ public class SalesInvoiceActivity extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        List<Invoice> invoices;
+        invoices = databaseHelper.getAllDueInvoices();
+
+        for (Invoice invoice : invoices) {
+
+            // Create an explicit intent for an Activity in your app
+            Intent intent = new Intent(this, PaymentActivity.class);
+            intent.putExtra("invoice", invoice.getInvoiceId());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(invoice.getInvoiceId()), intent, PendingIntent.FLAG_ONE_SHOT);
+
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setCategory(Notification.CATEGORY_ALARM)
+                    .setTicker("PLEASE")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(invoice.getCustomerName())
+                    .setContentText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoice.getInvoiceId())) + "" +
+                            " is already DUE")
+                    .setSubText("Tap To Resolve Invoice")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setContentIntent(pendingIntent);
+
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+            notificationManager.notify(Integer.parseInt(invoice.getInvoiceId()), builder.build());
+        }
+    }
 
 }

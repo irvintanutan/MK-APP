@@ -1,13 +1,16 @@
 package com.irvin.makeapp.Activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,10 +29,12 @@ import android.widget.Toast;
 
 import com.irvin.makeapp.Adapters.PaymentAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
+import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.StockIn;
@@ -67,6 +72,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,6 +106,7 @@ public class PaymentActivity extends AppCompatActivity {
     Double scale;
     Image image;
     PdfWriter pdfWriter;
+    MarshMallowPermission marshMallowPermission;
 
     FileOutputStream outFile;
 
@@ -110,7 +117,7 @@ public class PaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-
+        marshMallowPermission = new MarshMallowPermission(this);
         @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
@@ -124,7 +131,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if(intent.hasExtra("invoice"))
+        if (intent.hasExtra("invoice"))
             ModGlobal.invoice = databaseHelper.getInvoiceById(intent.getStringExtra("invoice")).get(0);
 
 
@@ -196,7 +203,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             }));
 
-        }catch (Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -704,6 +711,16 @@ public class PaymentActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
         } else if (item.getItemId() == R.id.action_report) {
             generatePDF();
+        } else if (item.getItemId() == R.id.action_call) {
+            if (!marshMallowPermission.checkPermissionForCallPhone()) {
+                marshMallowPermission.requestPermissionForCallPhone();
+            } else
+                callCustomer();
+
+        } else if (item.getItemId() == R.id.action_message) {
+
+            messageCustomer();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1009,6 +1026,31 @@ public class PaymentActivity extends AppCompatActivity {
         //add the call to the table
         table.addCell(cell);
 
+    }
+
+
+    private void callCustomer() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        CustomerModel customerModel =  databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+        callIntent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
+
+        if (ActivityCompat.checkSelfPermission(PaymentActivity.this,
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        }
+        startActivity(callIntent);
+    }
+
+    private void messageCustomer() {
+
+        try {
+            CustomerModel customerModel =  databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setType("vnd.android-dir/mms-sms");
+            i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
+            startActivity(i);
+        } catch (Exception e) {
+            Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

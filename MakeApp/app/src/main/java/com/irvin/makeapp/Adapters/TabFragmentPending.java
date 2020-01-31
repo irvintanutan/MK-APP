@@ -162,7 +162,7 @@ public class TabFragmentPending extends Fragment {
 
         for (MainForm form : groupList) {
 
-            loadChild(form.getCustomerName());
+            loadChild(form.getCustomerId());
 
             draftCollection.put(form, childList);
         }
@@ -170,14 +170,11 @@ public class TabFragmentPending extends Fragment {
     }
 
 
-    private void loadChild(String customerName) {
+    private void loadChild(String customerId) {
         childList = new ArrayList<>();
         for (Invoice model : invoices) {
 
-
-
-
-            if (model.getCustomerName().equals(customerName))
+            if (model.getCustomerId().equals(customerId))
                 childList.add(model);
         }
 

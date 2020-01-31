@@ -181,6 +181,6 @@ public class CustomerModel {
     }
 
     public String getFullName(){
-        return  this.firstName + " " + this.middleName.charAt(0) + ". " + this.lastName;
+        return  this.firstName + " " + this.lastName;
     }
 }

@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,15 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    String CHANNEL_ID = "INVOICES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-
-        createNotificationChannel();
 
 
         if (databaseHelper.getAllProducts().size() == 0) {
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         form.add(new MenuForm("Purchase Order", R.drawable.box, "Manage Inventory"));
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
+        form.add(new MenuForm("Reminder", R.drawable.memo, "Manage Reminders"));
         form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
 
 
@@ -150,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
                             //tickets(true);
                             break;
                         case 5:
+                            reminder();
+                            break;
+                        case 6:
                             logout();
                             break;
                         case 2:
@@ -180,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Log.e("RECEIPT NUMBER ", String.format("%0" + ModGlobal.receiptLimit.length() + "d", 234));
 
     }
 
@@ -222,6 +225,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
      /*   Intent i = new Intent(MainActivity.this, AttendanceActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+    }
+
+    private void reminder() {
+      /*  Intent i = new Intent(MainActivity.this, ReminderEditActivity.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
@@ -279,8 +289,9 @@ public class MainActivity extends AppCompatActivity {
 
                 public void onClick(DialogInterface dialog, int which) {
 
-
+                    finish();
                     System.exit(0);
+
 
                 }
 
@@ -331,53 +342,6 @@ public class MainActivity extends AppCompatActivity {
         badge.setCount(count);
         icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_group_count, badge);
-    }
-
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        List<Invoice> invoices;
-        invoices = databaseHelper.getAllDueInvoices();
-
-        for (Invoice invoice : invoices) {
-
-            // Create an explicit intent for an Activity in your app
-            Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("invoice" , invoice.getInvoiceId());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(invoice.getInvoiceId()), intent, 0);
-
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setTicker("PLEASE")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(invoice.getCustomerName())
-                    .setContentText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoice.getInvoiceId())) + "" +
-                            " is already DUE")
-                    .setSubText("Tap To Resolve Invoice")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-            notificationManager.notify( Integer.parseInt(invoice.getInvoiceId()) , builder.build());
-        }
     }
 
 
