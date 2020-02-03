@@ -1,16 +1,21 @@
 package com.irvin.makeapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
 import com.shockwave.pdfium.PdfDocument;
 
@@ -18,7 +23,9 @@ import java.io.File;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class PDFViewActivity extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
     PDFView pdfView;
@@ -26,11 +33,20 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
     String pdfFileName;
     String TAG = "PDFViewActivity";
     int position = -1;
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdfview);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
+        setSupportActionBar(tb);
+        final ActionBar ab = getSupportActionBar();
+
+        ab.setTitle("Sales Invoice Report");
+        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
+        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
+
         init();
     }
 
@@ -57,8 +73,6 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
                 .scrollHandle(new DefaultScrollHandle(this))
                 .load();
 
-
-        generateEmail();
     }
 
     @Override
@@ -87,6 +101,11 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
 
     public void generateEmail() {
         try {
+            CustomerModel customerModel = databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+            String email = customerModel.getEmail() != null ? customerModel.getEmail() : "";
+            String subject = "Sales Invoice " + customerModel.getFullName();
+            String text ="#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +
+                    "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId()));
 
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -94,9 +113,9 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"rvngames.inc@gmail.com"});
-            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "sample");
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, "sample");
+            intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, text);
             // Need to grant this permission
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             // Attachment
@@ -110,6 +129,23 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
             e.printStackTrace();
             Log.e("d" , e.toString());
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.pdf, menu);
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+     if (item.getItemId() == R.id.action_email) {
+            generateEmail();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

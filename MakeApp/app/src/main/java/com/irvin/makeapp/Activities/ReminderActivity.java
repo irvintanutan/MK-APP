@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -36,21 +37,13 @@ public class ReminderActivity extends AppCompatActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         fab = findViewById(R.id.floating_action_button);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                ModGlobal.isCreateNew = true;
-                Intent i = new Intent(ReminderActivity.this, CustomerDetailsActivity.class);
-                i.putExtra("toolBarTitle" , "Add New Customer");
-                startActivity(i);
-                finish();
-                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
-
+                Toast.makeText(getApplicationContext(), "Under Development", Toast.LENGTH_LONG).show();
 
             }
         });

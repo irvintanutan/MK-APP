@@ -4,13 +4,13 @@
 
 
     <item android:id="@+id/action_message"
-        android:title="Message"
+        android:title="Message Customer"
         android:icon="@drawable/message"
         app:showAsAction="collapseActionView"/>
 
 
     <item android:id="@+id/action_call"
-        android:title="Call"
+        android:title="Call Customer"
         android:icon="@drawable/phone"
         app:showAsAction="collapseActionView"/>
 

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -240,9 +241,9 @@ public class SalesInvoiceActivity extends AppCompatActivity {
 
         List<Invoice> invoices;
         invoices = databaseHelper.getAllDueInvoices();
-
+        Log.e("size" , Integer.toString(invoices.size()));
         for (Invoice invoice : invoices) {
-
+            Log.e("ad" , "asddd");
             // Create an explicit intent for an Activity in your app
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.putExtra("invoice", invoice.getInvoiceId());

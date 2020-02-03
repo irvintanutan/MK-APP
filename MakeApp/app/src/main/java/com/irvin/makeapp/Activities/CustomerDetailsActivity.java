@@ -298,30 +298,62 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         if (item.getItemId() == android.R.id.home) {
             goBack();
         } else if (item.getItemId() == R.id.action_save) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            boolean ok = true;
 
-            builder.setTitle("Confirm");
-            builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
-            builder.setMessage("Are you sure you want to save customer data ?");
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            if (firstName.getText() == null || firstName.getText().toString().isEmpty()) {
+                firstName.setError("First Name is Required");
+                ok = false;
+            }
 
-                public void onClick(DialogInterface dialog, int which) {
+            if (lastName.getText() == null || lastName.getText().toString().isEmpty()) {
+                lastName.setError("Last Name is Required");
+                ok = false;
+            }
 
-                    saveCustomer(ModGlobal.isCreateNew);
+            if (email.getText() == null || email.getText().toString().isEmpty()) {
+                email.setError("Email is Required");
+                ok = false;
+            }
 
-                }
+            if (contactNumber.getText() == null || contactNumber.getText().toString().isEmpty()) {
+                contactNumber.setError("Contact Number is Required");
+                ok = false;
+            }
 
-            });
-            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            if (age.getText() == null || age.getText().toString().isEmpty()) {
+                age.setError("Age is Required");
+                ok = false;
+            }
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            if (ok) {
 
-            AlertDialog alert = builder.create();
-            alert.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Confirm");
+                builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+                builder.setMessage("Are you sure you want to save customer data ?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        saveCustomer(ModGlobal.isCreateNew);
+
+                    }
+
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Some Fields Are Required", Toast.LENGTH_LONG).show();
+            }
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
                 marshMallowPermission.requestPermissionForCallPhone();
@@ -330,7 +362,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         } else if (item.getItemId() == R.id.action_message) {
 
-                messageCustomer();
+            messageCustomer();
 
         }
 
@@ -508,6 +540,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         return outputFileUri;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
