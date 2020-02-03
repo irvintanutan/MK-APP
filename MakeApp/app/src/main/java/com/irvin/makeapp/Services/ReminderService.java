@@ -3,14 +3,11 @@ package com.irvin.makeapp.Services;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
-import com.irvin.makeapp.Activities.ReminderEditActivity;
+import com.irvin.makeapp.Activities.ReminderActivity;
 import com.irvin.makeapp.Database.RemindersDbAdapter;
-import com.irvin.makeapp.R;
 
 public class ReminderService extends WakeReminderIntentService {
 
@@ -25,7 +22,7 @@ public class ReminderService extends WakeReminderIntentService {
 
         NotificationManager mgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(this, ReminderEditActivity.class);
+        Intent notificationIntent = new Intent(this, ReminderActivity.class);
         notificationIntent.putExtra(RemindersDbAdapter.KEY_ROWID, rowId);
 
         PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);

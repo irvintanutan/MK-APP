@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
+
+
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/customer_view"
+        android:id="@+id/reminder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar"
@@ -32,5 +34,4 @@
             android:src="@drawable/plus" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </RelativeLayout>

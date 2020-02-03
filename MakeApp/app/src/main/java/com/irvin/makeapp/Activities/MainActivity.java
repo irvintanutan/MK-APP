@@ -1,19 +1,12 @@
 package com.irvin.makeapp.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.Telephony;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -25,10 +18,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,12 +30,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.Constant.CountDrawable;
-import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MenuForm;
-import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
 
@@ -231,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reminder() {
-      /*  Intent i = new Intent(MainActivity.this, ReminderEditActivity.class);
+        Intent i = new Intent(MainActivity.this, ReminderActivity.class);
         startActivity(i);
         finish();
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
 

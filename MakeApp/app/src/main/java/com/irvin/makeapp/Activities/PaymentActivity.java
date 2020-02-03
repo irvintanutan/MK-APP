@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.os.TransactionTooLargeException;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -865,7 +866,7 @@ public class PaymentActivity extends AppCompatActivity {
         createPDF(downloadsPath + File.separator + "Notes.pdf");
 
         ModGlobal.imageFilePath = downloadsPath + File.separator + "Notes.pdf";
-
+        //generateEmail();
         startActivity(new Intent(PaymentActivity.this, PDFViewActivity.class));
     }
 
@@ -1050,6 +1051,34 @@ public class PaymentActivity extends AppCompatActivity {
             startActivity(i);
         } catch (Exception e) {
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void generateEmail() {
+        try {
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"rvngames.inc@gmail.com"});
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "sample");
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, "sample");
+            // Need to grant this permission
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            // Attachment
+            intent.setType("vnd.android.cursor.dir/email");
+
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(ModGlobal.imageFilePath)));
+
+                    intent.setPackage("com.google.android.gm");
+                startActivityForResult(intent, 101);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("d" , e.toString());
         }
     }
 

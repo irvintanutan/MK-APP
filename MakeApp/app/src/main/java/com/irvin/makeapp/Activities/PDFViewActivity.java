@@ -1,6 +1,9 @@
 package com.irvin.makeapp.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.github.barteksc.pdfviewer.PDFView;
@@ -53,6 +56,9 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
                 .onLoad(this)
                 .scrollHandle(new DefaultScrollHandle(this))
                 .load();
+
+
+        generateEmail();
     }
 
     @Override
@@ -76,6 +82,33 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
             if (b.hasChildren()) {
                 printBookmarksTree(b.getChildren(), sep + "-");
             }
+        }
+    }
+
+    public void generateEmail() {
+        try {
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"rvngames.inc@gmail.com"});
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "sample");
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, "sample");
+            // Need to grant this permission
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            // Attachment
+            intent.setType("message/rfc822");
+
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(ModGlobal.imageFilePath)));
+
+            intent.setPackage("com.google.android.gm");
+            startActivityForResult(intent, 101);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("d" , e.toString());
         }
     }
 
