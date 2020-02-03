@@ -25,6 +25,7 @@ import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseStockin;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
@@ -40,6 +41,7 @@ public class StockInMainActivity extends AppCompatActivity {
 
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseStockin databaseStockin = new DatabaseStockin(this);
     List<StockInList> stockInListList;
     LinearLayout nothing;
     RecyclerView recyclerView;
@@ -66,7 +68,7 @@ public class StockInMainActivity extends AppCompatActivity {
     private void init() {
         nothing = findViewById(R.id.nothing);
         stockInListList = new ArrayList<>();
-        stockInListList = databaseHelper.getAllStockIn();
+        stockInListList = databaseStockin.getAllStockIn();
 
         if (stockInListList.size() > 0) {
             nothing.setVisibility(View.GONE);
@@ -84,7 +86,7 @@ public class StockInMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 try {
-                    StockInList stockInList = databaseHelper.getAllStockIn(stockInListList.get(position).getId());
+                    StockInList stockInList = databaseStockin.getAllStockIn(stockInListList.get(position).getId());
 
 
                     JSONArray jsonArray = new JSONArray(stockInList.getDetails());

@@ -50,8 +50,8 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
         }else {
             Glide.with(mContext).load(mContext.getResources().getDrawable(R.drawable.user_img)).into(viewHolder.profilePicture);
         }
-        viewHolder.fullName.setText(customerModelList.get(position).getFirstName() + " " + customerModelList.get(position).getMiddleName() + " " +
-                " " + customerModelList.get(position).getLastName());
+        viewHolder.fullName.setText(ModGlobal.toTitleCase(customerModelList.get(position).getFirstName() + " " + customerModelList.get(position).getMiddleName() + " " +
+                " " + customerModelList.get(position).getLastName()));
 
     }
 

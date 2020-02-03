@@ -43,6 +43,7 @@ import com.bumptech.glide.Glide;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.MultiSelectionSpinner;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
@@ -58,6 +59,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class CustomerDetailsActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     CustomerModel customerModel = new CustomerModel();
     String mCurrentPhotoPath = "";
     private static int RESULT_LOAD_IMAGE = 1;
@@ -176,7 +178,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         if (!ModGlobal.isCreateNew) {
 
-            customerModel = databaseHelper.getAllCustomer(ModGlobal.customerId);
+            customerModel = databaseCustomer.getAllCustomer(ModGlobal.customerId);
             if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
                 Log.e("asd", customerModel.getPhotoUrl());
                 Glide.with(getApplicationContext()).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
@@ -250,7 +252,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));
                     finish();
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
-                } else {
+                }  else {
                     startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
                     finish();
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
@@ -413,9 +415,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         customerModel.setPhotoUrl(mCurrentPhotoPath == null ? " " : mCurrentPhotoPath);
 
         if (isCreateNew)
-            databaseHelper.addCustomer(customerModel);
+            databaseCustomer.addCustomer(customerModel);
         else
-            databaseHelper.updateCustomer(customerModel, ModGlobal.customerId);
+            databaseCustomer.updateCustomer(customerModel, ModGlobal.customerId);
 
         if (ModGlobal.isInSalesInvoice) {
             startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));

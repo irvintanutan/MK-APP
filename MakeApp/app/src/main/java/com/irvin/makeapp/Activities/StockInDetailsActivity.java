@@ -28,6 +28,7 @@ import com.irvin.makeapp.Adapters.StockInAdapter;
 import com.irvin.makeapp.Adapters.StockInDetailsAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseStockin;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
@@ -46,6 +47,7 @@ public class StockInDetailsActivity extends AppCompatActivity {
     LinearLayout btnView , layoutBottom;
     boolean indicator = false;
     TextView totalAmount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,12 +194,14 @@ public class StockInDetailsActivity extends AppCompatActivity {
     public class StockInTask extends AsyncTask<String, String, String> {
         boolean warning_indicator = true;
         private DatabaseHelper databaseHelper;
+        private DatabaseStockin databaseStockin;
         Context serviceContext;
         ProgressDialog progressDialog;
 
         public StockInTask(Context serviceContext) {
             this.serviceContext = serviceContext;
             databaseHelper = new DatabaseHelper(serviceContext);
+            databaseStockin = new DatabaseStockin(serviceContext);
         }
 
         @Override
@@ -228,7 +232,7 @@ public class StockInDetailsActivity extends AppCompatActivity {
             }
 
             String json = new Gson().toJson(ModGlobal.stockIns);
-            databaseHelper.addStockIn(json);
+            databaseStockin.addStockIn(json);
 
 
             return null;

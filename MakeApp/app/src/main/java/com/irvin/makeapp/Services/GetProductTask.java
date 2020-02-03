@@ -72,7 +72,7 @@ public class GetProductTask extends AsyncTask<String, String, String> {
                     }
 
             for (int a = 0; a < productsList.size(); a++) {
-                Thread.sleep(50);
+
                 databaseHelper.addProduct(productsList.get(a));
                 publishProgress(String.format("%d", productsList.size())
                         , String.format("%d", a));

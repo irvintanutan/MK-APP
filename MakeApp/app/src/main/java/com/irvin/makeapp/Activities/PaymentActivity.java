@@ -34,7 +34,10 @@ import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Constant.TranStatus;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Database.DatabasePayment;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
@@ -84,6 +87,9 @@ public class PaymentActivity extends AppCompatActivity {
     PaymentAdapter paymentAdapter;
     List<Payment> payments;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
+    DatabasePayment databasePayment = new DatabasePayment(this);
     TextView customerName;
     TextView totalAmountPaid;
     TextView invoiceId;
@@ -133,7 +139,7 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if (intent.hasExtra("invoice"))
-            ModGlobal.invoice = databaseHelper.getInvoiceById(intent.getStringExtra("invoice")).get(0);
+            ModGlobal.invoice = databaseInvoice.getInvoiceById(intent.getStringExtra("invoice")).get(0);
 
 
         init();
@@ -153,7 +159,7 @@ public class PaymentActivity extends AppCompatActivity {
 
 
             payments = new ArrayList<>();
-            payments = databaseHelper.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
+            payments = databasePayment.getPaymentPerInvoice(ModGlobal.invoice.getInvoiceId());
 
 
             double total = 0.00;
@@ -641,7 +647,7 @@ public class PaymentActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
 
-            databaseHelper.addPayment(new Payment("", Double.toString(finalCash), ModGlobal.invoice.getInvoiceId(), "",
+            databasePayment.addPayment(new Payment("", Double.toString(finalCash), ModGlobal.invoice.getInvoiceId(), "",
                     Double.toString(finalChange)));
 
             Invoice invoice = ModGlobal.invoice;
@@ -651,7 +657,7 @@ public class PaymentActivity extends AppCompatActivity {
                 invoice.setDueDate(dueDate);
             }
 
-            databaseHelper.updateInvoice(invoice, invoice.getInvoiceId());
+            databaseInvoice.updateInvoice(invoice, invoice.getInvoiceId());
             return null;
         }
 
@@ -1032,7 +1038,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void callCustomer() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        CustomerModel customerModel =  databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+        CustomerModel customerModel =  databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
         callIntent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
 
         if (ActivityCompat.checkSelfPermission(PaymentActivity.this,
@@ -1044,7 +1050,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void messageCustomer() {
 
         try {
-            CustomerModel customerModel =  databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+            CustomerModel customerModel =  databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setType("vnd.android-dir/mms-sms");
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));

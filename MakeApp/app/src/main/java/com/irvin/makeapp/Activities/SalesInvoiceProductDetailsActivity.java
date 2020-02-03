@@ -34,6 +34,8 @@ import com.irvin.makeapp.Adapters.SalesInvoiceDetailsAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Database.DatabasePayment;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.StockIn;
@@ -57,6 +59,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
     private double finalChange = 0.00;
     private double finalDiscount = 0.00;
     String dueDate = "";
+    DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
 
 
     @Override
@@ -552,12 +555,14 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
     public class InvoiceTask extends AsyncTask<String, String, String> {
         boolean warning_indicator = true;
         private DatabaseHelper databaseHelper;
+        private DatabasePayment databasePayment;
         Context serviceContext;
         ProgressDialog progressDialog;
 
         public InvoiceTask(Context serviceContext) {
             this.serviceContext = serviceContext;
             databaseHelper = new DatabaseHelper(serviceContext);
+            databasePayment = new DatabasePayment(serviceContext);
         }
 
         @Override
@@ -589,7 +594,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
             String json = new Gson().toJson(ModGlobal.stockIns);
 
-            databaseHelper.addPayment(new Payment("",Double.toString(finalCash),databaseHelper.getLastInvoiceId(),"" ,
+            databasePayment.addPayment(new Payment("",Double.toString(finalCash),databaseInvoice.getLastInvoiceId(),"" ,
                     Double.toString(finalChange)));
 
             Invoice invoice = new Invoice();
@@ -607,7 +612,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
             Log.e("status" , invoice.getStatus());
 
-            databaseHelper.addInvoice(invoice);
+            databaseInvoice.addInvoice(invoice);
 
 
             return null;

@@ -1,8 +1,14 @@
 package com.irvin.makeapp.Adapters;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +17,15 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.bumptech.glide.Glide;
+import com.irvin.makeapp.Activities.PaymentActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MainForm;
 import com.irvin.makeapp.R;
@@ -38,6 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private DatabaseHelper db;
+    private DatabaseInvoice databaseInvoice;
     private Activity context;
     private Map<MainForm, List<Invoice>> formDetails;
     private List<MainForm> formName;
@@ -47,7 +58,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.context = context;
         this.formDetails = formDetails;
         this.formName = formName;
-
+        databaseInvoice = new DatabaseInvoice(context);
         db = new DatabaseHelper(context);
 
     }
@@ -98,6 +109,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 cv.setBackgroundColor(Color.parseColor("#FFCDD2"));
                 cv.setBackgroundResource(R.drawable.round_quantity3);
+                createNotificationChannel(invoices);
             }else {
                 cv.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 cv.setBackgroundResource(R.drawable.round_quantity4);
@@ -168,7 +180,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         progressBar.setProgress((int) Double.parseDouble(formName.get(groupPosition).getTotalAmountPaid()));
 
 
-        if (db.getAllDueInvoices(formName.get(groupPosition).getCustomerId(), true) != null){
+        if (databaseInvoice.getAllDueInvoices(formName.get(groupPosition).getCustomerId(), true) != null){
             view.setBackgroundColor(Color.parseColor("#D50000"));
         }
 
@@ -209,4 +221,46 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         notifyDataSetChanged();
     }
+
+
+    private void createNotificationChannel(Invoice invoice) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = context.getString(R.string.channel_name);
+            String description = context.getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("SALES_INVOICE", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+            Log.e("ad" , "asddd");
+            // Create an explicit intent for an Activity in your app
+            Intent intent = new Intent(context, PaymentActivity.class);
+            intent.putExtra("invoice", invoice.getInvoiceId());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, Integer.parseInt(invoice.getInvoiceId()), intent, PendingIntent.FLAG_ONE_SHOT);
+
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "SALES_INVOICE")
+                    .setCategory(Notification.CATEGORY_ALARM)
+                    .setTicker("PLEASE")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(invoice.getCustomerName())
+                    .setContentText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoice.getInvoiceId())) + "" +
+                            " is already DUE")
+                    .setSubText("Tap To Resolve Invoice")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setContentIntent(pendingIntent);
+
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+            notificationManager.notify(Integer.parseInt(invoice.getInvoiceId()), builder.build());
+        }
 }

@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.irvin.makeapp.Activities.PaymentActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MainForm;
 import com.irvin.makeapp.Models.Payment;
@@ -34,6 +36,8 @@ import java.util.Map;
 public class TabFragmentPending extends Fragment {
 
     DatabaseHelper databaseHelper;
+    DatabaseInvoice databaseInvoice;
+    DatabaseCustomer databaseCustomer;
     List<Invoice> invoices;
     LinearLayout nothing;
     RecyclerView recyclerView;
@@ -50,9 +54,11 @@ public class TabFragmentPending extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.pending_tab, container, false);
         databaseHelper = new DatabaseHelper(getActivity());
+        databaseInvoice = new DatabaseInvoice(getActivity());
+        databaseCustomer = new DatabaseCustomer(getActivity());
         groupList = new ArrayList<>();
         invoices = new ArrayList<>();
-        invoices = databaseHelper.getAllInvoices(TranStatus.PENDING.toString());
+        invoices = databaseInvoice.getAllInvoices(TranStatus.PENDING.toString());
         createCollection();
         expListView = view.findViewById(R.id.expandableListView);
         expListAdapter = new ExpandableListAdapter(
@@ -143,19 +149,19 @@ public class TabFragmentPending extends Fragment {
     private void createCollection() {
         draftCollection = new LinkedHashMap<>();
 
-        List<TransactionModel> customerModels = databaseHelper.getAllCustomerWithDueDates(false);
+        List<TransactionModel> customerModels = databaseCustomer.getAllCustomerWithDueDates(false);
 
         for (TransactionModel customerModel : customerModels) {
 
             Log.e("TABFRAGMENT" , customerModel.getTotalAmount() + " " + customerModel.getTotalAmountPaid());
 
-            double balance = Double.parseDouble(databaseHelper.getAllDueInvoices(customerModel.getCustomerId(), false)) -
+            double balance = Double.parseDouble(databaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false)) -
                     Double.parseDouble(customerModel.getTotalAmountPaid());
 
 
 
             groupList.add(new MainForm(customerModel.getPhotoUrl(),
-                    customerModel.getCustomerName(), databaseHelper.getAllDueInvoices(customerModel.getCustomerId() , false), customerModel.getTotalAmountPaid()
+                    customerModel.getCustomerName(), databaseInvoice.getAllDueInvoices(customerModel.getCustomerId() , false), customerModel.getTotalAmountPaid()
                     , Double.toString(balance) , customerModel.getCustomerId()));
         }
 

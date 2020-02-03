@@ -40,6 +40,7 @@ import com.irvin.makeapp.Adapters.StockInAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Category;
 import com.irvin.makeapp.Models.CustomerModel;
@@ -53,6 +54,7 @@ import java.util.List;
 public class SalesInvoiceProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     List<CustomerModel> customerModelList;
     List<CustomerModel> tempCust = new ArrayList<>();
     RecyclerView recyclerView, recyclerView2;
@@ -200,7 +202,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        customerModelList = databaseHelper.getAllCustomer();
+        customerModelList = databaseCustomer.getAllCustomer();
         ModGlobal.customerModelList = customerModelList;
         tempCust = customerModelList;
 

@@ -27,6 +27,7 @@ public class ModGlobal {
     public static boolean indicator = false;
     public static int  position = -1;
     public static boolean isInSalesInvoice = false;
+    public static boolean isReminder = false;
     public static String receiptLimit = "999999";
     public static String paymentId = "";
     public static String totalAmountPaid = "";

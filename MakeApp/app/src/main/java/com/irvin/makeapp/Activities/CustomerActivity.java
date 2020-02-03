@@ -22,6 +22,7 @@ import com.irvin.makeapp.Adapters.CustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
@@ -32,6 +33,7 @@ import java.util.List;
 public class CustomerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     FloatingActionButton fab;
     RecyclerView recyclerView;
     CustomerAdapter customerAdapter;
@@ -126,7 +128,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
 
     private void loadList(){
-        customerModelList = databaseHelper.getAllCustomer();
+        customerModelList = databaseCustomer.getAllCustomer();
         ModGlobal.customerModelList = customerModelList;
 
         Log.e("size" , Integer.toString(customerModelList.size()));

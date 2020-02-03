@@ -19,6 +19,7 @@ import com.irvin.makeapp.Activities.ReportActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.R;
 
@@ -30,6 +31,7 @@ import java.util.List;
  */
 public class TabFragmentPaid extends Fragment {
     DatabaseHelper databaseHelper;
+    DatabaseInvoice databaseInvoice;
     List<Invoice> invoices;
     LinearLayout nothing;
     RecyclerView recyclerView;
@@ -39,8 +41,9 @@ public class TabFragmentPaid extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         invoices = new ArrayList<>();
+        databaseInvoice = new DatabaseInvoice(getActivity());
         databaseHelper = new DatabaseHelper(getActivity());
-        invoices = databaseHelper.getAllInvoices(TranStatus.PAID.toString());
+        invoices = databaseInvoice.getAllInvoices(TranStatus.PAID.toString());
         if (invoices.size() > 0) {
             view = inflater.inflate(R.layout.paid_tab, container, false);
 

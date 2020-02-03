@@ -14,6 +14,7 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
@@ -34,6 +35,7 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
     String TAG = "PDFViewActivity";
     int position = -1;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer( this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
 
     public void generateEmail() {
         try {
-            CustomerModel customerModel = databaseHelper.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+            CustomerModel customerModel = databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
             String email = customerModel.getEmail() != null ? customerModel.getEmail() : "";
             String subject = "Sales Invoice " + customerModel.getFullName();
             String text ="#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +

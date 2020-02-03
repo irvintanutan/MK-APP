@@ -32,6 +32,7 @@ import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.Constant.CountDrawable;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-
+    DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             alert.show();
         } else if (item.getItemId() == R.id.ic_group) {
 
-            Log.e("INVOICES", Integer.toString(databaseHelper.getAllDueInvoices().size()));
+            Log.e("INVOICES", Integer.toString(databaseInvoice.getAllDueInvoices().size()));
         }
 
         return super.onOptionsItemSelected(item);
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        int size = databaseHelper.getAllDueInvoices().size();
+        int size = databaseInvoice.getAllDueInvoices().size();
         setCount(MainActivity.this, Integer.toString(size), menu);
 
 
