@@ -23,7 +23,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 		WakeReminderIntentService.acquireStaticLock(context);
 		
 		Intent i = new Intent(context, ReminderService.class); 
-		i.putExtra(RemindersDbAdapter.KEY_ROWID, rowid);  
+		i.putExtra(RemindersDbAdapter.KEY_ROWID, rowid);
 		context.startService(i);
 		 
 	}

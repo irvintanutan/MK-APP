@@ -1,5 +1,7 @@
 package com.irvin.makeapp.Models;
 
+import com.irvin.makeapp.Constant.ModGlobal;
+
 public class CustomerModel {
 
     private int id;
@@ -181,6 +183,6 @@ public class CustomerModel {
     }
 
     public String getFullName(){
-        return  this.firstName + " " + this.lastName;
+        return ModGlobal.toTitleCase(this.firstName + " " + this.lastName);
     }
 }

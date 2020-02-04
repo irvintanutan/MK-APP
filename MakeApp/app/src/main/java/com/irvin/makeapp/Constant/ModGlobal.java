@@ -34,7 +34,7 @@ public class ModGlobal {
     public static Invoice invoice = new Invoice();
 
     ////please beware of changing value of database version
-    public static int DATABASE_VERSION = 1;
+    public static int DATABASE_VERSION = 2;
     public static String imageFilePath;
     public static String totalBalance;
     public static final char[] delimiters = { ' ', '_' };

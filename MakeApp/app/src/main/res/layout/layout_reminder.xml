@@ -24,7 +24,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:inputType="text" />
     <TextView
-        android:text="Body"
+        android:text="Description"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_70sdp"
             android:background="@drawable/reminder"
-            android:inputType="textImeMultiLine" />
+            android:inputType="textMultiLine" />
 
     <TextView
         android:text="Customer"

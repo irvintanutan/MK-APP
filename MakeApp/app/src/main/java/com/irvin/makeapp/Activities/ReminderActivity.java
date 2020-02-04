@@ -14,6 +14,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,18 +32,31 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irvin.makeapp.Adapters.ProductAdapter;
+import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Reminder;
+import com.irvin.makeapp.Models.StockIn;
+import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.ReminderManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -50,6 +64,7 @@ public class ReminderActivity extends AppCompatActivity {
     FloatingActionButton fab;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
+    RemindersDbAdapter remindersDbAdapter = new RemindersDbAdapter(this);
     private static final int DATE_PICKER_DIALOG = 0;
     private static final int TIME_PICKER_DIALOG = 1;
     List<CustomerModel> customerModelList;
@@ -61,25 +76,36 @@ public class ReminderActivity extends AppCompatActivity {
 
     private int mYear, mMonth, mDay, mHour, mMinute;
 
+    EditText editTextTopic, editTextBody;
+
+    ReminderAdapter reminderAdapter;
+    RecyclerView recyclerView;
+    List<Reminder> reminders;
+
     Button date;
     Button time;
     Button customer;
+    String topic, body, strDate, strTime;
+    private Long mRowId;
+    private RemindersDbAdapter mDbHelper = new RemindersDbAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
-
+        mCalendar = Calendar.getInstance();
         ab.setTitle("Reminders");
         ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
+        mRowId = savedInstanceState != null ? savedInstanceState.getLong(RemindersDbAdapter.KEY_ROWID)
+                : null;
 
         init();
     }
@@ -90,11 +116,75 @@ public class ReminderActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopUpReminder();
+                PopUpReminder(null);
             }
         });
+
+
+        recyclerView = findViewById(R.id.reminder_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        reminders = new ArrayList<>();
+        reminders = remindersDbAdapter.getAllReminders();
+
+        reminderAdapter = new ReminderAdapter(reminders, this);
+        recyclerView.setAdapter(reminderAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+
+                Reminder reminder = reminders.get(position);
+                mRowId = Long.parseLong(reminder.getKEY_ROWID());
+                PopUpReminder(reminder);
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+
+
+        }));
+
+
     }
 
+    private void setRowIdFromIntent() {
+        if (mRowId == null) {
+            Bundle extras = getIntent().getExtras();
+            mRowId = extras != null ? extras.getLong(RemindersDbAdapter.KEY_ROWID)
+                    : null;
+
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDbHelper.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDbHelper.open();
+        setRowIdFromIntent();
+        populateFields();
+    }
+
+    private void populateFields()  {
+
+        if (mRowId != null) {
+
+            Reminder reminder = remindersDbAdapter.getAllReminders(mRowId);
+
+            PopUpReminder(reminder);
+        }
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -114,7 +204,6 @@ public class ReminderActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     private void showDatePicker() {
@@ -169,6 +258,7 @@ public class ReminderActivity extends AppCompatActivity {
         // Set the time button text based upon the value from the database
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
         String timeForButton = timeFormat.format(mCalendar.getTime());
+        strTime = timeForButton;
         time.setText(timeForButton);
     }
 
@@ -176,11 +266,12 @@ public class ReminderActivity extends AppCompatActivity {
         // Set the date button text based upon the value from the database
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         String dateForButton = dateFormat.format(mCalendar.getTime());
+        strDate = dateForButton;
         date.setText(dateForButton);
     }
 
 
-    void PopUpReminder() {
+    void PopUpReminder(Reminder reminder) {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View alertLayout = inflater.inflate(R.layout.layout_reminder, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -188,19 +279,43 @@ public class ReminderActivity extends AppCompatActivity {
         date = alertLayout.findViewById(R.id.date);
         time = alertLayout.findViewById(R.id.time);
         customer = alertLayout.findViewById(R.id.customer);
+        editTextTopic = alertLayout.findViewById(R.id.topic);
+        editTextBody = alertLayout.findViewById(R.id.body);
 
+
+        if (reminder != null){
+
+            customer.setText(databaseCustomer.getAllCustomer(Integer.parseInt(reminder.getKEY_CUSTOMER_ID())).getFullName());
+            editTextTopic.setText(reminder.getKEY_TITLE());
+            editTextBody.setText(reminder.getKEY_BODY());
+
+            // Get the date from the database and format it for our use.
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+            Date date;
+            try {
+                String dateString = reminder.getKEY_DATE_TIME();
+                date = dateTimeFormat.parse(dateString);
+                mCalendar.setTime(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e("ReminderEditActivity", e.getMessage(), e);
+            }
+
+            updateDateButtonText();
+            updateTimeButtonText();
+        }
 
         customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               searchCustomer();
+                searchCustomer();
             }
         });
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              showDatePicker();
+                showDatePicker();
             }
         });
 
@@ -220,6 +335,7 @@ public class ReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                mRowId = null;
             }
         });
 
@@ -227,13 +343,41 @@ public class ReminderActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                try {
+                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+                    String reminderDateTime = dateTimeFormat.format(mCalendar.getTime());
 
+                    if (mRowId == null) {
+
+                        long id = mDbHelper.createReminder(editTextTopic.getText().toString(), editTextBody.getText().toString()
+                                , reminderDateTime, Integer.toString(ModGlobal.customerId));
+                        if (id > 0) {
+                            mRowId = id;
+                        }
+                    } else {
+                        mDbHelper.updateReminder(mRowId, editTextTopic.getText().toString(), editTextBody.getText().toString()
+                                , reminderDateTime, Integer.toString(ModGlobal.customerId));
+                    }
+
+                    reminders.clear();
+                    reminders = remindersDbAdapter.getAllReminders();
+
+                    reminderAdapter = new ReminderAdapter(reminders, ReminderActivity.this);
+                    recyclerView.setAdapter(reminderAdapter);
+                    reminderAdapter.notifyDataSetChanged();
+
+                    new ReminderManager(ReminderActivity.this).setReminder(mRowId, mCalendar);
+                    mRowId = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
 
         builder.show();
     }
+
 
     @SuppressLint("RestrictedApi")
     void searchCustomer() {
