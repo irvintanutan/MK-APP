@@ -1,9 +1,13 @@
 package com.irvin.makeapp.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,13 +17,16 @@ import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAdapter.ViewHolder> {
     private List<StockIn> products;
     private Context mContext = null;
+    AlertDialog finalDialog = null;
 
     public StockInDetailsAdapter(List<StockIn> products, Context mContext) {
         this.products = products;
@@ -39,6 +46,19 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
         viewHolder.product_code.setText(products.get(position).getProductCode());
         viewHolder.productPrice.setText("₱ " + products.get(position).getPrice());
         viewHolder.productQuantity.setText(products.get(position).getQuantity());
+        viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editPrice(products.get(position), position);
+            }
+        });
+
+        viewHolder.editPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editPrice(products.get(position), position);
+            }
+        });
 
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +107,40 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
         notifyDataSetChanged();
     }
 
+    private void editPrice(final StockIn stockIn, final int position) {
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View alertLayout = inflater.inflate(R.layout.edit_price, null);
+
+        final EditText price = alertLayout.findViewById(R.id.price);
+        final Button apply = alertLayout.findViewById(R.id.apply);
+
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (price.getText().toString().length() > 0) {
+                    DecimalFormat dec = new DecimalFormat("#,##0.00");
+                    stockIn.setPrice(dec.format(Double.parseDouble(price.getText().toString())));
+                    products.set(position, stockIn);
+                    notifyItemChanged(position);
+                }
+                finalDialog.dismiss();
+
+            }
+        });
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        finalDialog = alert.create();
+        finalDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        finalDialog.show();
+
+    }
 
     @Override
     public int getItemCount() {
@@ -97,7 +151,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
 
         TextView product_code, productName, productPrice, productQuantity;
         LinearLayout container;
-        ImageView add, minus, delete;
+        ImageView add, minus, delete, editPrice;;
         LinearLayout rightSideContainer, leftSideContainer;
 
 
@@ -114,10 +168,12 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
             add = view.findViewById(R.id.plus);
             minus = view.findViewById(R.id.minus);
             delete = view.findViewById(R.id.delete);
+            editPrice = view.findViewById(R.id.editPrice);
 
             if (ModGlobal.indicator) {
                 delete.setVisibility(View.GONE);
                 add.setVisibility(View.GONE);
+                editPrice.setVisibility(View.GONE);
                 minus.setVisibility(View.GONE);
                 rightSideContainer.setVisibility(View.GONE);
 

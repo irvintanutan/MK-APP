@@ -170,6 +170,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(tbl_product, null, values);
         db.close(); // Closing database connection
 
+    }
+
+    public void updateProduct(Products products) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+
+        values.put(productId, products.getProduct_id());
+        values.put(productName, products.getProduct_name());
+        values.put(productPrice, products.getProduct_price());
+        values.put(productCategory, products.getProduct_category());
+
+
+        db.update(tbl_product, values, "productId= ?", new String[]{products.getProduct_id()});
+        db.close();
 
     }
 

@@ -50,28 +50,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseApp.initializeApp(this);
+
 
 
         if (databaseHelper.getAllProducts().size() == 0) {
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("products");
-            Query query = ref.orderByChild("products");
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ModGlobal.dataSnapshot = dataSnapshot;
-                    new GetProductTask(MainActivity.this).execute("");
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.e("aaa", "loadPost:onCancelled", databaseError.toException());
-                    // ...
-                }
-            });
-
+                    new GetProductTask(MainActivity.this).execute("0");
         }
 
         @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);

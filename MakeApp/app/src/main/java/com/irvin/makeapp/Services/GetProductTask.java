@@ -3,12 +3,22 @@ package com.irvin.makeapp.Services;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.irvin.makeapp.Activities.MainActivity;
+import com.irvin.makeapp.Activities.ProductActivity;
+import com.irvin.makeapp.Activities.StockInMainActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Products;
@@ -62,21 +72,42 @@ public class GetProductTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
 
         try {
+            final String isUpdate = params[0];
             warning_indicator = true;
 
+            FirebaseApp.initializeApp(serviceContext);
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("products");
+            Query query = ref.orderByChild("products");
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ModGlobal.dataSnapshot = dataSnapshot;
                     for (DataSnapshot postSnapshot : ModGlobal.dataSnapshot.getChildren()) {
 
                         Products products = postSnapshot.getValue(Products.class);
                         productsList.add(products);
-
                     }
 
-            for (int a = 0; a < productsList.size(); a++) {
+                    for (int a = 0; a < productsList.size(); a++) {
+                        if (isUpdate.equals("0")) {
+                            databaseHelper.addProduct(productsList.get(a));
+                        }else {
+                            databaseHelper.updateProduct(productsList.get(a));
+                        }
+                        publishProgress(String.format("%d", productsList.size())
+                                , String.format("%d", a));
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("aaa", "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
 
-                databaseHelper.addProduct(productsList.get(a));
-                publishProgress(String.format("%d", productsList.size())
-                        , String.format("%d", a));
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("asd", e.toString());
@@ -99,6 +130,7 @@ public class GetProductTask extends AsyncTask<String, String, String> {
         alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
+
             }
         });
 

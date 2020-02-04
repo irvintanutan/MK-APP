@@ -59,6 +59,13 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
                 editPrice(products.get(position), position);
             }
         });
+
+        viewHolder.editPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editPrice(products.get(position), position);
+            }
+        });
         viewHolder.productQuantity.setText(products.get(position).getQuantity());
 
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +186,7 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
 
         TextView product_code, productName, productPrice, productQuantity;
         LinearLayout container;
-        ImageView add, minus, delete;
+        ImageView add, minus, delete, editPrice;
         LinearLayout rightSideContainer, leftSideContainer;
 
 
@@ -196,10 +203,13 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
             add = view.findViewById(R.id.plus);
             minus = view.findViewById(R.id.minus);
             delete = view.findViewById(R.id.delete);
+            editPrice = view.findViewById(R.id.editPrice);
+
 
             if (ModGlobal.indicator) {
                 delete.setVisibility(View.GONE);
                 add.setVisibility(View.GONE);
+                editPrice.setVisibility(View.GONE);
                 minus.setVisibility(View.GONE);
                 rightSideContainer.setVisibility(View.GONE);
 
