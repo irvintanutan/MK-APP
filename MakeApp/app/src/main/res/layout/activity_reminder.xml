@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activities.MainActivity">
 
 
@@ -11,12 +12,30 @@
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <com.imanoweb.calendarview.CustomCalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:calendarBackgroundColor="@color/white"
+        app:calendarTitleTextColor="@color/black"
+        app:currentDayOfMonthColor="@color/colorPrimary"
+        app:dayOfMonthTextColor="@color/black"
+        app:dayOfWeekTextColor="@color/black"
+        app:disabledDayBackgroundColor="@color/white"
+        app:disabledDayTextColor="@color/colorAccent"
+        app:selectedDayBackgroundColor="@color/colorAccent"
+        app:titleLayoutBackgroundColor="@color/white"
+        app:weekLayoutBackgroundColor="@color/white">
+    </com.imanoweb.calendarview.CustomCalendarView>
+
+   <!-- <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reminder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar"
-        android:scrollbars="none" />
+        android:scrollbars="none" />-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

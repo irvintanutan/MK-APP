@@ -1,12 +1,15 @@
 package com.irvin.makeapp.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -38,6 +41,7 @@ import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         form.add(new MenuForm("Purchase Order", R.drawable.box, "Manage Inventory"));
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
-        form.add(new MenuForm("Reminder", R.drawable.memo, "Manage Reminders"));
+        form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
         form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
 
 
@@ -201,10 +205,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reminder() {
-        Intent i = new Intent(MainActivity.this, ReminderActivity.class);
+      /*  Intent i = new Intent(MainActivity.this, ReminderActivity.class);
         startActivity(i);
         finish();
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+        Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+        builder.appendPath("time");
+        ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
+        Intent intent = new Intent(Intent.ACTION_VIEW)
+                .setData(builder.build());
+        startActivity(intent);
     }
 
 

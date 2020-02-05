@@ -1,26 +1,15 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,34 +18,27 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.irvin.makeapp.Adapters.ProductAdapter;
-import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
-import com.irvin.makeapp.Models.Reminder;
-import com.irvin.makeapp.Models.StockIn;
-import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
-import com.irvin.makeapp.Services.ReminderManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -64,7 +46,7 @@ public class ReminderActivity extends AppCompatActivity {
     FloatingActionButton fab;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
-    RemindersDbAdapter remindersDbAdapter = new RemindersDbAdapter(this);
+
     private static final int DATE_PICKER_DIALOG = 0;
     private static final int TIME_PICKER_DIALOG = 1;
     List<CustomerModel> customerModelList;
@@ -78,16 +60,15 @@ public class ReminderActivity extends AppCompatActivity {
 
     EditText editTextTopic, editTextBody;
 
-    ReminderAdapter reminderAdapter;
+
     RecyclerView recyclerView;
-    List<Reminder> reminders;
 
     Button date;
     Button time;
     Button customer;
     String topic, body, strDate, strTime;
     private Long mRowId;
-    private RemindersDbAdapter mDbHelper = new RemindersDbAdapter(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +85,12 @@ public class ReminderActivity extends AppCompatActivity {
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
-        mRowId = savedInstanceState != null ? savedInstanceState.getLong(RemindersDbAdapter.KEY_ROWID)
-                : null;
 
-        init();
+
+        //init();
     }
 
-    private void init() {
+   /* private void init() {
         fab = findViewById(R.id.floating_action_button);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -150,38 +130,17 @@ public class ReminderActivity extends AppCompatActivity {
         }));
 
 
-    }
+    }*/
 
-    private void setRowIdFromIntent() {
-        if (mRowId == null) {
-            Bundle extras = getIntent().getExtras();
-            mRowId = extras != null ? extras.getLong(RemindersDbAdapter.KEY_ROWID)
-                    : null;
 
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDbHelper.close();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDbHelper.open();
-        setRowIdFromIntent();
-        populateFields();
-    }
 
     private void populateFields()  {
 
         if (mRowId != null) {
 
-            Reminder reminder = remindersDbAdapter.getAllReminders(mRowId);
+    /*        Reminder reminder = remindersDbAdapter.getAllReminders(mRowId);
 
-            PopUpReminder(reminder);
+            PopUpReminder(reminder);*/
         }
 
     }
@@ -270,7 +229,7 @@ public class ReminderActivity extends AppCompatActivity {
         date.setText(dateForButton);
     }
 
-
+/*
     void PopUpReminder(Reminder reminder) {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View alertLayout = inflater.inflate(R.layout.layout_reminder, null);
@@ -376,7 +335,7 @@ public class ReminderActivity extends AppCompatActivity {
         });
 
         builder.show();
-    }
+    }*/
 
 
     @SuppressLint("RestrictedApi")
