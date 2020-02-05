@@ -21,11 +21,13 @@ public class CustomerModel {
     private String skinTone;
     private String interests;
     private String photoUrl;
+    private String remarks;
+
 
     public CustomerModel(String firstName, String lastName, String middleName, String address,
                          String birthday, String age, String occupation, String email, String contactNumber,
                          String bestTimeToBeContacted, String referredBy,
-                         String skinType, String skinConcern, String skinTone, String interests, String photoUrl) {
+                         String skinType, String skinConcern, String skinTone, String interests, String photoUrl, String remarks) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -42,6 +44,7 @@ public class CustomerModel {
         this.skinTone = skinTone;
         this.interests = interests;
         this.photoUrl = photoUrl;
+        this.remarks = remarks;
     }
 
     public CustomerModel(){}
@@ -180,6 +183,15 @@ public class CustomerModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public String getFullName(){

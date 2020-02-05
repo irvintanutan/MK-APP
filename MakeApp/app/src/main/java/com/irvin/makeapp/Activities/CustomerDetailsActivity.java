@@ -65,7 +65,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 20;
     AppCompatImageView profilePicture;
-    EditText firstName, middleName, lastName, address, email, age, occupation, contactNumber, bestTimeToBeContacted, referredBy;
+    EditText firstName, middleName, lastName, address, email, age, occupation, contactNumber, bestTimeToBeContacted, referredBy , remarks;
     Button birthday;
     Spinner skinType, skinTone;
     MultiSelectionSpinner skinConcern, interest;
@@ -138,6 +138,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         bestTimeToBeContacted = findViewById(R.id.bestTimeToBeContacted);
         referredBy = findViewById(R.id.referredBy);
         contactNumber = findViewById(R.id.contactNumber);
+        remarks = findViewById(R.id.remarks);
 
 
         email.addTextChangedListener(new TextWatcher() {
@@ -197,6 +198,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             bestTimeToBeContacted.setText(customerModel.getBestTimeToBeContacted());
             referredBy.setText(customerModel.getReferredBy());
             contactNumber.setText(customerModel.getContactNumber());
+            remarks.setText(customerModel.getRemarks());
 
             if (customerModel.getSkinType().isEmpty()) {
                 skinType.setSelection(0);
@@ -312,11 +314,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 ok = false;
             }
 
-            if (email.getText() == null || email.getText().toString().isEmpty()) {
-                email.setError("Email is Required");
-                ok = false;
-            }
-
             if (contactNumber.getText() == null || contactNumber.getText().toString().isEmpty()) {
                 contactNumber.setError("Contact Number is Required");
                 ok = false;
@@ -413,6 +410,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         customerModel.setSkinTone(skinTone.getSelectedItem().toString() == null ? " " : skinTone.getSelectedItem().toString());
         customerModel.setInterests(interest.getSelectedItemsAsString() == null ? " " : interest.getSelectedItemsAsString());
         customerModel.setPhotoUrl(mCurrentPhotoPath == null ? " " : mCurrentPhotoPath);
+        customerModel.setRemarks(remarks.getText().toString() == null ? " " : remarks.getText().toString());
 
         if (isCreateNew)
             databaseCustomer.addCustomer(customerModel);

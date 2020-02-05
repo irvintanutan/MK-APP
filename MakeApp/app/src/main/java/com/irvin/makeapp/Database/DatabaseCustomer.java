@@ -46,6 +46,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
     private static final String skinTone = "skinTone";
     private static final String interests = "interests";
     private static final String photoUrl = "photoUrl";
+    private static final String remarks = "remarks";
 
 
 
@@ -88,6 +89,8 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
         values.put(skinTone, customerModel.getSkinTone());
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
+        values.put(remarks, customerModel.getRemarks());
+
 
 
         // Inserting Row
@@ -127,6 +130,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                 c.setSkinTone(cursor.getString(14));
                 c.setInterests(cursor.getString(15));
                 c.setPhotoUrl(cursor.getString(16));
+                c.setRemarks(cursor.getString(17));
 
 
                 personList.add(c);
@@ -220,6 +224,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                 c.setSkinTone(cursor.getString(14));
                 c.setInterests(cursor.getString(15));
                 c.setPhotoUrl(cursor.getString(16));
+                c.setRemarks(cursor.getString(17));
 
 
             } while (cursor.moveToNext());
@@ -250,6 +255,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
         values.put(skinTone, customerModel.getSkinTone());
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
+        values.put(remarks, customerModel.getRemarks());
 
         db.update(tbl_customer, values, "id= ?", new String[]{Integer.toString(id)});
         db.close();

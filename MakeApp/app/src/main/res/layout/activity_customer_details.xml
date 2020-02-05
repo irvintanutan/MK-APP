@@ -210,6 +210,7 @@
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+
                     <Button
                         android:id="@+id/birthday"
                         android:layout_width="match_parent"
@@ -321,7 +322,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
                         android:padding="7dp">
 
                         <LinearLayout
@@ -344,6 +345,25 @@
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:text="Remarks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        />
+
+                    <EditText
+                        android:id="@+id/remarks"
+                        android:gravity="top"
+                        android:padding="@dimen/_5sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_70sdp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/round3"
+                        android:inputType="textMultiLine" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
