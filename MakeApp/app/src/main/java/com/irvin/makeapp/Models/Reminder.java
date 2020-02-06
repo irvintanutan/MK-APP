@@ -2,17 +2,19 @@ package com.irvin.makeapp.Models;
 
 public class Reminder {
 
-    public Reminder(){
+    public Reminder() {
 
     }
 
-    public Reminder(String KEY_TITLE, String KEY_CUSTOMER_ID, String KEY_BODY, String KEY_DATE_TIME, String KEY_ROWID,String KEY_EVENT_ID) {
+    public Reminder(String KEY_TITLE, String KEY_CUSTOMER_ID, String KEY_BODY, String KEY_DATE_TIME, String KEY_ROWID
+            , String KEY_EVENT_ID, String KEY_INVOICE_ID) {
         this.KEY_TITLE = KEY_TITLE;
         this.KEY_CUSTOMER_ID = KEY_CUSTOMER_ID;
         this.KEY_BODY = KEY_BODY;
         this.KEY_DATE_TIME = KEY_DATE_TIME;
         this.KEY_ROWID = KEY_ROWID;
         this.KEY_EVENT_ID = KEY_EVENT_ID;
+        this.KEY_INVOICE_ID = KEY_INVOICE_ID;
     }
 
     public String getKEY_TITLE() {
@@ -64,10 +66,20 @@ public class Reminder {
     }
 
 
-    private String KEY_TITLE = "title";
-    private String KEY_CUSTOMER_ID = "customer";
-    private String KEY_BODY = "body";
-    private String KEY_DATE_TIME = "reminder_date_time";
-    private String KEY_ROWID = "_id";
-    private String KEY_EVENT_ID = "event_id";
+    private String KEY_TITLE;
+    private String KEY_CUSTOMER_ID;
+    private String KEY_BODY;
+    private String KEY_DATE_TIME;
+    private String KEY_ROWID;
+    private String KEY_EVENT_ID;
+
+    public String getKEY_INVOICE_ID() {
+        return KEY_INVOICE_ID;
+    }
+
+    public void setKEY_INVOICE_ID(String KEY_INVOICE_ID) {
+        this.KEY_INVOICE_ID = KEY_INVOICE_ID;
+    }
+
+    private String KEY_INVOICE_ID;
 }

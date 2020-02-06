@@ -65,6 +65,7 @@ import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.CalendarReminder;
 
 import java.io.File;
 import java.text.ParseException;
@@ -290,9 +291,8 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             reminders = new ArrayList<>();
             reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
 
-     /*   Toast.makeText(getApplicationContext() ,  Integer.toString(reminders.size()) , Toast.LENGTH_SHORT).show();
-        Log.e("asdasdasdasdas" , Integer.toString(reminders.size()));
-*/
+/*        Toast.makeText(getApplicationContext() ,  Integer.toString(reminders.size()) , Toast.LENGTH_SHORT).show();
+        Log.e("asdasdasdasdas" , Integer.toString(reminders.size()));*/
             reminderAdapter = new ReminderAdapter(reminders, this);
             recyclerView.setAdapter(reminderAdapter);
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
@@ -321,7 +321,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
                         public void onClick(DialogInterface dialog, int which) {
 
-                            deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()));
+                            CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), CustomerDetailsActivity.this);
                             databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
                             reminders.clear();
                             reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
@@ -794,7 +794,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     }
 
 
-    void PopUpReminder(Reminder reminder) {
+    void PopUpReminder(final Reminder reminder) {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View alertLayout = inflater.inflate(R.layout.layout_reminder, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -803,14 +803,12 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         time = alertLayout.findViewById(R.id.time);
         editTextTopic = alertLayout.findViewById(R.id.topic);
         editTextBody = alertLayout.findViewById(R.id.body);
-
+        mCalendar = Calendar.getInstance();
 
         if (reminder != null) {
 
-            customer.setText(databaseCustomer.getAllCustomer(Integer.parseInt(reminder.getKEY_CUSTOMER_ID())).getFullName());
             editTextTopic.setText(reminder.getKEY_TITLE());
             editTextBody.setText(reminder.getKEY_BODY());
-
             // Get the date from the database and format it for our use.
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
             Date date;
@@ -865,18 +863,32 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
                     if (mRowId == null) {
 
-                        addEvent(new Reminder(editTextTopic.getText().toString(),
-                                Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
-                                reminderDateTime, "", eventId));
+                        eventId = CalendarReminder.addEvent(new Reminder(editTextTopic.getText().toString(),
+                                        Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
+                                        reminderDateTime, "", eventId, ""), mCalendar, customerModel.getFullName(),
+                                CustomerDetailsActivity.this);
 
                         long id = databaseHelper.createReminder(new Reminder(editTextTopic.getText().toString(),
                                 Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
-                                reminderDateTime, "", eventId));
+                                reminderDateTime, "", eventId, ""));
                         if (id > 0) {
                             mRowId = id;
                         }
                     } else {
-                        databaseHelper.updateReminder(new Reminder(), mRowId.toString());
+                        databaseHelper.updateReminder(new Reminder(editTextTopic.getText().toString(),
+                                Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
+                                reminderDateTime, mRowId.toString(), eventId, reminder.getKEY_INVOICE_ID()), mRowId.toString());
+                        try {
+
+                            CalendarReminder.updateEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), CustomerDetailsActivity.this,
+                                    mCalendar, new Reminder(editTextTopic.getText().toString(),
+                                            Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
+                                            reminderDateTime, mRowId.toString(), eventId, reminder.getKEY_INVOICE_ID()), customerModel.getFullName());
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
 
                     reminders.clear();
@@ -971,44 +983,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             marshMallowPermission.requestPermissionForWriteCalendar();
         }
 
-    }
-
-
-    public void addEvent(Reminder reminder) {
-
-        long calID = 1;
-        Calendar endCalendar = mCalendar;
-        endCalendar.add(Calendar.HOUR, 1);
-        ContentResolver cr = getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, mCalendar.getTimeInMillis());
-        values.put(CalendarContract.Events.DTEND, endCalendar.getTimeInMillis());
-        values.put(CalendarContract.Events.TITLE, reminder.getKEY_TITLE());
-        values.put(CalendarContract.Events.DESCRIPTION, reminder.getKEY_BODY());
-        values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE,TimeZone.getDefault().getID());
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-            eventId = uri.getLastPathSegment();
-
-            ContentValues reminders = new ContentValues();
-            reminders.put(CalendarContract.Reminders.EVENT_ID, eventId);
-            reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-            reminders.put(CalendarContract.Reminders.MINUTES, 60);
-
-
-            cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
-        }
-
-    }
-
-    private void deleteEvent(long eventID) {
-        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        int rows = getContentResolver().delete(deleteUri, null, null);
-        Log.i("Calendar", "Rows deleted: " + rows);
     }
 
 }

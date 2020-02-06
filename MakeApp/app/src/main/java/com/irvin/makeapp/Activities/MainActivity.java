@@ -33,6 +33,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.Constant.CountDrawable;
+import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
+        if (!marshMallowPermission.checkPermissionForWriteCalendar()) {
+            marshMallowPermission.requestPermissionForWriteCalendar();
+        }
 
 
         if (databaseHelper.getAllProducts().size() == 0) {

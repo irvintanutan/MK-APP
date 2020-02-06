@@ -38,10 +38,16 @@ import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Database.DatabasePayment;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
+import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.CalendarReminder;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
@@ -175,7 +181,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
     public void checkOut(View view) {
 
-        if (ModGlobal.stockIns.isEmpty()){
+        if (ModGlobal.stockIns.isEmpty()) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Warning");
@@ -271,38 +277,36 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductDetailsActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductDetailsActivity.this);
 
-                        builder.setTitle("Processing Payment");
-                        builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
-                        builder.setMessage("Are you sure you want to place the order ?");
+                    builder.setTitle("Processing Payment");
+                    builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+                    builder.setMessage("Are you sure you want to place the order ?");
 
-                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                            public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog, int which) {
 
-                                if (finalCash < finalTotal){
-                                    dueDateTime();
-                                }else {
-                                    new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
-                                }
-
-
-
-
+                            if (finalCash < finalTotal) {
+                                dueDateTime();
+                            } else {
+                                new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
                             }
 
-                        });
-                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        }
 
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                    });
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
             });
 
@@ -550,8 +554,6 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
     }
 
 
-
-
     public class InvoiceTask extends AsyncTask<String, String, String> {
         boolean warning_indicator = true;
         private DatabaseHelper databaseHelper;
@@ -589,12 +591,12 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                 Log.e(ModGlobal.stockIns.get(a).getProductCode(), ModGlobal.stockIns.get(a).getQuantity());
 
                 databaseHelper.stockIn(ModGlobal.stockIns.get(a).getProductCode()
-                        , ModGlobal.stockIns.get(a).getQuantity() , false);
+                        , ModGlobal.stockIns.get(a).getQuantity(), false);
             }
 
             String json = new Gson().toJson(ModGlobal.stockIns);
 
-            databasePayment.addPayment(new Payment("",Double.toString(finalCash),databaseInvoice.getLastInvoiceId(),"" ,
+            databasePayment.addPayment(new Payment("", Double.toString(finalCash), databaseInvoice.getLastInvoiceId(), "",
                     Double.toString(finalChange)));
 
             Invoice invoice = new Invoice();
@@ -604,13 +606,37 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
             invoice.setDiscount(Double.toString(finalDiscount));
             invoice.setDueDate(dueDate);
 
-            if (finalCash < finalTotal)
-                 invoice.setStatus(TranStatus.PENDING.toString());
-            else invoice.setStatus(TranStatus.PAID.toString());
+            if (finalCash < finalTotal) {
+                invoice.setStatus(TranStatus.PENDING.toString());
+
+
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Calendar mCalendar = Calendar.getInstance();
+                Date date;
+                try {
+                    date = dateTimeFormat.parse(dueDate + " 07:00:00");
+                    mCalendar.setTime(date);
+
+                    String eventId = "";
+                    eventId = CalendarReminder.addEvent(new Reminder("Due for " + ModGlobal.toTitleCase(invoice.getCustomerName()),
+                                    Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(databaseInvoice.getLastInvoiceId())) +
+                                    " - ₱" + dec.format(finalTotal - finalCash),
+                                    dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()), mCalendar, invoice.getCustomerName(),
+                            SalesInvoiceProductDetailsActivity.this);
+
+                    long id = databaseHelper.createReminder(new Reminder("Due for " + ModGlobal.toTitleCase(invoice.getCustomerName()),
+                            Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(databaseInvoice.getLastInvoiceId())) +
+                            " - ₱" + dec.format(finalTotal - finalCash),
+                            dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("asd", e.getMessage());
+                }
+            } else invoice.setStatus(TranStatus.PAID.toString());
             invoice.setInvoiceDetail(json);
 
 
-            Log.e("status" , invoice.getStatus());
+            Log.e("status", invoice.getStatus());
 
             databaseInvoice.addInvoice(invoice);
 

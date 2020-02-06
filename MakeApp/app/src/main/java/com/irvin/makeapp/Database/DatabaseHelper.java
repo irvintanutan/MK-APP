@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Products;
@@ -92,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_DATE_TIME = "reminder_date_time";
     public static final String KEY_ROWID = "_id";
     public static final String KEY_EVENT_ID = "event_id";
+    public static final String KEY_INVOICE_ID = "invoice_id";
 
 
     public DatabaseHelper(Context context) {
@@ -160,7 +162,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         + KEY_BODY + " text not null, "
                         + KEY_CUSTOMER_ID + " text not null, "
                         + KEY_DATE_TIME + " text not null, "
-                        + KEY_EVENT_ID + " text not null);";
+                        + KEY_EVENT_ID + " text not null, "
+                        + KEY_INVOICE_ID + " text not null);";
         db.execSQL(DATABASE_CREATE_REMINDER);
 
     }
@@ -177,7 +180,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + KEY_BODY + " text not null, "
                     + KEY_CUSTOMER_ID + " text not null, "
                     + KEY_DATE_TIME + " text not null, "
-                    + KEY_EVENT_ID + " text not null);";
+                    + KEY_EVENT_ID + " text not null, "
+                    + KEY_INVOICE_ID + " text not null);";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -357,6 +361,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         initialValues.put(KEY_CUSTOMER_ID, reminder.getKEY_CUSTOMER_ID());
         initialValues.put(KEY_DATE_TIME, reminder.getKEY_DATE_TIME());
         initialValues.put(KEY_EVENT_ID, reminder.getKEY_EVENT_ID());
+        initialValues.put(KEY_INVOICE_ID, reminder.getKEY_INVOICE_ID());
 
         return db.insert(tbl_reminder, null, initialValues);
     }
@@ -370,6 +375,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         initialValues.put(KEY_CUSTOMER_ID, reminder.getKEY_CUSTOMER_ID());
         initialValues.put(KEY_DATE_TIME, reminder.getKEY_DATE_TIME());
         initialValues.put(KEY_EVENT_ID, reminder.getKEY_EVENT_ID());
+        initialValues.put(KEY_INVOICE_ID, reminder.getKEY_INVOICE_ID());
 
         db.update(tbl_reminder, initialValues, KEY_ROWID+"= ?", new String[]{rowId});
         db.close();
@@ -378,8 +384,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Reminder> getAllReminders(String customerId) {
         List<Reminder> reminders = new ArrayList<>();
         // Select All Query
+       // String selectQuery = "SELECT  * FROM " + tbl_reminder + " ORDER BY " + KEY_ROWID + " DESC";
 
-        String selectQuery = "SELECT  * FROM " + tbl_reminder + " where " + KEY_CUSTOMER_ID + "='" + customerId + "' ORDER BY " + KEY_ROWID + " DESC";
+       String selectQuery = "SELECT  * FROM " + tbl_reminder + " where " + KEY_CUSTOMER_ID + "='" + customerId + "' ORDER BY " + KEY_ROWID + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -394,6 +401,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 reminder.setKEY_CUSTOMER_ID(cursor.getString(3));
                 reminder.setKEY_DATE_TIME(cursor.getString(4));
                 reminder.setKEY_EVENT_ID(cursor.getString(5));
+                reminder.setKEY_INVOICE_ID(cursor.getString(6));
 
 
                 reminders.add(reminder);
@@ -409,6 +417,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         return db.delete(tbl_reminder, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
+    public Reminder getAllRemindersByInvoice(String id) {
+        Reminder reminder = new Reminder();
+
+        String selectQuery = "SELECT  * FROM " + tbl_reminder + " WHERE " + KEY_INVOICE_ID + " = '" + id + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                reminder.setKEY_ROWID(cursor.getString(0));
+                reminder.setKEY_TITLE(cursor.getString(1));
+                reminder.setKEY_BODY(cursor.getString(2));
+                reminder.setKEY_CUSTOMER_ID(cursor.getString(3));
+                reminder.setKEY_DATE_TIME(cursor.getString(4));
+                reminder.setKEY_EVENT_ID(cursor.getString(5));
+                reminder.setKEY_INVOICE_ID(cursor.getString(6));
+
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return reminder;
     }
 
     public Reminder getAllReminders(Long id) {

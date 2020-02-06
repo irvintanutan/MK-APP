@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
@@ -31,10 +35,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
 
+        try {
 
-        viewHolder.title.setText(reminders.get(position).getKEY_TITLE());
-        viewHolder.description.setText(reminders.get(position).getKEY_BODY());
-        viewHolder.date.setText(reminders.get(position).getKEY_DATE_TIME());
+            viewHolder.title.setText(reminders.get(position).getKEY_TITLE());
+            viewHolder.description.setText(reminders.get(position).getKEY_BODY());
+            DateFormat formatter2 = new SimpleDateFormat("MMM. dd, yyyy");
+            Date date2 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(reminders.get(position).getKEY_DATE_TIME());
+            viewHolder.date.setText(formatter2.format(date2));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void update(List<Reminder> reminders) {

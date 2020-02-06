@@ -41,8 +41,10 @@ import com.irvin.makeapp.Database.DatabasePayment;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.Payment;
+import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.CalendarReminder;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -68,6 +70,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -655,9 +658,42 @@ public class PaymentActivity extends AppCompatActivity {
 
             if (status.equals(TranStatus.PENDING.toString())) {
                 invoice.setDueDate(dueDate);
+
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Calendar mCalendar = Calendar.getInstance();
+                Date date;
+                try {
+
+                    Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
+
+                    date = dateTimeFormat.parse(dueDate + " 07:00:00");
+                    mCalendar.setTime(date);
+
+                    databaseHelper.updateReminder(new Reminder(reminder.getKEY_TITLE(),
+                            reminder.getKEY_CUSTOMER_ID(), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(reminder.getKEY_INVOICE_ID())) +
+                            " - ₱" + dec.format(finalChange),
+                            dueDate + " 07:00:00", reminder.getKEY_ROWID(), reminder.getKEY_EVENT_ID()
+                            , reminder.getKEY_INVOICE_ID()), reminder.getKEY_ROWID());
+
+                    CalendarReminder.updateEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), PaymentActivity.this,
+                            mCalendar, new Reminder(reminder.getKEY_TITLE(),
+                                    reminder.getKEY_CUSTOMER_ID(), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(reminder.getKEY_INVOICE_ID())) +
+                                    " - ₱" + dec.format(finalChange),
+                                    dueDate + " 07:00:00", reminder.getKEY_ROWID(), reminder.getKEY_EVENT_ID()
+                                    , reminder.getKEY_INVOICE_ID()), invoice.getCustomerName());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else {
+                Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
+                CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), PaymentActivity.this);
+                databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
             }
 
             databaseInvoice.updateInvoice(invoice, invoice.getInvoiceId());
+
+
             return null;
         }
 
@@ -737,138 +773,6 @@ public class PaymentActivity extends AppCompatActivity {
         maxWidth = 600;
 
         String downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-
-        Document doc = new Document();
-        //try {
-
-
-           /* outFile = new FileOutputStream(downloadsPath + File.separator + "Notes.pdf");
-            pdfWriter = PdfWriter.getInstance(doc, outFile);
-            doc.open();
-            String invoiceNumber = "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() +
-                    "d", Integer.parseInt(ModGlobal.invoice.getInvoiceId()));
-            Paragraph title = new Paragraph(new Phrase(ModGlobal.invoice.getCustomerName() + "( " +
-                    ModGlobal.invoice.getStatus() + " )" + "\n" + invoiceNumber,
-                    new Font(Font.FontFamily.TIMES_ROMAN, 30, Font.BOLD)));
-            title.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(title);
-
-
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ModGlobal.invoice.getDateCreated());
-            DateFormat formatter = new SimpleDateFormat("E. MMM dd, yyyy HH:mm:ss");
-            Paragraph transactionDate = new Paragraph(new Phrase("Transaction Date : " + formatter.format(date),
-                    new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL)));
-            transactionDate.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(transactionDate);
-
-            Paragraph dueDate = null;
-
-
-            //specify column widths
-            float[] columnWidths = {1.5f, 2f, 5f, 2f};
-            //create PDF table with the given widths
-            PdfPTable table = new PdfPTable(columnWidths);
-            // set table width a percentage of the page width
-            table.setWidthPercentage(90f);
-
-
-            //special font sizes
-            Font bfBold12 = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0));
-            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
-
-            //insert column headings
-            insertCell(table, "Order No", Element.ALIGN_RIGHT, 1, bfBold12);
-            insertCell(table, "Account No", Element.ALIGN_LEFT, 1, bfBold12);
-            insertCell(table, "Account Name", Element.ALIGN_LEFT, 1, bfBold12);
-            insertCell(table, "Order Total", Element.ALIGN_RIGHT, 1, bfBold12);
-            table.setHeaderRows(1);
-
-
-            if (ModGlobal.invoice.getStatus().equals(TranStatus.PENDING.toString())) {
-                DateFormat formatter2 = new SimpleDateFormat("E. MMM dd, yyyy");
-                Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(ModGlobal.invoice.getDueDate());
-                dueDate = new Paragraph(new Phrase("Due Date : " + formatter2.format(date2),
-                        new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.NORMAL)));
-                dueDate.setAlignment(Paragraph.ALIGN_CENTER);
-                dueDate.add(table);
-                doc.add(dueDate);
-            }
-
-            String details = "\n\n";
-            details += "Item/s                        QTY         AMOUNT             TOTAL\n";
-
-            JSONArray jsonArray = new JSONArray(ModGlobal.invoice.getInvoiceDetail());
-            ArrayList<StockIn> stockIns = new ArrayList<>();
-            for (int a = 0; a < jsonArray.length(); a++) {
-
-                JSONObject object = jsonArray.getJSONObject(a);
-                StockIn stockIn = new StockIn(object.getString("productName")
-                        , object.getString("productCode"), object.getString("quantity")
-                        , object.getString("price"));
-
-                stockIns.add(stockIn);
-            }
-            ModGlobal.stockIns = stockIns;
-            DecimalFormat dec = new DecimalFormat("#,##0.00");
-
-            details += "------------------------------------------------------------------------------\n";
-            double finalTotalPrice = 0.00;
-            for (StockIn stockIn : ModGlobal.stockIns) {
-                details += stockIn.getProductName() + "\n";
-
-                String qty = stockIn.getQuantity();
-                String price = stockIn.getPrice();
-                double totalPriceDouble = Integer.parseInt(qty) * Double.parseDouble(price.replace(",", ""));
-                finalTotalPrice += totalPriceDouble;
-                String totalPrice = dec.format(totalPriceDouble);
-                String lineItems = "                                   X" + qty;
-                lineItems += "          @" + price;
-
-                for (int a = 1; a <= 20 - price.length(); a++)
-                    lineItems += " ";
-
-                lineItems += "Php" + totalPrice;
-                details += lineItems + "\n\n";
-
-            }
-            details += "------------------------------------------------------------------------------\n";
-            Paragraph parDetails = new Paragraph(new Phrase(details,
-                    new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL)));
-            doc.add(parDetails);
-            details = "";
-            details += "                                             "
-                    + " Total Amount    -   Php " + dec.format(finalTotalPrice) + "\n";
-
-            details += "                                             "
-                    + " Total Cash         -   Php " + ModGlobal.totalAmountPaid + "\n";
-            details += "                                              -------------------------------------------\n";
-
-            if (Double.parseDouble(ModGlobal.totalBalance.replace(",", "")) <= 0) {
-                details += "                                             "
-                        + " Balance              -  Php 0.00\n";
-            } else {
-                details += "                                             "
-                        + " Balance              -  Php " + ModGlobal.totalBalance + "\n";
-            }
-
-              parDetails = new Paragraph(new Phrase(details,
-                    new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD)));
-            doc.add(parDetails);*/
-
-
-        /*} catch (DocumentException | IOException e) {
-            e.printStackTrace();
-            Log.e("Exists", e.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally {
-            doc.close();
-            pdfWriter.close();
-            Log.e("Exists", "No errors.");
-        }*/
-
         createPDF(downloadsPath + File.separator + "Notes.pdf");
 
         ModGlobal.imageFilePath = downloadsPath + File.separator + "Notes.pdf";
@@ -1038,7 +942,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void callCustomer() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        CustomerModel customerModel =  databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+        CustomerModel customerModel = databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
         callIntent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
 
         if (ActivityCompat.checkSelfPermission(PaymentActivity.this,
@@ -1050,7 +954,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void messageCustomer() {
 
         try {
-            CustomerModel customerModel =  databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
+            CustomerModel customerModel = databaseCustomer.getAllCustomer(Integer.parseInt(ModGlobal.invoice.getCustomerId()));
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setType("vnd.android-dir/mms-sms");
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
@@ -1059,33 +963,4 @@ public class PaymentActivity extends AppCompatActivity {
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-    public void generateEmail() {
-        try {
-
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_SEND);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"rvngames.inc@gmail.com"});
-            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "sample");
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, "sample");
-            // Need to grant this permission
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            // Attachment
-            intent.setType("vnd.android.cursor.dir/email");
-
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(ModGlobal.imageFilePath)));
-
-                    intent.setPackage("com.google.android.gm");
-                startActivityForResult(intent, 101);
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("d" , e.toString());
-        }
-    }
-
 }
