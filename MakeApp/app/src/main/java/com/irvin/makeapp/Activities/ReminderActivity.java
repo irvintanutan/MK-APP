@@ -27,13 +27,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +49,7 @@ public class ReminderActivity extends AppCompatActivity {
     FloatingActionButton fab;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
+    RemindersDbAdapter remindersDbAdapter = new RemindersDbAdapter(this);
 
     private static final int DATE_PICKER_DIALOG = 0;
     private static final int TIME_PICKER_DIALOG = 1;
@@ -59,10 +63,9 @@ public class ReminderActivity extends AppCompatActivity {
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     EditText editTextTopic, editTextBody;
-
-
+    ReminderAdapter reminderAdapter;
     RecyclerView recyclerView;
-
+    List<Reminder> reminders;
     Button date;
     Button time;
     Button customer;

@@ -39,20 +39,7 @@
             android:background="@drawable/reminder"
             android:inputType="textMultiLine" />
 
-    <TextView
-        android:text="Customer"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/customer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/round"
-        android:onClick="dateTime"
-        android:text="None"
-        android:textColor="@color/white" />
+
     <TextView
         android:text="Reminder Date"
         android:layout_marginBottom="@dimen/_10sdp"

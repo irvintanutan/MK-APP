@@ -4,7 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
 import android.text.Editable;
@@ -30,6 +36,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -38,20 +46,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.irvin.makeapp.Adapters.ReminderAdapter;
+import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.MultiSelectionSpinner;
+import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -65,7 +88,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 20;
     AppCompatImageView profilePicture;
-    EditText firstName, middleName, lastName, address, email, age, occupation, contactNumber, bestTimeToBeContacted, referredBy , remarks;
+    EditText firstName, middleName, lastName, address, email, age, occupation, contactNumber, bestTimeToBeContacted, referredBy, remarks;
     Button birthday;
     Spinner skinType, skinTone;
     MultiSelectionSpinner skinConcern, interest;
@@ -78,6 +101,30 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
+
+
+    private static final int DATE_PICKER_DIALOG = 0;
+    private static final int TIME_PICKER_DIALOG = 1;
+    List<CustomerModel> customerModelList;
+    List<CustomerModel> tempCust = new ArrayList<>();
+    private Calendar mCalendar;
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIME_FORMAT = "kk:mm";
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd kk:mm:ss";
+
+    private int mYear, mMonth, mDay, mHour, mMinute;
+
+    EditText editTextTopic, editTextBody;
+    ReminderAdapter reminderAdapter;
+    RecyclerView recyclerView;
+    List<Reminder> reminders;
+    Button date;
+    Button time;
+    Button customer;
+    String topic, body, strDate, strTime;
+    String eventId = "";
+    private Long mRowId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +280,79 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         }
 
+        Button rem = findViewById(R.id.reminders);
+        TextView followUp = findViewById(R.id.followUp);
+        if (!ModGlobal.isCreateNew) {
+            recyclerView = findViewById(R.id.reminder_view);
+            recyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+            reminders = new ArrayList<>();
+            reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
+
+     /*   Toast.makeText(getApplicationContext() ,  Integer.toString(reminders.size()) , Toast.LENGTH_SHORT).show();
+        Log.e("asdasdasdasdas" , Integer.toString(reminders.size()));
+*/
+            reminderAdapter = new ReminderAdapter(reminders, this);
+            recyclerView.setAdapter(reminderAdapter);
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+                @Override
+                public void onClick(View view, int position) {
+
+                    Reminder reminder = reminders.get(position);
+                    mRowId = Long.parseLong(reminder.getKEY_ROWID());
+                    PopUpReminder(reminder);
+
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+
+                    final Reminder reminder = reminders.get(position);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CustomerDetailsActivity.this);
+
+                    builder.setTitle("Confirm");
+                    builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+                    builder.setMessage("Are you sure you want to delete " + reminder.getKEY_TITLE() + " reminder ?");
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()));
+                            databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
+                            reminders.clear();
+                            reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
+
+                            reminderAdapter = new ReminderAdapter(reminders, CustomerDetailsActivity.this);
+                            recyclerView.setAdapter(reminderAdapter);
+                            reminderAdapter.notifyDataSetChanged();
+
+                        }
+
+                    });
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                }
+
+
+            }));
+        } else {
+            rem.setVisibility(View.GONE);
+            followUp.setVisibility(View.GONE);
+        }
+
     }
 
 
@@ -254,7 +374,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));
                     finish();
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
-                }  else {
+                } else {
                     startActivity(new Intent(CustomerDetailsActivity.this, CustomerActivity.class));
                     finish();
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
@@ -609,6 +729,176 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         return result;
     }
 
+    private void showDatePicker() {
+
+        // Get Current Date
+        mCalendar = Calendar.getInstance();
+        mYear = mCalendar.get(Calendar.YEAR);
+        mMonth = mCalendar.get(Calendar.MONTH);
+        mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        mCalendar.set(Calendar.YEAR, year);
+                        mCalendar.set(Calendar.MONTH, monthOfYear);
+                        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        updateDateButtonText();
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    private void showTimePicker() {
+
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+
+                        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        mCalendar.set(Calendar.MINUTE, minute);
+                        updateTimeButtonText();
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
+    }
+
+    private void updateTimeButtonText() {
+        // Set the time button text based upon the value from the database
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+        String timeForButton = timeFormat.format(mCalendar.getTime());
+        strTime = timeForButton;
+        time.setText(timeForButton);
+    }
+
+    private void updateDateButtonText() {
+        // Set the date button text based upon the value from the database
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        String dateForButton = dateFormat.format(mCalendar.getTime());
+        strDate = dateForButton;
+        date.setText(dateForButton);
+    }
+
+
+    void PopUpReminder(Reminder reminder) {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View alertLayout = inflater.inflate(R.layout.layout_reminder, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        date = alertLayout.findViewById(R.id.date);
+        time = alertLayout.findViewById(R.id.time);
+        editTextTopic = alertLayout.findViewById(R.id.topic);
+        editTextBody = alertLayout.findViewById(R.id.body);
+
+
+        if (reminder != null) {
+
+            customer.setText(databaseCustomer.getAllCustomer(Integer.parseInt(reminder.getKEY_CUSTOMER_ID())).getFullName());
+            editTextTopic.setText(reminder.getKEY_TITLE());
+            editTextBody.setText(reminder.getKEY_BODY());
+
+            // Get the date from the database and format it for our use.
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+            Date date;
+            try {
+                String dateString = reminder.getKEY_DATE_TIME();
+                date = dateTimeFormat.parse(dateString);
+                mCalendar.setTime(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e("ReminderEditActivity", e.getMessage(), e);
+            }
+
+            updateDateButtonText();
+            updateTimeButtonText();
+        }
+
+
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker();
+            }
+        });
+
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePicker();
+            }
+        });
+
+        builder.setView(alertLayout);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Set", null);
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mRowId = null;
+            }
+        });
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+                    String reminderDateTime = dateTimeFormat.format(mCalendar.getTime());
+
+                    if (mRowId == null) {
+
+                        addEvent(new Reminder(editTextTopic.getText().toString(),
+                                Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
+                                reminderDateTime, "", eventId));
+
+                        long id = databaseHelper.createReminder(new Reminder(editTextTopic.getText().toString(),
+                                Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
+                                reminderDateTime, "", eventId));
+                        if (id > 0) {
+                            mRowId = id;
+                        }
+                    } else {
+                        databaseHelper.updateReminder(new Reminder(), mRowId.toString());
+                    }
+
+                    reminders.clear();
+                    reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
+
+                    reminderAdapter = new ReminderAdapter(reminders, CustomerDetailsActivity.this);
+                    recyclerView.setAdapter(reminderAdapter);
+                    reminderAdapter.notifyDataSetChanged();
+
+
+                    mRowId = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        builder.show();
+    }
+
+
     private boolean hasPermission(String permission) {
         if (canMakeSmores()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -669,6 +959,56 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 break;
         }
 
+    }
+
+    public void reminder(View view) {
+
+        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
+
+        if (marshMallowPermission.checkPermissionForWriteCalendar()) {
+            PopUpReminder(null);
+        } else {
+            marshMallowPermission.requestPermissionForWriteCalendar();
+        }
+
+    }
+
+
+    public void addEvent(Reminder reminder) {
+
+        long calID = 1;
+        Calendar endCalendar = mCalendar;
+        endCalendar.add(Calendar.HOUR, 1);
+        ContentResolver cr = getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, mCalendar.getTimeInMillis());
+        values.put(CalendarContract.Events.DTEND, endCalendar.getTimeInMillis());
+        values.put(CalendarContract.Events.TITLE, reminder.getKEY_TITLE());
+        values.put(CalendarContract.Events.DESCRIPTION, reminder.getKEY_BODY());
+        values.put(CalendarContract.Events.CALENDAR_ID, calID);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE,TimeZone.getDefault().getID());
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            eventId = uri.getLastPathSegment();
+
+            ContentValues reminders = new ContentValues();
+            reminders.put(CalendarContract.Reminders.EVENT_ID, eventId);
+            reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+            reminders.put(CalendarContract.Reminders.MINUTES, 60);
+
+
+            cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
+        }
+
+    }
+
+    private void deleteEvent(long eventID) {
+        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        int rows = getContentResolver().delete(deleteUri, null, null);
+        Log.i("Calendar", "Rows deleted: " + rows);
     }
 
 }
