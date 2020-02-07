@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="false"
@@ -29,12 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".Activities.CustomerProfileViewActivity"></activity>
         <activity
             android:name=".Activities.NavigationDrawerActivity"
             android:label="@string/title_activity_navigation_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.ReminderActivity" />
-
         <activity android:name=".Activities.ReportActivity" />
         <activity android:name=".Activities.PaymentActivity" />
         <activity android:name=".Activities.SalesInvoiceProductDetailsActivity" />

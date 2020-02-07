@@ -38,16 +38,16 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     public void onBindViewHolder(CustomerAdapter.ViewHolder viewHolder, int position) {
 
         if (!customerModelList.get(position).getPhotoUrl().isEmpty() && customerModelList.get(position).getPhotoUrl() != null) {
-            Log.e("asd" , customerModelList.get(position).getPhotoUrl());
+            Log.e("asd", customerModelList.get(position).getPhotoUrl());
             Glide.with(mContext).load(new File(customerModelList.get(position).getPhotoUrl())).into(viewHolder.profilePicture);
-        }else {
+        } else {
             Glide.with(mContext).load(mContext.getResources().getDrawable(R.drawable.user_img)).into(viewHolder.profilePicture);
         }
         viewHolder.fullName.setText(ModGlobal.toTitleCase(customerModelList.get(position).getFirstName() +
                 " " + customerModelList.get(position).getLastName()));
         viewHolder.age.setText("Age : " + customerModelList.get(position).getAge());
         viewHolder.contactNumber.setText("Contact # : " + customerModelList.get(position).getContactNumber());
-        viewHolder.skinType.setText("Skin Type : " + customerModelList.get(position).getSkinType());
+        viewHolder.skinType.setText(customerModelList.get(position).getSkinType());
     }
 
     public void update(List<CustomerModel> customerModelList) {

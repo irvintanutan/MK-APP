@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="SAMPLE TITLE"
                 android:textColor="@color/colorAccent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
                 android:textSize="@dimen/_15sdp"/>
 
 
@@ -67,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_10sdp"
+                android:textStyle="bold|italic"
                 android:text="SAMPLE TITLE" />
 
 

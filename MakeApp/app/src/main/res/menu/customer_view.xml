@@ -5,20 +5,20 @@
 
     <item android:id="@+id/action_message"
         android:title="Message"
-        android:icon="@drawable/message"
+        android:icon="@drawable/baseline_sms_24"
         app:showAsAction="always"/>
 
 
     <item android:id="@+id/action_call"
         android:title="Call"
-        android:icon="@drawable/phone"
+        android:icon="@drawable/baseline_phone_in_talk_24"
         app:showAsAction="always"/>
 
 
 
     <item android:id="@+id/action_save"
         android:title="Save"
-        android:icon="@drawable/save"
+        android:icon="@drawable/baseline_save_24"
         app:showAsAction="always"/>
 
 </menu>

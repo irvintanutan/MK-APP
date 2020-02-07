@@ -83,7 +83,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
             public void onClick(View view, int position) {
                 ModGlobal.isCreateNew = false;
                 ModGlobal.customerId = customerModelList.get(position).getId();
-                Intent i = new Intent(CustomerActivity.this, CustomerDetailsActivity.class);
+                Intent i = new Intent(CustomerActivity.this, CustomerProfileViewActivity.class);
                 i.putExtra("toolBarTitle" , "");
                 startActivity(i);
                 finish();
@@ -176,45 +176,6 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    long addEventToCalender(String title, String addInfo, String place, int status,
-                                          long startDate, boolean isRemind, boolean isMailService) {
-        String eventUriStr = "content://com.android.calendar/events";
-        ContentValues event = new ContentValues();
-        // id, We need to choose from our mobile for primary its 1
-        event.put("calendar_id", 1);
-        event.put("title", title);
-        event.put("description", addInfo);
-        event.put("eventLocation", place);
-        event.put("eventTimezone", "UTC/GMT +2:00");
-
-        // For next 1hr
-        long endDate = startDate + 1000 * 60 * 60;
-        event.put("dtstart", startDate);
-        event.put("dtend", endDate);
-        //If it is bithday alarm or such kind (which should remind me for whole day) 0 for false, 1 for true
-        // values.put("allDay", 1);
-        event.put("eventStatus", status);
-        event.put("hasAlarm", 1);
-
-        ContentResolver cr = getContentResolver();
-
-        Uri eventUri = cr.insert(Uri.parse(eventUriStr), event);
-        long eventID = Long.parseLong(eventUri.getLastPathSegment());
-
-        if (isRemind) {
-            String reminderUriString = "content://com.android.calendar/reminders";
-            ContentValues reminderValues = new ContentValues();
-            reminderValues.put("event_id", eventID);
-            // Default value of the system. Minutes is a integer
-            reminderValues.put("minutes", 60);
-            // Alert Methods: Default(0), Alert(1), Email(2), SMS(3)
-            reminderValues.put("method", 1);
-            cr.insert(Uri.parse(reminderUriString), reminderValues); //Uri reminderUri =
-        }
-
-        return eventID;
     }
 
     private void filter(String text){

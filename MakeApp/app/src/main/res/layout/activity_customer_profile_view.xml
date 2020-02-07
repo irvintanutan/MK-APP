@@ -73,6 +73,7 @@
                             android:id="@+id/firstName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,6 +88,7 @@
                             android:id="@+id/middleName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:hint="Middle Name"
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -101,6 +103,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/lastName"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Last Name"
                             android:inputType="text" />
@@ -116,6 +119,7 @@
                             android:id="@+id/address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@null"
                             android:hint="Address"
                             android:inputType="textMultiLine" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -129,6 +133,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/age"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Age"
                             android:inputType="number" />
@@ -143,6 +148,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/occupation"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Occupation"
                             android:inputType="text" />
@@ -158,6 +164,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/email"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Email"
                             android:inputType="textEmailAddress" />
@@ -172,6 +179,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/contactNumber"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Contact Number"
                             android:inputType="phone" />
@@ -187,6 +195,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/bestTimeToBeContacted"
                             android:layout_width="match_parent"
+                            android:background="@null"
                             android:layout_height="wrap_content"
                             android:hint="Best time to be contacted"
                             android:inputType="text" />
@@ -200,6 +209,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/referredBy"
+                            android:background="@null"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Referred By"
