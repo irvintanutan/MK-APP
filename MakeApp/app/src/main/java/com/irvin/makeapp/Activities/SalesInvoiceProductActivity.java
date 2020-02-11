@@ -208,6 +208,16 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
         Log.e("size", Integer.toString(customerModelList.size()));
 
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        final AlertDialog dialog = alert.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
         customerAdapter = new SearchCustomerAdapter(customerModelList, this);
         recyclerView.setAdapter(customerAdapter);
 
@@ -215,12 +225,13 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
             @Override
             public void onClick(View view, int position) {
-                ModGlobal.position = position;
-                customerAdapter.notifyDataSetChanged();
+
 
                 ModGlobal.customerId = tempCust.get(position).getId();
                 ModGlobal.customerName = tempCust.get(position).getFirstName() + " " + tempCust.get(position).getLastName();
 
+                customerName.setText(ModGlobal.customerName);
+                dialog.dismiss();
 
             }
 
@@ -235,15 +246,6 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
             }
         }));
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        // this is set the view from XML inside AlertDialog
-        alert.setView(alertLayout);
-        // disallow cancel of AlertDialog on click of back button and outside touch
-        alert.setCancelable(false);
-        final AlertDialog dialog = alert.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
 
 
         done.setOnClickListener(new View.OnClickListener() {
@@ -267,7 +269,6 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
                     AlertDialog alert = builder.create();
                     alert.show();
                 } else {
-                    customerName.setText(ModGlobal.customerName);
                     dialog.dismiss();
                 }
             }

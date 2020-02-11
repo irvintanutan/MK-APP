@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hbb20.GThumb;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
@@ -39,10 +40,19 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
 
         if (!customerModelList.get(position).getPhotoUrl().isEmpty() && customerModelList.get(position).getPhotoUrl() != null) {
             Log.e("asd", customerModelList.get(position).getPhotoUrl());
-            Glide.with(mContext).load(new File(customerModelList.get(position).getPhotoUrl())).into(viewHolder.profilePicture);
+            viewHolder.profilePicture.setVisibility(View.GONE);
+            viewHolder.profilePicture2.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(new File(customerModelList.get(position).getPhotoUrl())).into(viewHolder.profilePicture2);
         } else {
-            Glide.with(mContext).load(mContext.getResources().getDrawable(R.drawable.user_img)).into(viewHolder.profilePicture);
+            viewHolder.profilePicture2.setVisibility(View.GONE);
+            viewHolder.profilePicture.setVisibility(View.VISIBLE);
+            viewHolder.profilePicture.applyMultiColor();
+            viewHolder.profilePicture.loadThumbForName(customerModelList.get(position).getPhotoUrl(), customerModelList.get(position).getFirstName(),
+                    customerModelList.get(position).getLastName());
         }
+
+
+
         viewHolder.fullName.setText(ModGlobal.toTitleCase(customerModelList.get(position).getFirstName() +
                 " " + customerModelList.get(position).getLastName()));
         viewHolder.age.setText("Age : " + customerModelList.get(position).getAge());
@@ -64,7 +74,8 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView fullName, age, contactNumber, skinType;
-        CircleImageView profilePicture;
+        GThumb profilePicture;
+        CircleImageView profilePicture2;
 
         public ViewHolder(View view) {
             super(view);
@@ -74,6 +85,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
             contactNumber = view.findViewById(R.id.contactNumber);
             skinType = view.findViewById(R.id.skinType);
             profilePicture = view.findViewById(R.id.profilePicture);
+            profilePicture2 = view.findViewById(R.id.profilePicture2);
 
         }
     }

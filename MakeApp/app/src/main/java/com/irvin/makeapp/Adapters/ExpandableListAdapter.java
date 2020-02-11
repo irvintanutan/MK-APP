@@ -21,6 +21,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.bumptech.glide.Glide;
+import com.hbb20.GThumb;
 import com.irvin.makeapp.Activities.PaymentActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
@@ -165,13 +166,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView fullName, totalAmount, totalAmountPaid, totalBalance;
         HorizontalProgressView progressBar;
         View view;
-        CircleImageView profilePicture;
+        CircleImageView profilePicture2;
+        GThumb profilePicture;
 
 
         fullName = convertView.findViewById(R.id.fullName);
         totalAmount = convertView.findViewById(R.id.totalAmount);
         totalAmountPaid = convertView.findViewById(R.id.totalAmountPaid);
         totalBalance = convertView.findViewById(R.id.totalBalance);
+        profilePicture2 = convertView.findViewById(R.id.profilePicture2);
         profilePicture = convertView.findViewById(R.id.profilePicture);
         progressBar = convertView.findViewById(R.id.progressBar);
         view = convertView.findViewById(R.id.view);
@@ -185,10 +188,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         if (!formName.get(groupPosition).getPath().isEmpty() && formName.get(groupPosition).getPath() != null) {
-            Glide.with(context).load(new File(formName.get(groupPosition).getPath())).into(profilePicture);
+            profilePicture.setVisibility(View.GONE);
+            Glide.with(context).load(new File(formName.get(groupPosition).getPath())).into(profilePicture2);
         } else {
-            Glide.with(context).load(context.getResources().getDrawable(R.drawable.user_img)).into(profilePicture);
+            profilePicture2.setVisibility(View.GONE);
+            profilePicture.applyMultiColor();
+            profilePicture.loadThumbForName("", formName.get(groupPosition).getCustomerName().split(" ")[0],
+                    formName.get(groupPosition).getCustomerName().split(" ")[1]);
         }
+
+
+
 
         DecimalFormat dec = new DecimalFormat("#,##0.00");
         fullName.setText(formName.get(groupPosition).getCustomerName());

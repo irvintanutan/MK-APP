@@ -83,7 +83,8 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
             public void onClick(View view, int position) {
                 ModGlobal.isCreateNew = false;
                 ModGlobal.customerId = customerModelList.get(position).getId();
-                Intent i = new Intent(CustomerActivity.this, CustomerProfileViewActivity.class);
+                ModGlobal.customerName = customerModelList.get(position).getFullName();
+                Intent i = new Intent(CustomerActivity.this, CustomerDetailsActivity.class);
                 i.putExtra("toolBarTitle" , "");
                 startActivity(i);
                 finish();

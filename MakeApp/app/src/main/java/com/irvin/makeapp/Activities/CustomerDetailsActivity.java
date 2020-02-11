@@ -866,7 +866,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                         eventId = CalendarReminder.addEvent(new Reminder(editTextTopic.getText().toString(),
                                         Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
                                         reminderDateTime, "", eventId, ""), mCalendar, customerModel.getFullName(),
-                                CustomerDetailsActivity.this);
+                                CustomerDetailsActivity.this, Long.parseLong("1"));
 
                         long id = databaseHelper.createReminder(new Reminder(editTextTopic.getText().toString(),
                                 Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
@@ -985,4 +985,15 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
     }
 
+    public void invoice(View view) {
+
+        Intent intent = new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class);
+        startActivity(intent);
+        finish();
+
+        ModGlobal.ProductModelListCopy.clear();
+        ModGlobal.stockIns.clear();
+        ModGlobal.ProductModelList.clear();
+
+    }
 }

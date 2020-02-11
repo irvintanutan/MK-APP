@@ -29,9 +29,8 @@ public class CalendarReminder {
 
 
 
-    public static String addEvent(Reminder reminder , Calendar mCalendar , String fullName,  Activity activity) {
+    public static String addEvent(Reminder reminder , Calendar mCalendar , String fullName,  Activity activity ,Long calID) {
         String eventId = "";
-        long calID = 1;
         ContentResolver cr = activity.getContentResolver();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, mCalendar.getTimeInMillis());
@@ -40,6 +39,7 @@ public class CalendarReminder {
         values.put(CalendarContract.Events.DESCRIPTION, fullName + "\n" + reminder.getKEY_BODY());
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+
 
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);

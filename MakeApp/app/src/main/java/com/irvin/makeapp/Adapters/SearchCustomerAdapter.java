@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hbb20.GThumb;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
@@ -38,18 +39,26 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
     @Override
     public void onBindViewHolder(SearchCustomerAdapter.ViewHolder viewHolder, int position) {
 
+/*
         if(ModGlobal.position == position)
             viewHolder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
         else
             viewHolder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
-
+*/
 
         if (!customerModelList.get(position).getPhotoUrl().isEmpty() && customerModelList.get(position).getPhotoUrl() != null) {
-            Log.e("asd" , customerModelList.get(position).getPhotoUrl());
-            Glide.with(mContext).load(new File(customerModelList.get(position).getPhotoUrl())).into(viewHolder.profilePicture);
-        }else {
-            Glide.with(mContext).load(mContext.getResources().getDrawable(R.drawable.user_img)).into(viewHolder.profilePicture);
+            Log.e("asd", customerModelList.get(position).getPhotoUrl());
+            viewHolder.profilePicture.setVisibility(View.GONE);
+            viewHolder.profilePicture2.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(new File(customerModelList.get(position).getPhotoUrl())).into(viewHolder.profilePicture2);
+        } else {
+            viewHolder.profilePicture2.setVisibility(View.GONE);
+            viewHolder.profilePicture.setVisibility(View.VISIBLE);
+            viewHolder.profilePicture.applyMultiColor();
+            viewHolder.profilePicture.loadThumbForName(customerModelList.get(position).getPhotoUrl(), customerModelList.get(position).getFirstName(),
+                    customerModelList.get(position).getLastName());
         }
+
         viewHolder.fullName.setText(ModGlobal.toTitleCase(customerModelList.get(position).getFirstName() + " " + customerModelList.get(position).getMiddleName() + " " +
                 " " + customerModelList.get(position).getLastName()));
 
@@ -69,7 +78,8 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView fullName;
-        CircleImageView profilePicture;
+        GThumb profilePicture;
+        CircleImageView profilePicture2;
         CardView cv;
 
         public ViewHolder(View view) {
@@ -77,6 +87,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
             cv = view.findViewById(R.id.cv);
             fullName = view.findViewById(R.id.fullName);
             profilePicture = view.findViewById(R.id.profilePicture);
+            profilePicture2 = view.findViewById(R.id.profilePicture2);
 
         }
     }

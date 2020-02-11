@@ -41,7 +41,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@drawable/check" />
+                android:src="@drawable/baseline_close_24"
+                tools:ignore="VectorDrawableCompat" />
 
 
 
@@ -96,6 +97,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
                 android:src="@drawable/plus" />
+
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
