@@ -28,7 +28,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".Activities.CustomerProfileViewActivity"></activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity android:name=".Activities.CustomerProfileViewActivity" />
         <activity
             android:name=".Activities.NavigationDrawerActivity"
             android:label="@string/title_activity_navigation_drawer"

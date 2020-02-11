@@ -45,6 +45,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -188,6 +189,8 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         contactNumber = findViewById(R.id.contactNumber);
         remarks = findViewById(R.id.remarks);
 
+        CardView inv = findViewById(R.id.invoice);
+        if (ModGlobal.isCreateNew) inv.setVisibility(View.GONE);
 
         email.addTextChangedListener(new TextWatcher() {
 

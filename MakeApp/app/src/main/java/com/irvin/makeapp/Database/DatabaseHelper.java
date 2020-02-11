@@ -127,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + productName + " TEXT , "
                 + productPrice + " TEXT , "
                 + productCategory + " TEXT , "
-                + productQuantity + " TEXT );";
+                + productQuantity + " TEXT default '0');";
         db.execSQL(CREATE_PRODUCT_TABLE);
 
 
@@ -284,8 +284,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Products> getAllProductsWithQuantity() {
         List<Products> products = new ArrayList<Products>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_product + " where " + productQuantity + " > 0";
 
+        String selectQuery;
+        if (ModGlobal.settingPref.getBoolean("trackInventory", true)) {
+            selectQuery = "SELECT  * FROM " + tbl_product + " where " + productQuantity + " > 0";
+        }else {
+            selectQuery = "SELECT  * FROM " + tbl_product;
+        }
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -366,7 +371,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(tbl_reminder, null, initialValues);
     }
 
-    public void updateReminder(Reminder reminder , String rowId) {
+    public void updateReminder(Reminder reminder, String rowId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues initialValues = new ContentValues();
@@ -377,16 +382,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         initialValues.put(KEY_EVENT_ID, reminder.getKEY_EVENT_ID());
         initialValues.put(KEY_INVOICE_ID, reminder.getKEY_INVOICE_ID());
 
-        db.update(tbl_reminder, initialValues, KEY_ROWID+"= ?", new String[]{rowId});
+        db.update(tbl_reminder, initialValues, KEY_ROWID + "= ?", new String[]{rowId});
         db.close();
     }
 
     public List<Reminder> getAllReminders(String customerId) {
         List<Reminder> reminders = new ArrayList<>();
         // Select All Query
-       // String selectQuery = "SELECT  * FROM " + tbl_reminder + " ORDER BY " + KEY_ROWID + " DESC";
+        // String selectQuery = "SELECT  * FROM " + tbl_reminder + " ORDER BY " + KEY_ROWID + " DESC";
 
-       String selectQuery = "SELECT  * FROM " + tbl_reminder + " where " + KEY_CUSTOMER_ID + "='" + customerId + "' ORDER BY " + KEY_ROWID + " DESC";
+        String selectQuery = "SELECT  * FROM " + tbl_reminder + " where " + KEY_CUSTOMER_ID + "='" + customerId + "' ORDER BY " + KEY_ROWID + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Constant;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class ModGlobal {
 
+    public static SharedPreferences settingPref;
     public static boolean isCreateNew = false;
     public static int customerId;
     public static String customerName = "";

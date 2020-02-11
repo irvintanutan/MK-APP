@@ -1,6 +1,5 @@
 package com.irvin.makeapp.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -8,8 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
@@ -72,31 +68,41 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
             @Override
             public void onClick(View view) {
 
-                StockIn stockIn = products.get(position);
-                int qty = Integer.parseInt(stockIn.getQuantity()) + 1;
 
-                if (qty <= Integer.parseInt(databaseHelper.getAllProducts(products.get(position).getProductCode()).get(0).getProduct_quantity())) {
+                if (ModGlobal.settingPref.getBoolean("trackInventory", true)) {
+                    StockIn stockIn = products.get(position);
+                    int qty = Integer.parseInt(stockIn.getQuantity()) + 1;
+
+                    if (qty <= Integer.parseInt(databaseHelper.getAllProducts(products.get(position).getProductCode()).get(0).getProduct_quantity())) {
+                        stockIn.setQuantity(Integer.toString(qty));
+                        products.set(position, stockIn);
+                        notifyDataSetChanged();
+                        SalesInvoiceProductDetailsActivity.calculateTotal();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        builder.setTitle("Warning");
+                        builder.setIcon(mContext.getResources().getDrawable(R.drawable.warning));
+                        builder.setMessage("Quantity Limit already reached");
+
+                        builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }else {
+                    StockIn stockIn = products.get(position);
+                    int qty = Integer.parseInt(stockIn.getQuantity()) + 1;
                     stockIn.setQuantity(Integer.toString(qty));
                     products.set(position, stockIn);
                     notifyDataSetChanged();
                     SalesInvoiceProductDetailsActivity.calculateTotal();
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("Warning");
-                    builder.setIcon(mContext.getResources().getDrawable(R.drawable.warning));
-                    builder.setMessage("Quantity Limit already reached");
-
-                    builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    });
-
-                    AlertDialog alert = builder.create();
-                    alert.show();
                 }
             }
         });

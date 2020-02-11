@@ -21,6 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ModGlobal.settingPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
         if (!marshMallowPermission.checkPermissionForWriteCalendar()) {
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (databaseHelper.getAllProducts().size() == 0) {
-                    new GetProductTask(MainActivity.this).execute("0");
+            new GetProductTask(MainActivity.this).execute("0");
         }
 
         @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
@@ -133,9 +135,6 @@ public class MainActivity extends AppCompatActivity {
                         case 5:
                             reminder();
                             break;
-                        case 6:
-                            logout();
-                            break;
                         case 2:
                             stockIn();
                             break;
@@ -144,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case 4:
                             reports();
+                            break;
+                        case 6:
+                            setting();
                             break;
                         default:
                     }
@@ -208,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+    }
+
+    private void setting() {
+        Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     private void reminder() {
