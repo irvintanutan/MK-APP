@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -33,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
+import com.irvin.makeapp.BuildConfig;
 import com.irvin.makeapp.Constant.CountDrawable;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -56,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        TextView version = findViewById(R.id.versionName);
+        version.setText("PinkHeartV"+BuildConfig.VERSION_NAME);
 
         ModGlobal.settingPref = PreferenceManager.getDefaultSharedPreferences(this);
 

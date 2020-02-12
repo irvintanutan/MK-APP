@@ -1,57 +1,80 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
 
-import com.anychart.AnyChart;
-import com.anychart.AnyChartView;
-import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
-import com.anychart.core.cartesian.series.Column;
-import com.anychart.enums.HoverMode;
-import com.anychart.enums.Position;
-import com.anychart.enums.TooltipPositionMode;
-import com.anychart.graphics.vector.Anchor;
-import com.google.android.material.tabs.TabLayout;
-import com.irvin.makeapp.Adapters.ViewPagerAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.irvin.makeapp.Database.DatabaseCustomer;
+import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
-
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
+    DecimalFormat dec = new DecimalFormat("#,##0.00");
+    TextView receivables , thisMonth, totalSales;
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
+    DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        Pie pie = AnyChart.pie();
+        Window window = getWindow();
 
-        List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("John", 10000));
-        data.add(new ValueDataEntry("Jake", 12000));
-        data.add(new ValueDataEntry("Peter", 18000));
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        pie.data(data);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-        anyChartView.setChart(pie);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.end_color));
+
+        init();
+
+    }
+
+    void init(){
+
+        receivables = findViewById(R.id.receivables);
+        thisMonth = findViewById(R.id.thisMonth);
+        totalSales = findViewById(R.id.totalSales);
+
+        receivables.setText(accountReceivable());
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        thisMonth.setText(databaseInvoice.getMonthlySales( formatter.format(date)));
+        totalSales.setText(databaseInvoice.getTotalSales());
 
 
+
+    }
+
+
+    private String accountReceivable(){
+        String result = "";
+        Double balance = 0.00;
+
+        List<TransactionModel> customerModels = databaseCustomer.getAllCustomerWithDueDates(false);
+
+        for (TransactionModel customerModel : customerModels) {
+
+            balance += Double.parseDouble(databaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false)) -
+                    Double.parseDouble(customerModel.getTotalAmountPaid());
+
+        }
+
+        return  "₱ " + dec.format(balance);
     }
 
 

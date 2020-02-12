@@ -3,10 +3,21 @@
     <color name="colorPrimary">#FF4081</color>
     <color name="colorPrimaryDark">#FF4081</color>
     <color name="colorAccent">#424242</color>
+
+<!--    <color name="colorPrimary">#FCFCFC</color>
+    <color name="colorPrimaryDark">#2A2E43</color>
+    <color name="colorAccent">#FF402D</color>-->
+
+    <!--colors for light mode-->
+    <color name="contentTextColor">#020000</color>
+    <color name="whiteTextColor">#fff</color>
+
     <color name="indicator">#ecd95a</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="green">#2e7d32</color>
     <color name="cashier_green">#424242</color>
     <color name="divider">#F5F5F5</color>
+    <color name="status_bar">#667eea</color>
+    <color name="end_color">#764ba2</color>
 </resources>

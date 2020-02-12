@@ -20,4 +20,15 @@
         android:scrollbars="none" />
 
 
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/user_view"
+        android:id="@+id/versionName"
+        android:padding="@dimen/_10sdp"
+        android:text="v.2.9"
+        android:textColor="#BDBDBD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

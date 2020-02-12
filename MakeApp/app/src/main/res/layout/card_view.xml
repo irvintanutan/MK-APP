@@ -4,7 +4,7 @@
     android:layout_margin="@dimen/_5sdp"
     android:clickable="true"
     android:elevation="10dp"
-    app:cardCornerRadius="@dimen/_3sdp"
+    app:cardCornerRadius="@dimen/_5sdp"
     android:foreground="?android:attr/selectableItemBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">

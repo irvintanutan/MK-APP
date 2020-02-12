@@ -25,8 +25,10 @@ import com.hbb20.GThumb;
 import com.irvin.makeapp.Activities.PaymentActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MainForm;
 import com.irvin.makeapp.R;
@@ -49,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private DatabaseHelper db;
+    private DatabaseCustomer databaseCustomer;
     private DatabaseInvoice databaseInvoice;
     private Activity context;
     private Map<MainForm, List<Invoice>> formDetails;
@@ -61,6 +64,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.formName = formName;
         databaseInvoice = new DatabaseInvoice(context);
         db = new DatabaseHelper(context);
+        databaseCustomer = new DatabaseCustomer(context);
 
     }
 
@@ -193,8 +197,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             profilePicture2.setVisibility(View.GONE);
             profilePicture.applyMultiColor();
-            profilePicture.loadThumbForName("", formName.get(groupPosition).getCustomerName().split(" ")[0],
-                    formName.get(groupPosition).getCustomerName().split(" ")[1]);
+
+            CustomerModel customerModel = databaseCustomer.getAllCustomer(Integer.parseInt(formName.get(groupPosition).getCustomerId()));
+
+            profilePicture.loadThumbForName("", customerModel.getFirstName(),
+                    customerModel.getLastName());
         }
 
 

@@ -12,6 +12,7 @@ import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class DatabaseInvoice extends SQLiteOpenHelper {
 
+    DecimalFormat dec = new DecimalFormat("#,##0.00");
     private Context mContext;
     DatabaseHelper databaseHelper;
     DatabaseCustomer databaseCustomer;
@@ -104,8 +106,6 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
     }
 
 
-
-
     public String getLastInvoiceId() {
 
         String id = "1";
@@ -122,7 +122,6 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         return id;
 
     }
-
 
 
     public List<Invoice> getAllInvoices() {
@@ -269,6 +268,42 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         db.close();
         return products;
     }
+
+
+    public String getMonthlySales(String date) {
+        Double result = 0.00;
+
+        String query = "select sum(" + totalAmount + ") from " + tbl_invoice + " where strftime('%Y-%m', " + dateCreated + ") = '" + date + "';";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                result = cursor.getDouble(0);
+
+            } while (cursor.moveToNext());
+        }
+        return "₱ " + dec.format(result);
+    }
+
+    public String getTotalSales() {
+        Double result = 0.00;
+
+        String query = "select sum(" + totalAmount + ") from " + tbl_invoice;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                result = cursor.getDouble(0);
+
+            } while (cursor.moveToNext());
+        }
+        return "₱ " + dec.format(result);
+    }
+
 
     public String getAllDueInvoices(String customerId, boolean isDueDate) {
         String result = "";
