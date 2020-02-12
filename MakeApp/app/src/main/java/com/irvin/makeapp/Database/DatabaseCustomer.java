@@ -103,7 +103,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
     public List<CustomerModel> getAllCustomer() {
         List<CustomerModel> personList = new ArrayList<CustomerModel>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_customer + " order by id DESC";
+        String selectQuery = "SELECT  * FROM " + tbl_customer + " order by firstName asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -157,7 +157,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                     "INNER JOIN tbl_customer c on i.customerId  = c.id " +
                     "  WHERE i.status = 'PENDING'" +
                     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
-                    " GROUP BY c.id";
+                    " GROUP BY c.id order by c.firstName asc";
         } else {
             selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
                     "sum (p.amount) as totalAmountPaid , c.id " +
@@ -166,7 +166,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                     "INNER JOIN tbl_customer c on i.customerId  = c.id " +
                     "  WHERE i.status = 'PENDING'" +
                     /*     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +*/
-                    " GROUP BY c.id";
+                    " GROUP BY c.id order by c.firstName asc";
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
