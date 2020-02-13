@@ -20,7 +20,9 @@ import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -82,6 +84,7 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapte
 
         } catch (ParseException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
     }
 

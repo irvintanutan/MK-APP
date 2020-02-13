@@ -43,7 +43,11 @@ import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -172,7 +176,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+            try{
 
+                double sample = Double.parseDouble("asd");
+
+            }catch (Exception e){
+
+
+                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+
+            }
     }
 
 

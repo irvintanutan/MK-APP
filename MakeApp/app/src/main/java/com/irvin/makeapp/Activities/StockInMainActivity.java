@@ -29,11 +29,15 @@ import com.irvin.makeapp.Database.DatabaseStockin;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +114,8 @@ public class StockInMainActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+
+                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                 }
 
             }

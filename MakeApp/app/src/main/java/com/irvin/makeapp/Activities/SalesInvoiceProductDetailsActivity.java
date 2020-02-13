@@ -42,7 +42,9 @@ import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.CalendarReminder;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -630,6 +632,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                             dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                     Log.e("asd", e.getMessage());
                 }
             } else invoice.setStatus(TranStatus.PAID.toString());

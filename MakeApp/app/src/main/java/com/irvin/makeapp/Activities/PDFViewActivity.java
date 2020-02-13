@@ -18,6 +18,7 @@ import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 import com.shockwave.pdfium.PdfDocument;
 
 import java.io.File;
@@ -129,6 +130,7 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
             startActivityForResult(intent, 101);
         }catch (Exception e){
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
             Log.e("d" , e.toString());
         }
     }

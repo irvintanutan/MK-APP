@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         } catch (ParseException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

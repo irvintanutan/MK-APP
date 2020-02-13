@@ -32,6 +32,7 @@ import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.Models.MainForm;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 import com.white.progressview.HorizontalProgressView;
 
 import java.io.File;
@@ -136,6 +137,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         } catch (ParseException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(context.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
         return convertView;

@@ -45,6 +45,7 @@ import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.CalendarReminder;
+import com.irvin.makeapp.Services.Logger;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -907,8 +908,10 @@ public class PaymentActivity extends AppCompatActivity {
 
         } catch (DocumentException dex) {
             dex.printStackTrace();
+            Logger.CreateNewEntry(dex , new File(getExternalFilesDir("") , ModGlobal.logFile));
         } catch (Exception ex) {
             ex.printStackTrace();
+            Logger.CreateNewEntry(ex , new File(getExternalFilesDir("") , ModGlobal.logFile));
         } finally {
             if (doc != null) {
                 //close the document

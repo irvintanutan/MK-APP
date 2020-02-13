@@ -9,14 +9,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -76,8 +79,10 @@ public class StockInMainAdapter extends RecyclerView.Adapter<StockInMainAdapter.
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         } catch (ParseException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
 

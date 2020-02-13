@@ -23,6 +23,7 @@ import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
+import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.Invoice;
@@ -30,11 +31,15 @@ import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.Models.TopTenProductModel;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -132,7 +137,11 @@ public class ReportActivity extends AppCompatActivity {
                 }
 
             } catch (JSONException e) {
+
                 e.printStackTrace();
+
+                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+
             }
 
 

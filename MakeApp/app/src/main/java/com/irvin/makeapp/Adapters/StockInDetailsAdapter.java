@@ -16,7 +16,9 @@ import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -97,6 +99,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
                     notifyItemRangeChanged(position, getItemCount());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
                 }
             }
         });

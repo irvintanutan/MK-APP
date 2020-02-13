@@ -13,7 +13,9 @@ import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Payment;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -56,6 +58,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
 
         } catch (ParseException e) {
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

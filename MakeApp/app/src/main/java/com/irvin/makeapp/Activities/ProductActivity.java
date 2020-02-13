@@ -38,7 +38,9 @@ import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Category;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -339,6 +341,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                 Log.e("asd", e.toString());
                 warning_indicator = false;
             }

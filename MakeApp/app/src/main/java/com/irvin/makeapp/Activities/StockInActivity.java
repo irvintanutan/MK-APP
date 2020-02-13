@@ -35,7 +35,9 @@ import com.irvin.makeapp.Models.Category;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,6 +175,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
             loadList();
         }catch (Exception e){
             e.printStackTrace();
+            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

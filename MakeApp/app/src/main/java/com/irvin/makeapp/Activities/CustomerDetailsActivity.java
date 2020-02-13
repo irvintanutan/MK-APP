@@ -7,9 +7,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,9 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.CalendarContract;
 import android.provider.MediaStore;
-import android.provider.Telephony;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,13 +42,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
@@ -62,11 +54,11 @@ import com.irvin.makeapp.Constant.MultiSelectionSpinner;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Database.RemindersDbAdapter;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.CalendarReminder;
+import com.irvin.makeapp.Services.Logger;
 
 import java.io.File;
 import java.text.ParseException;
@@ -76,7 +68,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -509,6 +500,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
         } catch (Exception e) {
+            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -821,6 +813,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 mCalendar.setTime(date);
             } catch (ParseException e) {
                 e.printStackTrace();
+                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                 Log.e("ReminderEditActivity", e.getMessage(), e);
             }
 
@@ -890,6 +883,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
                         }catch (Exception e){
                             e.printStackTrace();
+                            Logger.CreateNewEntry(e, new File(getExternalFilesDir("") , ModGlobal.logFile));
                         }
 
                     }
@@ -905,6 +899,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     mRowId = null;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                 }
 
             }
