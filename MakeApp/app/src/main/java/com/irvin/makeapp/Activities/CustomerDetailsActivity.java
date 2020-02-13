@@ -583,6 +583,8 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         builder.show();
     }
 
+
+
     public void profilePicture(View view) {
         startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
     }

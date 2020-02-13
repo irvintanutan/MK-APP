@@ -9,17 +9,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.chart.common.listener.Event;
+import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Cartesian;
+import com.anychart.charts.Pie;
 import com.anychart.core.cartesian.series.Column;
+import com.anychart.enums.Align;
 import com.anychart.enums.HoverMode;
+import com.anychart.enums.LegendLayout;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
@@ -51,8 +58,9 @@ import java.util.Date;
 import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
+
     DecimalFormat dec = new DecimalFormat("#,##0.00");
-    TextView receivables , thisMonth, totalSales;
+    TextView receivables, thisMonth, totalSales;
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
     List<TopTenProductModel> topTenProductModels = new ArrayList<>();
@@ -74,7 +82,7 @@ public class ReportActivity extends AppCompatActivity {
 
     }
 
-    void init(){
+    void init() {
 
         receivables = findViewById(R.id.receivables);
         thisMonth = findViewById(R.id.thisMonth);
@@ -83,15 +91,16 @@ public class ReportActivity extends AppCompatActivity {
         receivables.setText(accountReceivable());
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM");
-        thisMonth.setText(databaseInvoice.getMonthlySales( formatter.format(date)));
+        thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
         totalSales.setText(databaseInvoice.getTotalSales());
 
         productChart();
+        topCustomer();
 
     }
 
 
-    private String accountReceivable(){
+    private String accountReceivable() {
         String result = "";
         Double balance = 0.00;
 
@@ -104,12 +113,56 @@ public class ReportActivity extends AppCompatActivity {
 
         }
 
-        return  "₱ " + dec.format(balance);
+        return "₱ " + dec.format(balance);
     }
 
-    void productChart(){
-        int counter = 0;
+    void topCustomer() {
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view1);
+
+        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+        Pie pie = AnyChart.pie();
+
+        pie.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
+            @Override
+            public void onClick(Event event) {
+            }
+        });
+
+        List<TransactionModel> transactionModels = databaseCustomer.getTop5Customer();
+
+        List<DataEntry> data = new ArrayList<>();
+        for (TransactionModel transactionModel : transactionModels){
+
+            data.add(new ValueDataEntry(transactionModel.getCustomerName(), Integer.parseInt(transactionModel.getTotalAmount())));
+
+        }
+
+
+
+
+        pie.data(data);
+
+        pie.title("Top 5 Customers Base on Purchases");
+
+        pie.labels().position("outside");
+
+        pie.legend().title().enabled(true);
+        pie.legend().title()
+                .text("Customers")
+                .padding(0d, 0d, 10d, 0d);
+
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
+        anyChartView.setChart(pie);
+    }
+
+    void productChart() {
         AnyChartView anyChartView = findViewById(R.id.any_chart_view);
+
+        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+        int counter = 0;
 
         Cartesian cartesian = AnyChart.column();
 
@@ -124,11 +177,11 @@ public class ReportActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(invoice.getInvoiceDetail());
 
-                for (int a = 0 ; a < jsonArray.length() ; a++) {
+                for (int a = 0; a < jsonArray.length(); a++) {
 
                     JSONObject object = jsonArray.getJSONObject(a);
                     StockIn stockIn = new StockIn(object.getString("productName")
-                            ,object.getString("productCode") , object.getString("quantity")
+                            , object.getString("productCode"), object.getString("quantity")
                             , object.getString("price"));
 
                     addProduct(stockIn);
@@ -140,13 +193,12 @@ public class ReportActivity extends AppCompatActivity {
 
                 e.printStackTrace();
 
-                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+                Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
 
             }
 
 
         }
-
 
 
         Collections.sort(topTenProductModels, new Comparator<TopTenProductModel>() {
@@ -157,13 +209,10 @@ public class ReportActivity extends AppCompatActivity {
         });
 
         List<DataEntry> data = new ArrayList<>();
-        for (int a = topTenProductModels.size() - 1 ; a >= 0 ; a--) {
+        for (int a = topTenProductModels.size() - 1; a >= 0; a--) {
             TopTenProductModel topTenProductModel = topTenProductModels.get(a);
             data.add(new ValueDataEntry(topTenProductModel.getProductName(), topTenProductModel.getTotal()));
         }
-
-
-
 
 
         Column column = cartesian.column(data);
@@ -193,32 +242,31 @@ public class ReportActivity extends AppCompatActivity {
 
     }
 
-    void addProduct(StockIn stockIn){
+    void addProduct(StockIn stockIn) {
 
         boolean indicator = false;
         int index = 0;
 
         String productCode = stockIn.getProductCode();
         String productName = stockIn.getProductName();
-        double price = Double.parseDouble(stockIn.getPrice().replace(",","")) * Integer.parseInt(stockIn.getQuantity());
+        double price = Double.parseDouble(stockIn.getPrice().replace(",", "")) * Integer.parseInt(stockIn.getQuantity());
 
 
-           for (int a = 0; a < topTenProductModels.size(); a++) {
-               if (stockIn.getProductCode().equals(topTenProductModels.get(a).getProductCode())){
-                    indicator = true;
-                    index = a;
-               }
-           }
+        for (int a = 0; a < topTenProductModels.size(); a++) {
+            if (stockIn.getProductCode().equals(topTenProductModels.get(a).getProductCode())) {
+                indicator = true;
+                index = a;
+            }
+        }
 
-           if (indicator){
-                price += topTenProductModels.get(index).getTotal();
-               topTenProductModels.set(index , new TopTenProductModel(topTenProductModels.get(index).getProductCode() ,
-                       topTenProductModels.get(index).getProductName() , price));
-           }else {
-               topTenProductModels.add(new TopTenProductModel(productCode , productName , price));
+        if (indicator) {
+            price += topTenProductModels.get(index).getTotal();
+            topTenProductModels.set(index, new TopTenProductModel(topTenProductModels.get(index).getProductCode(),
+                    topTenProductModels.get(index).getProductName(), price));
+        } else {
+            topTenProductModels.add(new TopTenProductModel(productCode, productName, price));
 
-           }
-
+        }
 
 
     }
@@ -244,9 +292,11 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     public void inventory(View view) {
+
     }
 
     public void customer(View view) {
+
     }
 
     public void statistic(View view) {

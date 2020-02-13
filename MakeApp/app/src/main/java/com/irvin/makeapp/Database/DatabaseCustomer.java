@@ -195,6 +195,45 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
     }
 
 
+    public List<TransactionModel> getTop5Customer() {
+        List<TransactionModel> personList = new ArrayList<>();
+        // Select All Query
+
+        String selectQuery;
+
+
+            selectQuery = "SELECT  c.photoUrl , c.firstName , c.lastName , " +
+                    "sum (i.totalAmount) as totalAmount , c.id " +
+                    "FROM tbl_invoice i " +
+                    "INNER JOIN tbl_customer c on i.customerId  = c.id " +
+                    " GROUP BY c.id order by totalAmount desc limit 5";
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TransactionModel c = new TransactionModel();
+
+
+                c.setCustomerName(ModGlobal.toTitleCase(cursor.getString(1) + " " + cursor.getString(2)));
+                c.setPhotoUrl(cursor.getString(0));
+                c.setTotalAmount(cursor.getString(3));
+                c.setCustomerId(cursor.getString(4));
+                c.setTotalAmountPaid(cursor.getString(3));
+
+
+                personList.add(c);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return personList;
+    }
+
     public CustomerModel getAllCustomer(int id) {
         CustomerModel c = new CustomerModel();
         // Select All Query

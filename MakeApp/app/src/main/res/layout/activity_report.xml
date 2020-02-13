@@ -71,6 +71,7 @@
 
                 <androidx.cardview.widget.CardView
                     style="@style/reportsCardStyle"
+                    android:onClick="month"
                     app:cardBackgroundColor="@color/whiteTextColor"
                     app:cardCornerRadius="16dp">
 
@@ -105,7 +106,7 @@
 
                         <TextView
                             style="@style/reportContentText"
-                            android:text="Receivables" />
+                            android:text="Collectibles" />
 
                         <TextView
                             android:id="@+id/receivables"
@@ -238,7 +239,14 @@
                 </LinearLayout>
 
                 <com.anychart.AnyChartView
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:id="@+id/any_chart_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_230sdp" />
+
+                <com.anychart.AnyChartView
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:id="@+id/any_chart_view1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_230sdp" />
             </LinearLayout>

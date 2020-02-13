@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-            try{
+        /*    try{
 
                 double sample = Double.parseDouble("asd");
 
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
 
-            }
+            }*/
     }
 
 
