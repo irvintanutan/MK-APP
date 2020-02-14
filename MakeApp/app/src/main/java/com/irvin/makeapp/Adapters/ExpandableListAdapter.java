@@ -195,18 +195,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         if (!formName.get(groupPosition).getPath().isEmpty() && formName.get(groupPosition).getPath() != null) {
             profilePicture.setVisibility(View.GONE);
+            profilePicture2.setVisibility(View.VISIBLE);
             Glide.with(context).load(new File(formName.get(groupPosition).getPath())).into(profilePicture2);
         } else {
             profilePicture2.setVisibility(View.GONE);
+            profilePicture.setVisibility(View.VISIBLE);
             profilePicture.applyMultiColor();
-
             CustomerModel customerModel = databaseCustomer.getAllCustomer(Integer.parseInt(formName.get(groupPosition).getCustomerId()));
-
             profilePicture.loadThumbForName("", customerModel.getFirstName(),
                     customerModel.getLastName());
         }
-
-
 
 
         DecimalFormat dec = new DecimalFormat("#,##0.00");

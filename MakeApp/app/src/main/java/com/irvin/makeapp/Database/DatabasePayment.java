@@ -97,6 +97,11 @@ public class DatabasePayment extends SQLiteOpenHelper {
         return payments;
     }
 
+    public boolean deletePayment(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(tbl_payment, invoiceId + "=" + id, null) > 0;
+    }
 
     private String getDateToday() {
         Date date = Calendar.getInstance().getTime();

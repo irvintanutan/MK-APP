@@ -438,6 +438,10 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 ok = false;
             }
 
+            if (birthday.getText().toString().equals("Birth Date")) {
+                ok = false;
+            }
+
             if (ok) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -465,7 +469,10 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 AlertDialog alert = builder.create();
                 alert.show();
             } else {
-                Toast.makeText(getApplicationContext(), "Some Fields Are Required", Toast.LENGTH_LONG).show();
+                if (birthday.getText().toString().equals("Birth Date")) {
+                    Toast.makeText(getApplicationContext(), "Birth Date is Required", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "Some Fields Are Required", Toast.LENGTH_LONG).show();
             }
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
@@ -500,7 +507,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
         } catch (Exception e) {
-            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -582,7 +589,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         builder.show();
     }
-
 
 
     public void profilePicture(View view) {
@@ -815,7 +821,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 mCalendar.setTime(date);
             } catch (ParseException e) {
                 e.printStackTrace();
-                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+                Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 Log.e("ReminderEditActivity", e.getMessage(), e);
             }
 
@@ -883,9 +889,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                                             Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
                                             reminderDateTime, mRowId.toString(), eventId, reminder.getKEY_INVOICE_ID()), customerModel.getFullName());
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            Logger.CreateNewEntry(e, new File(getExternalFilesDir("") , ModGlobal.logFile));
+                            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                         }
 
                     }
@@ -901,7 +907,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     mRowId = null;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 }
 
             }

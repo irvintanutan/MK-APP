@@ -142,7 +142,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
         return personList;
     }
 
-    public List<TransactionModel> getAllCustomerWithDueDates(boolean isDueDate) {
+    public List<TransactionModel> getAllCustomerWithDueDates(boolean isDueDate , String filter) {
         List<TransactionModel> personList = new ArrayList<>();
         // Select All Query
         Date date = Calendar.getInstance().getTime();
@@ -155,7 +155,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                     "FROM tbl_invoice i " +
                     "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
                     "INNER JOIN tbl_customer c on i.customerId  = c.id " +
-                    "  WHERE i.status = 'PENDING'" +
+                    "  WHERE i.status = 'PENDING' and (c.firstName like '%" + filter +"%' or c.lastName like '%"+ filter + "%')" +
                     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +
                     " GROUP BY c.id order by c.firstName asc";
         } else {
@@ -164,7 +164,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                     "FROM tbl_invoice i " +
                     "INNER JOIN tbl_payment p on i.invoiceId = p.invoiceId " +
                     "INNER JOIN tbl_customer c on i.customerId  = c.id " +
-                    "  WHERE i.status = 'PENDING'" +
+                    "  WHERE i.status = 'PENDING' and (c.firstName like '%" + filter + "%' or c.lastName like '%"+ filter + "%')" +
                     /*     " and date('" + formatter.format(date) + "') >= date(i.dueDate)" +*/
                     " GROUP BY c.id order by c.firstName asc";
         }

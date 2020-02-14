@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DatabaseInvoice extends SQLiteOpenHelper {
-
+    DatabasePayment databasePayment;
     DecimalFormat dec = new DecimalFormat("#,##0.00");
     private Context mContext;
     DatabaseHelper databaseHelper;
@@ -50,6 +50,7 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         this.mContext = context;
         databaseHelper = new DatabaseHelper(mContext);
         databaseCustomer = new DatabaseCustomer(mContext);
+        databasePayment = new DatabasePayment(mContext);
     }
 
     @Override
@@ -339,6 +340,12 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
 
 
         return result;
+    }
+
+    public boolean deleteInvoice(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        databasePayment.deletePayment(id);
+        return db.delete(tbl_invoice, invoiceId + "=" + id, null) > 0;
     }
 
 

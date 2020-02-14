@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void invoice() {
+        ModGlobal.searchFilter = "";
         Intent i = new Intent(MainActivity.this, SalesInvoiceActivity.class);
         startActivity(i);
         finish();

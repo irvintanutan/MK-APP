@@ -34,7 +34,7 @@ public class ModGlobal {
     public static String paymentId = "";
     public static String totalAmountPaid = "";
     public static Invoice invoice = new Invoice();
-
+    public static String searchFilter = "";
     ////please beware of changing value of database version
     public static int DATABASE_VERSION = 2;
     public static String imageFilePath;

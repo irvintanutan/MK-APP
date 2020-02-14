@@ -1,14 +1,19 @@
 package com.irvin.makeapp.Adapters;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +33,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -49,6 +56,8 @@ public class TabFragmentPending extends Fragment {
     Map<MainForm, List<Invoice>> draftCollection;
     ExpandableListAdapter expListAdapter;
     ExpandableListView expListView;
+    SearchView searchView;
+    String filter = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +65,34 @@ public class TabFragmentPending extends Fragment {
         databaseHelper = new DatabaseHelper(getActivity());
         databaseInvoice = new DatabaseInvoice(getActivity());
         databaseCustomer = new DatabaseCustomer(getActivity());
+        filter = ModGlobal.searchFilter;
+        loadCustomerInvoices();
+
+
+        searchView = view.findViewById(R.id.searchLayout);
+        searchView.setQuery(filter, false);
+        searchView.setQueryHint("Search Customer");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                filter = newText;
+                ModGlobal.searchFilter = filter;
+                loadCustomerInvoices();
+
+                return false;
+            }
+        });
+
+        return view;
+    }
+
+    void loadCustomerInvoices(){
         groupList = new ArrayList<>();
         invoices = new ArrayList<>();
         invoices = databaseInvoice.getAllInvoices(TranStatus.PENDING.toString());
@@ -82,87 +119,77 @@ public class TabFragmentPending extends Fragment {
             }
         });
 
-
-      /*  databaseHelper = new DatabaseHelper(getActivity());
-        invoices = new ArrayList<>();
-        invoices = databaseHelper.getAllInvoices(TranStatus.PENDING.toString());
-        if (invoices.size() > 0) {
-            view = inflater.inflate(R.layout.pending_tab, container, false);
-
-            recyclerView = view.findViewById(R.id.expandableListView);
-            recyclerView.setHasFixedSize(true);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(layoutManager);
+        expListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                    final int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+                    final int childPosition = ExpandableListView.getPackedPositionChild(id);
 
 
-            salesInvoiceAdapter = new SalesInvoiceAdapter(invoices, getActivity());
-            recyclerView.setAdapter(salesInvoiceAdapter);
+                    final Invoice inv = draftCollection.get(groupList.get(groupPosition)).get(childPosition);
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-            recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-                GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+                    builder.setTitle("Warning");
+                    builder.setIcon(getResources().getDrawable(R.drawable.warning));
+                    builder.setMessage("Are you sure you want to delete #INV-" + String.format("%0" +
+                            ModGlobal.receiptLimit.length() + "d", Integer.parseInt(inv.getInvoiceId())));
 
-                    @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
-                        return true;
-                    }
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                });
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing but close the dialog
+                            // Do nothing
+                            dialog.dismiss();
 
-                @Override
-                public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                            databaseInvoice.deleteInvoice(inv.getInvoiceId());
 
-                    View child = rv.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && gestureDetector.onTouchEvent(e)) {
-                        int position = rv.getChildAdapterPosition(child);
+                            Intent i = new Intent(getActivity(), getActivity().getClass());
+                            startActivity(i);
+                            getActivity().finish();
+                            getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
 
-                        ModGlobal.invoice = new Invoice();
-                        ModGlobal.invoice = invoices.get(position);
+                        }
 
-                        Intent i = new Intent(getActivity(), PaymentActivity.class);
-                        startActivity(i);
-                        getActivity().finish();
-                        getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+                    });
 
-                    }
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-                    return false;
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return true;
                 }
 
-                @Override
-                public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-                }
-
-                @Override
-                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-                }
-            });
-
-        }*/
-
-        return view;
+                return false;
+            }
+        });
     }
 
 
     private void createCollection() {
         draftCollection = new LinkedHashMap<>();
 
-        List<TransactionModel> customerModels = databaseCustomer.getAllCustomerWithDueDates(false);
+        List<TransactionModel> customerModels = databaseCustomer.getAllCustomerWithDueDates(false , filter);
 
         for (TransactionModel customerModel : customerModels) {
 
-            Log.e("TABFRAGMENT" , customerModel.getTotalAmount() + " " + customerModel.getTotalAmountPaid());
+            Log.e("TABFRAGMENT", customerModel.getTotalAmount() + " " + customerModel.getTotalAmountPaid());
 
             double balance = Double.parseDouble(databaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false)) -
                     Double.parseDouble(customerModel.getTotalAmountPaid());
 
 
-
             groupList.add(new MainForm(customerModel.getPhotoUrl(),
-                    customerModel.getCustomerName(), databaseInvoice.getAllDueInvoices(customerModel.getCustomerId() , false), customerModel.getTotalAmountPaid()
-                    , Double.toString(balance) , customerModel.getCustomerId()));
+                    customerModel.getCustomerName(), databaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false), customerModel.getTotalAmountPaid()
+                    , Double.toString(balance), customerModel.getCustomerId()));
         }
 
 
@@ -185,6 +212,5 @@ public class TabFragmentPending extends Fragment {
         }
 
     }
-
 
 }
