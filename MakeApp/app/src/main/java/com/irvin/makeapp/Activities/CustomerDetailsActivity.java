@@ -420,29 +420,35 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             if (firstName.getText() == null || firstName.getText().toString().isEmpty()) {
                 firstName.setError("First Name is Required");
-                ok = false;
+                firstName.requestFocus();
+                return true;
             }
 
             if (lastName.getText() == null || lastName.getText().toString().isEmpty()) {
                 lastName.setError("Last Name is Required");
-                ok = false;
+                lastName.requestFocus();
+                return true;
             }
 
             if (contactNumber.getText() == null || contactNumber.getText().toString().isEmpty()) {
                 contactNumber.setError("Contact Number is Required");
-                ok = false;
+                contactNumber.requestFocus();
+                return true;
             }
 
             if (age.getText() == null || age.getText().toString().isEmpty()) {
                 age.setError("Age is Required");
-                ok = false;
+                age.requestFocus();
+                return true;
             }
 
             if (birthday.getText().toString().equals("Birth Date")) {
-                ok = false;
+               birthday();
+                Toast.makeText(getApplicationContext(), "Birth Date is Required", Toast.LENGTH_LONG).show();
+                return true;
             }
 
-            if (ok) {
+
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -468,12 +474,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
                 AlertDialog alert = builder.create();
                 alert.show();
-            } else {
-                if (birthday.getText().toString().equals("Birth Date")) {
-                    Toast.makeText(getApplicationContext(), "Birth Date is Required", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(getApplicationContext(), "Some Fields Are Required", Toast.LENGTH_LONG).show();
-            }
+
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
                 marshMallowPermission.requestPermissionForCallPhone();
@@ -552,6 +553,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
     public void dateTime(View view) {
 
+        birthday();
+    }
+
+
+    void birthday(){
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View alertLayout = inflater.inflate(R.layout.datetime, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -589,7 +595,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         builder.show();
     }
-
 
     public void profilePicture(View view) {
         startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);

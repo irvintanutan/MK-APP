@@ -158,8 +158,10 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem sync = menu.findItem(R.id.action_sync);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
+        sync.setVisible(false);
         searchView.setOnQueryTextListener(this);
         return true;
     }

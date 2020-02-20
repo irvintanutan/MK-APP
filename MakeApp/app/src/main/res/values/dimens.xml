@@ -27,7 +27,7 @@
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="headerTextSize">@dimen/_25ssp</dimen>
-    <dimen name="headerTextSize2">@dimen/_15ssp</dimen>
+    <dimen name="headerTextSize">@dimen/_15ssp</dimen>
+    <dimen name="headerTextSize2">@dimen/_12ssp</dimen>
 
 </resources>

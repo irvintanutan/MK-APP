@@ -60,7 +60,7 @@ public class StockInMainActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("Purchase Order");
+        ab.setTitle("Stock In");
         ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout

@@ -1,6 +1,5 @@
 package com.irvin.makeapp.Activities;
 
-import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,38 +17,31 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.BuildConfig;
 import com.irvin.makeapp.Constant.CountDrawable;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
+import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
-import com.irvin.makeapp.Services.Logger;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
+    DecimalFormat dec = new DecimalFormat("#,##0.00");
+    TextView receivables, thisMonth, totalSales;
+    DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
             new GetProductTask(MainActivity.this).execute("0");
         }
 
-        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
+       /*     @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
-        final ActionBar ab = getSupportActionBar();
+    final ActionBar ab = getSupportActionBar();
 
         ab.setTitle("MK App");
         ab.setDisplayShowHomeEnabled(false); // show or hide the default home button
@@ -89,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
-
+*/
         RecyclerView recyclerView = findViewById(R.id.user_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -101,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
         form.add(new MenuForm("Products", R.drawable.product, "View Products"));
-        form.add(new MenuForm("Purchase Order", R.drawable.box, "Manage Inventory"));
+        form.add(new MenuForm("Stock In", R.drawable.box, "Manage Inventory"));
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
         form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
@@ -176,19 +171,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*    try{
 
-                double sample = Double.parseDouble("asd");
+        receivables = findViewById(R.id.receivables);
+        thisMonth = findViewById(R.id.thisMonth);
+        totalSales = findViewById(R.id.totalSales);
 
-            }catch (Exception e){
-
-
-                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
-
-            }*/
+        receivables.setText(accountReceivable());
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
+        totalSales.setText(databaseInvoice.getTotalSales());
     }
 
 
+    private String accountReceivable() {
+        String result = "";
+        Double balance = 0.00;
+
+        List<TransactionModel> customerModels = databaseCustomer.getAllCustomerWithDueDates(false, "");
+
+        for (TransactionModel customerModel : customerModels) {
+
+            balance += Double.parseDouble(databaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false)) -
+                    Double.parseDouble(customerModel.getTotalAmountPaid());
+
+        }
+
+        return "₱ " + dec.format(balance);
+    }
     private void customer() {
         Intent i = new Intent(MainActivity.this, CustomerActivity.class);
         startActivity(i);
@@ -360,4 +370,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void month(View view) {
+    }
 }

@@ -6,13 +6,13 @@
     <item android:id="@+id/action_message"
         android:title="Message"
         android:icon="@drawable/baseline_sms_24"
-        app:showAsAction="always"/>
+        app:showAsAction="collapseActionView"/>
 
 
     <item android:id="@+id/action_call"
         android:title="Call"
         android:icon="@drawable/baseline_phone_in_talk_24"
-        app:showAsAction="always"/>
+        app:showAsAction="collapseActionView"/>
 
 
 

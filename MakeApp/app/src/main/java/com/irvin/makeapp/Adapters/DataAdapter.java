@@ -33,7 +33,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         viewHolder.menu_icon.setImageResource(form.get(i).getPhotoid());
         viewHolder.menu_name.setText(form.get(i).getMenuName());
-        viewHolder.menu_desc.setText(form.get(i).getMenuDescription());
     }
 
     @Override
@@ -48,7 +47,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         public ViewHolder(View view) {
             super(view);
 
-            menu_desc = view.findViewById(R.id.menuDescription);
             menu_name = view.findViewById(R.id.menuText);
             menu_icon = view.findViewById(R.id.image);
         }
