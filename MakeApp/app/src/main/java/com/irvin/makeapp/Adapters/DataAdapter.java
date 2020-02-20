@@ -1,6 +1,7 @@
 package com.irvin.makeapp.Adapters;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.R;
 
@@ -17,9 +19,13 @@ import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private List<MenuForm> form;
+    private Context context;
+    private DatabaseInvoice databaseInvoice;
 
-    public DataAdapter(List<MenuForm> form) {
+    public DataAdapter(List<MenuForm> form , Context context) {
         this.form = form;
+        this.context = context;
+        databaseInvoice = new DatabaseInvoice(context);
     }
 
     @Override
@@ -30,6 +36,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
+        int size = databaseInvoice.getAllDueInvoices().size();
+
+        if (form.get(i).getMenuName().equals("Sales Invoice")){
+            if (size > 0) {
+                viewHolder.badge.setVisibility(View.VISIBLE);
+                viewHolder.badge.setText(Integer.toString(size));
+            }
+        }
 
         viewHolder.menu_icon.setImageResource(form.get(i).getPhotoid());
         viewHolder.menu_name.setText(form.get(i).getMenuName());
@@ -41,12 +55,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView menu_name , menu_desc;
+        private TextView menu_name , badge;
         private ImageView menu_icon;
 
         public ViewHolder(View view) {
             super(view);
 
+            badge = view.findViewById(R.id.badgeNotification);
             menu_name = view.findViewById(R.id.menuText);
             menu_icon = view.findViewById(R.id.image);
         }

@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
         form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
+        form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
         form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
 
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         //form.add(new MenuForm("Edit Site", R.drawable.radiotower));*/
 
 
-        RecyclerView.Adapter adapter = new DataAdapter(form);
+        RecyclerView.Adapter adapter = new DataAdapter(form , this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -150,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
                             reports();
                             break;
                         case 6:
+                            groupSales();
+                            break;
+                        case 7:
                             setting();
                             break;
                         default:
@@ -241,7 +245,12 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
     }
-
+    private void groupSales() {
+     /*   Intent i = new Intent(MainActivity.this, AttendanceActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+    }
     private void setting() {
         Intent i = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(i);
