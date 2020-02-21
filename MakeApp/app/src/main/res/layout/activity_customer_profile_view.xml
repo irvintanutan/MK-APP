@@ -5,413 +5,100 @@
     android:layout_height="match_parent"
     tools:context=".Activities.CustomerDetailsActivity">
 
-
-    <LinearLayout
-        android:id="@+id/container"
+    <RelativeLayout
+        android:id="@+id/nested"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/app_bar"
-        android:layout_marginTop="7dp"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp">
+        android:layout_height="match_parent">
 
-        <ScrollView
+        <RelativeLayout
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradientbackground"
+            android:paddingLeft="@dimen/_20sdp"
+            android:paddingTop="@dimen/_20sdp"
+            android:paddingRight="@dimen/_20sdp"
+            android:paddingBottom="@dimen/_20sdp">
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingBottom="@dimen/_5sdp">
+
+                <com.hbb20.GThumb
+                    android:id="@+id/profilePicture"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_10sdp"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePicture2"
+                    android:layout_width="@dimen/_55sdp"
+                    android:layout_height="@dimen/_55sdp"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginRight="@dimen/_14sdp"
+                    android:src="@drawable/user_img">
+
+                </de.hdodenhof.circleimageview.CircleImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/profilePicture"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:maxWidth="39dip"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/user_img" />
-
-                    <LinearLayout
-
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:layout_marginRight="@dimen/_1sdp"
-                            android:id="@+id/camera"
-                            android:layout_width="0dp"
-                            android:layout_weight="2"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:background="@drawable/round_blue"
-                            android:onClick="profilePicture"
-                            android:text="+ Add Profile Picture"
-                            android:textColor="@color/white" />
-
-                    </LinearLayout>
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:hint="First Name"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/firstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/middleName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="Middle Name"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/lastName"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Last Name"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="Address"
-                            android:inputType="textMultiLine" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/age"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Age"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/occupation"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Occupation"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/email"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Email"
-                            android:inputType="textEmailAddress" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/contactNumber"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Contact Number"
-                            android:inputType="phone" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/bestTimeToBeContacted"
-                            android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            android:hint="Best time to be contacted"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/referredBy"
-                            android:background="@null"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Referred By"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <Button
-                        android:id="@+id/birthday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/round_blue"
-                        android:onClick="dateTime"
-                        android:text="Birth Date"
-                        android:textColor="@color/white" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="39dip"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        >
-
-
-                    </androidx.appcompat.widget.AppCompatImageView>
-
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:padding="7dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/_5sdp"
-                                android:text="@string/skinType"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                            <androidx.appcompat.widget.AppCompatSpinner
-                                android:id="@+id/skinType"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:entries="@array/skin_type"
-                                android:prompt="@string/skinType" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:padding="7dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/skinConcern"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-
-                            <com.irvin.makeapp.Constant.MultiSelectionSpinner
-                                android:id="@+id/skinConcern"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:spinnerMode="dropdown" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:padding="7dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/skinTone"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                            <androidx.appcompat.widget.AppCompatSpinner
-                                android:id="@+id/skinTone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:entries="@array/skin_tone"
-                                android:prompt="@string/skinTone" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_10sdp"
-                        android:padding="7dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/interest"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                            <com.irvin.makeapp.Constant.MultiSelectionSpinner
-                                android:id="@+id/interest"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:spinnerMode="dropdown" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
+                    android:gravity="center"
+                    android:orientation="vertical">
 
 
                     <TextView
-                        android:text="Remarks"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        />
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/remarks"
-                        android:gravity="top"
-                        android:padding="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:id="@+id/fullName"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_70sdp"
+                        android:layout_height="wrap_content"
+                        android:text="SAMPLE TITLE"
                         android:textColor="@color/white"
-                        android:background="@drawable/round3"
-                        android:inputType="textMultiLine" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+                        android:textSize="@dimen/_15sdp"/>
 
 
                     <TextView
-                        android:id="@+id/followUp"
-                        android:text="Follow Up Reminders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/reminder_view"
+                        android:id="@+id/age"
+                        android:textColor="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="none" />
-                    <Button
-                        android:id="@+id/reminders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:background="@drawable/round_blue"
-                        android:onClick="reminder"
-                        android:text="+ ADD REMINDERS"
-                        android:textColor="@color/white" />
+                        android:textSize="@dimen/_10sdp"
+                        android:text="SAMPLE TITLE" />
 
+
+                    <TextView
+                        android:textColor="@color/white"
+                        android:id="@+id/contactNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="SAMPLE TITLE" />
+
+
+                    <TextView
+                        android:textColor="@color/white"
+                        android:id="@+id/skinType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold|italic"
+                        android:text="SAMPLE TITLE" />
 
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
 
-        </ScrollView>
+        </RelativeLayout>
 
-    </LinearLayout>
-
-
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/app_bar" />
+    </RelativeLayout>
 
 </RelativeLayout>

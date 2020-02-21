@@ -96,13 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
         form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
         form.add(new MenuForm("Products", R.drawable.product, "View Products"));
-        form.add(new MenuForm("Stock In", R.drawable.box, "Manage Inventory"));
+        form.add(new MenuForm("Inventory", R.drawable.box, "Manage Inventory"));
         form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
         form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
         form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
         form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
         form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
-
 
 
         /*form.add(new MenuForm("Site Survey", R.drawable.salesentry));

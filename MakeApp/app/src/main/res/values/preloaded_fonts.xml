@@ -4,8 +4,10 @@
         <item>@font/anton</item>
         <item>@font/archivo_black</item>
         <item>@font/bowlby_one_sc</item>
+        <item>@font/oleo_script_bold</item>
         <item>@font/capriola</item>
         <item>@font/francois_one</item>
+        <item>@font/oleo_script_bold</item>
         <item>@font/titillium_web_semibold</item>
     </array>
 </resources>
