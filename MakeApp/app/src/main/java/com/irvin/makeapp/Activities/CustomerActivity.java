@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -53,7 +54,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
         ModGlobal.isInSalesInvoice = false;
 
-        Toolbar tb = findViewById(R.id.app_bar);
+        @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
@@ -84,7 +85,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
                 ModGlobal.isCreateNew = false;
                 ModGlobal.customerId = customerModelList.get(position).getId();
                 ModGlobal.customerName = customerModelList.get(position).getFullName();
-                Intent i = new Intent(CustomerActivity.this, CustomerDetailsActivity.class);
+                Intent i = new Intent(CustomerActivity.this, CustomerProfileViewActivity.class);
                 i.putExtra("toolBarTitle" , "");
                 startActivity(i);
                 finish();

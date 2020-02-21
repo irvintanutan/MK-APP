@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.CustomerDetailsActivity">
+    tools:context=".Activities.CustomerProfileViewActivity">
 
     <RelativeLayout
         android:id="@+id/nested"
@@ -13,92 +13,292 @@
         <RelativeLayout
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/gradientbackground"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_marginTop="-20dp"
+            android:background="@drawable/customer_profile"
+            android:elevation="@dimen/_10sdp"
             android:paddingLeft="@dimen/_20sdp"
             android:paddingTop="@dimen/_20sdp"
             android:paddingRight="@dimen/_20sdp"
             android:paddingBottom="@dimen/_20sdp">
 
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:elevation="@dimen/_10sdp"
+            android:gravity="left"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/_15sdp">
+
+            <TextView
+                android:id="@+id/customerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="asdasdasd asdas d"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/phoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/baseline_phone_24"
+                android:drawablePadding="@dimen/_10sdp"
+                android:gravity="center"
+                android:text="asd asda dasdad"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/baseline_email_24"
+                android:drawablePadding="@dimen/_10sdp"
+                android:gravity="center"
+                android:text="asd asda dasdad"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/baseline_location_on_24"
+                android:drawablePadding="@dimen/_10sdp"
+                android:gravity="center"
+                android:text="asd asda dasdad"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profileContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_90sdp"
+            android:elevation="@dimen/_10sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingBottom="@dimen/_5sdp">
+
+            <com.hbb20.GThumb
+                android:id="@+id/profilePicture"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_75sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:visibility="gone" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePicture2"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_14sdp"
+                android:src="@drawable/user_img">
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/profileContainer">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingTop="@dimen/_5sdp"
-                android:paddingBottom="@dimen/_5sdp">
+                android:orientation="vertical"
+                android:padding="@dimen/_10sdp">
 
-                <com.hbb20.GThumb
-                    android:id="@+id/profilePicture"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:layout_marginRight="@dimen/_10sdp"/>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profilePicture2"
-                    android:layout_width="@dimen/_55sdp"
-                    android:layout_height="@dimen/_55sdp"
-                    android:layout_marginLeft="@dimen/_8sdp"
-                    android:layout_marginRight="@dimen/_14sdp"
-                    android:src="@drawable/user_img">
-
-                </de.hdodenhof.circleimageview.CircleImageView>
-
-                <LinearLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_10sdp">
 
-
-                    <TextView
-                        android:id="@+id/fullName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="SAMPLE TITLE"
-                        android:textColor="@color/white"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-                        android:textSize="@dimen/_15sdp"/>
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Skin Type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skinType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Skin Type"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:fontFamily="@font/anton"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:inputType="textMultiLine"
+                            android:text="No Input" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/age"
-                        android:textColor="@color/white"
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_10sdp"
-                        android:text="SAMPLE TITLE" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Skin Concern"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skinConcern"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Skin Concern"
+                            android:background="@null"
+                            android:enabled="false"
 
-                    <TextView
-                        android:textColor="@color/white"
-                        android:id="@+id/contactNumber"
+                            android:fontFamily="@font/anton"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:inputType="textMultiLine"
+                            android:text="No Input" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_10sdp"
-                        android:text="SAMPLE TITLE" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Skin Tone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skinTone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Skin Tone"
+                            android:background="@null"
+                            android:enabled="false"
 
-                    <TextView
-                        android:textColor="@color/white"
-                        android:id="@+id/skinType"
+                            android:fontFamily="@font/anton"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:inputType="textMultiLine"
+                            android:text="No Input" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold|italic"
-                        android:text="SAMPLE TITLE" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Interest"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/interest"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Interest"
+                            android:background="@null"
+                            android:enabled="false"
 
-                </LinearLayout>
+                            android:fontFamily="@font/anton"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:inputType="textMultiLine"
+                            android:text="No Input" />
+                    </LinearLayout>
 
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/followUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:text="Follow Up Reminders"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reminder_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
+
+                <Button
+                    android:id="@+id/reminders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:background="@drawable/round_blue"
+                    android:onClick="reminder"
+                    android:text="+ ADD REMINDERS"
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
 
-        </RelativeLayout>
+        </ScrollView>
 
     </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Main content -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:onClick="edit"
+            android:src="@drawable/sales_invoice" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

@@ -369,33 +369,6 @@
                         android:padding="@dimen/_5sdp"
                         android:textColor="@color/white" />
 
-
-                    <TextView
-                        android:id="@+id/followUp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:text="Follow Up Reminders"
-                        android:textStyle="bold" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/reminder_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none" />
-
-                    <Button
-                        android:id="@+id/reminders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:background="@drawable/round_blue"
-                        android:onClick="reminder"
-                        android:text="+ ADD REMINDERS"
-                        android:textColor="@color/white" />
-
-
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>

@@ -74,17 +74,7 @@ public class MainActivity extends AppCompatActivity {
             new GetProductTask(MainActivity.this).execute("0");
         }
 
-       /*     @SuppressLint("WrongViewCast") Toolbar tb = findViewById(R.id.app_bar);
-        setSupportActionBar(tb);
-    final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("MK App");
-        ab.setDisplayShowHomeEnabled(false); // show or hide the default home button
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
-        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
-
-*/
         RecyclerView recyclerView = findViewById(R.id.user_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
