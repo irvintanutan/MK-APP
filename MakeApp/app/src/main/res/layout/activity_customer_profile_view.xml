@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -79,6 +80,82 @@
                 android:textSize="@dimen/_10sdp" />
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_100sdp"
+            android:gravity="center_vertical"
+            android:elevation="@dimen/_10sdp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:onClick="call"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    app:srcCompat="@drawable/baseline_phone_in_talk_24" />
+
+
+                <ImageView
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:onClick="message"
+                    app:srcCompat="@drawable/baseline_sms_24" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_weight="1"
+                android:gravity="right">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/invoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:onClick="invoice"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_10sdp"
+                    app:contentPadding="@dimen/_5sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_marginRight="@dimen/_5sdp"
+                            android:src="@drawable/invoice" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Create Invoice +"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/_8ssp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/profileContainer"
             android:layout_width="match_parent"
@@ -137,31 +214,33 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
                             android:text="Skin Type"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:textStyle="bold" />
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/skinType"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Skin Type"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:background="@null"
                             android:enabled="false"
-                            android:textColor="@color/black"
                             android:fontFamily="sans-serif-condensed"
-                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:hint="Skin Type"
                             android:inputType="textMultiLine"
-                            android:text="No Input" />
+                            android:text="No Input"
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_marginBottom="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:padding="@dimen/_10sdp">
 
                     <LinearLayout
@@ -170,30 +249,32 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Skin Concern"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Skin Concern" />
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/skinConcern"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Skin Concern"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:background="@null"
                             android:enabled="false"
-                            android:textColor="@color/black"
                             android:fontFamily="sans-serif-condensed"
-                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:hint="Skin Concern"
                             android:inputType="textMultiLine"
-                            android:text="No Input" />
+                            android:text="No Input"
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_marginBottom="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:padding="@dimen/_10sdp">
 
                     <LinearLayout
@@ -202,30 +283,32 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Skin Tone"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Skin Tone" />
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/skinTone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Skin Tone"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:background="@null"
                             android:enabled="false"
-                            android:textColor="@color/black"
                             android:fontFamily="sans-serif-condensed"
-                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:hint="Skin Tone"
                             android:inputType="textMultiLine"
-                            android:text="No Input" />
+                            android:text="No Input"
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_marginBottom="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:padding="@dimen/_10sdp">
 
                     <LinearLayout
@@ -234,22 +317,24 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Interest"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Interest" />
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/interest"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Interest"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:background="@null"
                             android:enabled="false"
-                            android:textColor="@color/black"
                             android:fontFamily="sans-serif-condensed"
-                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:hint="Interest"
                             android:inputType="textMultiLine"
-                            android:text="No Input" />
+                            android:text="No Input"
+                            android:textColor="@color/black" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -272,7 +357,7 @@
                     android:id="@+id/reminders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
                     android:background="@drawable/round_blue"
                     android:onClick="reminder"

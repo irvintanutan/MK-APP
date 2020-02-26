@@ -379,6 +379,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:visibility="gone"
         android:id="@+id/invoice"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"

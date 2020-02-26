@@ -3,14 +3,17 @@ package com.irvin.makeapp.Activities;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hbb20.GThumb;
@@ -74,6 +78,7 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
     private static final String TIME_FORMAT = "kk:mm";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd kk:mm:ss";
 
+    MarshMallowPermission marshMallowPermission;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
@@ -81,6 +86,8 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_profile_view);
 
+
+        marshMallowPermission = new MarshMallowPermission(this);
         customerModel = databaseCustomer.getAllCustomer(ModGlobal.customerId);
 
         init();
@@ -409,5 +416,51 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
         date.setText(dateForButton);
     }
 
+    private void callCustomer() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + customerModel.getContactNumber()));
 
+        if (ActivityCompat.checkSelfPermission(CustomerProfileViewActivity.this,
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        }
+        startActivity(callIntent);
+    }
+
+    private void messageCustomer() {
+
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setType("vnd.android-dir/mms-sms");
+            i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
+            startActivity(i);
+        } catch (Exception e) {
+            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void invoice(View view) {
+
+        Intent intent = new Intent(CustomerProfileViewActivity.this, SalesInvoiceProductActivity.class);
+        startActivity(intent);
+        finish();
+
+        ModGlobal.ProductModelListCopy.clear();
+        ModGlobal.stockIns.clear();
+        ModGlobal.ProductModelList.clear();
+
+    }
+
+    public void message(View view) {
+        messageCustomer();
+    }
+
+    public void call(View view) {
+        if (!marshMallowPermission.checkPermissionForCallPhone()) {
+            marshMallowPermission.requestPermissionForCallPhone();
+        } else
+            callCustomer();
+    }
 }
