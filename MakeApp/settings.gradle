@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':lvl_sample', ':lvl_library'
 rootProject.name='Make App'

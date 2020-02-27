@@ -58,11 +58,11 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     CustomerModel customerModel = new CustomerModel();
-    EditText  skinType, skinTone , skinConcern , interest;
+    EditText skinType, skinTone, skinConcern, interest;
 
     GThumb profilePicture;
     CircleImageView profilePicture2;
-    TextView customerName , phoneNumber , email , location;
+    TextView customerName, phoneNumber, email, location;
     ReminderAdapter reminderAdapter;
     RecyclerView recyclerView;
     List<Reminder> reminders;
@@ -96,108 +96,113 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
 
 
     private void init() {
+        try {
+            profilePicture = findViewById(R.id.profilePicture);
+            profilePicture2 = findViewById(R.id.profilePicture2);
+            customerName = findViewById(R.id.customerName);
+            phoneNumber = findViewById(R.id.phoneNumber);
+            email = findViewById(R.id.email);
+            location = findViewById(R.id.address);
+            skinType = findViewById(R.id.skinType);
+            skinTone = findViewById(R.id.skinTone);
+            skinConcern = findViewById(R.id.skinConcern);
+            interest = findViewById(R.id.interest);
 
-        profilePicture = findViewById(R.id.profilePicture);
-        profilePicture2 = findViewById(R.id.profilePicture2);
-        customerName = findViewById(R.id.customerName);
-        phoneNumber = findViewById(R.id.phoneNumber);
-        email = findViewById(R.id.email);
-        location = findViewById(R.id.address);
-        skinType = findViewById(R.id.skinType);
-        skinTone = findViewById(R.id.skinTone);
-        skinConcern = findViewById(R.id.skinConcern);
-        interest = findViewById(R.id.interest);
-
-        if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
-            profilePicture.setVisibility(View.GONE);
-            profilePicture2.setVisibility(View.VISIBLE);
-            Glide.with(this).load(new File(customerModel.getPhotoUrl())).into(profilePicture2);
-        } else {
-            profilePicture2.setVisibility(View.GONE);
-            profilePicture.setVisibility(View.VISIBLE);
-            profilePicture.applyMultiColor();
-            profilePicture.loadThumbForName(customerModel.getPhotoUrl(), customerModel.getFirstName(),
-                    customerModel.getLastName());
-        }
-
-
-        customerName.setText(customerModel.getFullName());
-        phoneNumber.setText(customerModel.getContactNumber());
-        email.setText(customerModel.getEmail());
-        location.setText(customerModel.getAddress());
-        skinType.setText(customerModel.getSkinType());
-        skinConcern.setText(customerModel.getSkinConcern());
-        skinTone.setText(customerModel.getSkinTone());
-        interest.setText(customerModel.getInterests());
-
-        Button rem = findViewById(R.id.reminders);
-        TextView followUp = findViewById(R.id.followUp);
-        if (!ModGlobal.isCreateNew) {
-            recyclerView = findViewById(R.id.reminder_view);
-            recyclerView.setHasFixedSize(true);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-            recyclerView.setLayoutManager(layoutManager);
-            reminders = new ArrayList<>();
-            reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
-
-            reminderAdapter = new ReminderAdapter(reminders, this);
-            recyclerView.setAdapter(reminderAdapter);
-            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
-
-                @Override
-                public void onClick(View view, int position) {
-
-                    Reminder reminder = reminders.get(position);
-                    mRowId = Long.parseLong(reminder.getKEY_ROWID());
-                    PopUpReminder(reminder);
-
-                }
-
-                @Override
-                public void onLongClick(View view, int position) {
+            if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
+                profilePicture.setVisibility(View.GONE);
+                profilePicture2.setVisibility(View.VISIBLE);
+                Glide.with(this).load(new File(customerModel.getPhotoUrl())).into(profilePicture2);
+            } else {
+                profilePicture2.setVisibility(View.GONE);
+                profilePicture.setVisibility(View.VISIBLE);
+                profilePicture.applyMultiColor();
+                profilePicture.loadThumbForName(customerModel.getPhotoUrl(), customerModel.getFirstName(),
+                        customerModel.getLastName());
+            }
 
 
-                    final Reminder reminder = reminders.get(position);
+            customerName.setText(customerModel.getFullName());
+            phoneNumber.setText(customerModel.getContactNumber());
+            email.setText(customerModel.getEmail());
+            location.setText(customerModel.getAddress());
+            skinType.setText(customerModel.getSkinType());
+            skinConcern.setText(customerModel.getSkinConcern());
+            skinTone.setText(customerModel.getSkinTone());
+            interest.setText(customerModel.getInterests());
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CustomerProfileViewActivity.this);
+            Button rem = findViewById(R.id.reminders);
+            TextView followUp = findViewById(R.id.followUp);
+            if (!ModGlobal.isCreateNew) {
+                recyclerView = findViewById(R.id.reminder_view);
+                recyclerView.setHasFixedSize(true);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+                reminders = new ArrayList<>();
+                reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
 
-                    builder.setTitle("Confirm");
-                    builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
-                    builder.setMessage("Are you sure you want to delete " + reminder.getKEY_TITLE() + " reminder ?");
-                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                reminderAdapter = new ReminderAdapter(reminders, this);
+                recyclerView.setAdapter(reminderAdapter);
+                recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
 
-                        public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(View view, int position) {
 
-                            CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), CustomerProfileViewActivity.this);
-                            databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
-                            reminders.clear();
-                            reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
+                        Reminder reminder = reminders.get(position);
+                        mRowId = Long.parseLong(reminder.getKEY_ROWID());
+                        PopUpReminder(reminder);
 
-                            reminderAdapter = new ReminderAdapter(reminders, CustomerProfileViewActivity.this);
-                            recyclerView.setAdapter(reminderAdapter);
-                            reminderAdapter.notifyDataSetChanged();
+                    }
 
-                        }
-
-                    });
-                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog alert = builder.create();
-                    alert.show();
-
-                }
+                    @Override
+                    public void onLongClick(View view, int position) {
 
 
-            }));
-        } else {
-            rem.setVisibility(View.GONE);
-            followUp.setVisibility(View.GONE);
+                        final Reminder reminder = reminders.get(position);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerProfileViewActivity.this);
+
+                        builder.setTitle("Confirm");
+                        builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+                        builder.setMessage("Are you sure you want to delete " + reminder.getKEY_TITLE() + " reminder ?");
+                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), CustomerProfileViewActivity.this);
+                                databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
+                                reminders.clear();
+                                reminders = databaseHelper.getAllReminders(Integer.toString(ModGlobal.customerId));
+
+                                reminderAdapter = new ReminderAdapter(reminders, CustomerProfileViewActivity.this);
+                                recyclerView.setAdapter(reminderAdapter);
+                                reminderAdapter.notifyDataSetChanged();
+
+                            }
+
+                        });
+                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    }
+
+
+                }));
+            } else {
+                rem.setVisibility(View.GONE);
+                followUp.setVisibility(View.GONE);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
 
     }
@@ -215,7 +220,7 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
         ModGlobal.customerId = customerModel.getId();
         ModGlobal.customerName = customerModel.getFullName();
         Intent i = new Intent(CustomerProfileViewActivity.this, CustomerDetailsActivity.class);
-        i.putExtra("toolBarTitle" , "");
+        i.putExtra("toolBarTitle", "");
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -438,7 +443,6 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     public void invoice(View view) {

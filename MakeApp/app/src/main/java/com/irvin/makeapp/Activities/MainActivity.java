@@ -17,12 +17,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.BuildConfig;
 import com.irvin.makeapp.Constant.CountDrawable;
@@ -45,7 +55,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private BillingClient billingClient;
+    List<String> skuList = new ArrayList<> ();
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
@@ -59,8 +70,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+            billingClient = BillingClient.newBuilder(this).setListener(new PurchasesUpdatedListener() {
+                @Override
+                public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
+
+                }
+            }).enablePendingPurchases().build();
+
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(BillingResult billingResult) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        // The BillingClient is ready. You can query purchases here.
+
+                        skuList.add("pink_heart_full");
+                        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+                        billingClient.querySkuDetailsAsync(params.build(),
+                                new SkuDetailsResponseListener() {
+                                    @Override
+                                    public void onSkuDetailsResponse(BillingResult billingResult,
+                                                                     List<SkuDetails> skuDetailsList) {
+                                        // Process the result.
+                                        // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+                                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                .setSkuDetails(skuDetailsList.get(0))
+                                                .build();
+                                        BillingResult responseCode = billingClient.launchBillingFlow(MainActivity.this ,flowParams);
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                }
+            });
+
+
+
         TextView version = findViewById(R.id.versionName);
-        version.setText("PinkHeartV"+BuildConfig.VERSION_NAME);
+        version.setText("PinkHeartV" + BuildConfig.VERSION_NAME);
 
         ModGlobal.settingPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -98,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         //form.add(new MenuForm("Edit Site", R.drawable.radiotower));*/
 
 
-        RecyclerView.Adapter adapter = new DataAdapter(form , this);
+        RecyclerView.Adapter adapter = new DataAdapter(form, this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -192,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
         return "₱ " + dec.format(balance);
     }
+
     private void customer() {
         Intent i = new Intent(MainActivity.this, CustomerActivity.class);
         startActivity(i);
@@ -234,12 +287,14 @@ public class MainActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
     }
+
     private void groupSales() {
      /*   Intent i = new Intent(MainActivity.this, AttendanceActivity.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
     }
+
     private void setting() {
         Intent i = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(i);

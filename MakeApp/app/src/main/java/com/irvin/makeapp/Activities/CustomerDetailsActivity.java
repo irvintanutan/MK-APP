@@ -162,117 +162,123 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
 
     private void init() {
-        profilePicture = findViewById(R.id.profilePicture);
-        firstName = findViewById(R.id.firstName);
-        lastName = findViewById(R.id.lastName);
-        middleName = findViewById(R.id.middleName);
-        address = findViewById(R.id.address);
-        birthday = findViewById(R.id.birthday);
-        skinType = findViewById(R.id.skinType);
-        skinConcern = findViewById(R.id.skinConcern);
-        skinTone = findViewById(R.id.skinTone);
-        interest = findViewById(R.id.interest);
-        email = findViewById(R.id.email);
-        occupation = findViewById(R.id.occupation);
-        age = findViewById(R.id.age);
-        bestTimeToBeContacted = findViewById(R.id.bestTimeToBeContacted);
-        referredBy = findViewById(R.id.referredBy);
-        contactNumber = findViewById(R.id.contactNumber);
-        remarks = findViewById(R.id.remarks);
 
-        CardView inv = findViewById(R.id.invoice);
-        if (ModGlobal.isCreateNew) inv.setVisibility(View.GONE);
+        try {
+            profilePicture = findViewById(R.id.profilePicture);
+            firstName = findViewById(R.id.firstName);
+            lastName = findViewById(R.id.lastName);
+            middleName = findViewById(R.id.middleName);
+            address = findViewById(R.id.address);
+            birthday = findViewById(R.id.birthday);
+            skinType = findViewById(R.id.skinType);
+            skinConcern = findViewById(R.id.skinConcern);
+            skinTone = findViewById(R.id.skinTone);
+            interest = findViewById(R.id.interest);
+            email = findViewById(R.id.email);
+            occupation = findViewById(R.id.occupation);
+            age = findViewById(R.id.age);
+            bestTimeToBeContacted = findViewById(R.id.bestTimeToBeContacted);
+            referredBy = findViewById(R.id.referredBy);
+            contactNumber = findViewById(R.id.contactNumber);
+            remarks = findViewById(R.id.remarks);
 
-        email.addTextChangedListener(new TextWatcher() {
+            CardView inv = findViewById(R.id.invoice);
+            if (ModGlobal.isCreateNew) inv.setVisibility(View.GONE);
 
-            @Override
-            public void afterTextChanged(Editable s) {
+            email.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                        email.setError(null);
+                    } else email.setError("Invalid Email");
+                }
+            });
+
+            ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.skin_type, android.R.layout.simple_spinner_item);
+            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            skinType.setAdapter(adapter1);
+
+            skinConcern.setItems(getResources().getStringArray(R.array.skin_concern));
+            skinConcern.setListener(this);
+
+
+            ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.skin_tone, android.R.layout.simple_spinner_item);
+            adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            skinTone.setAdapter(adapter3);
+
+
+            interest.setItems(getResources().getStringArray(R.array.interest));
+            interest.setListener(this);
+
+            if (!ModGlobal.isCreateNew) {
+
+                customerModel = databaseCustomer.getAllCustomer(ModGlobal.customerId);
+                if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
+                    Log.e("asd", customerModel.getPhotoUrl());
+                    Glide.with(getApplicationContext()).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
+                } else {
+                    Glide.with(getApplicationContext()).load(getApplication().getResources().getDrawable(R.drawable.user_img)).into(profilePicture);
+                }
+                mCurrentPhotoPath = customerModel.getPhotoUrl();
+                firstName.setText(customerModel.getFirstName());
+                lastName.setText(customerModel.getLastName());
+                middleName.setText(customerModel.getMiddleName());
+                address.setText(customerModel.getAddress());
+                birthday.setText(customerModel.getBirthday());
+                email.setText(customerModel.getEmail());
+                occupation.setText(customerModel.getOccupation());
+                age.setText(customerModel.getAge());
+                bestTimeToBeContacted.setText(customerModel.getBestTimeToBeContacted());
+                referredBy.setText(customerModel.getReferredBy());
+                contactNumber.setText(customerModel.getContactNumber());
+                remarks.setText(customerModel.getRemarks());
+
+                if (customerModel.getSkinType().isEmpty()) {
+                    skinType.setSelection(0);
+                } else {
+
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.skin_type, android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    skinType.setAdapter(adapter);
+                    int spinnerPosition = adapter.getPosition(customerModel.getSkinType());
+                    skinType.setSelection(spinnerPosition);
+                }
+
+                if (customerModel.getSkinTone().isEmpty()) {
+                    skinTone.setSelection(0);
+                } else {
+
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.skin_tone, android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    skinTone.setAdapter(adapter);
+                    int spinnerPosition = adapter.getPosition(customerModel.getSkinTone());
+                    skinTone.setSelection(spinnerPosition);
+                }
+
+                List<String> skinConcernList = new ArrayList<>();
+                skinConcernList = Arrays.asList(customerModel.getSkinConcern().split(","));
+                List<String> interestList = new ArrayList<>();
+                interestList = Arrays.asList(customerModel.getInterests().split(","));
+
+                skinConcern.setSelection(skinConcernList);
+                interest.setSelection(interestList);
+
+
             }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-                    email.setError(null);
-                } else email.setError("Invalid Email");
-            }
-        });
-
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.skin_type, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        skinType.setAdapter(adapter1);
-
-        skinConcern.setItems(getResources().getStringArray(R.array.skin_concern));
-        skinConcern.setListener(this);
-
-
-        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.skin_tone, android.R.layout.simple_spinner_item);
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        skinTone.setAdapter(adapter3);
-
-
-        interest.setItems(getResources().getStringArray(R.array.interest));
-        interest.setListener(this);
-
-        if (!ModGlobal.isCreateNew) {
-
-            customerModel = databaseCustomer.getAllCustomer(ModGlobal.customerId);
-            if (!customerModel.getPhotoUrl().isEmpty() && customerModel.getPhotoUrl() != null) {
-                Log.e("asd", customerModel.getPhotoUrl());
-                Glide.with(getApplicationContext()).load(new File(customerModel.getPhotoUrl())).into(profilePicture);
-            } else {
-                Glide.with(getApplicationContext()).load(getApplication().getResources().getDrawable(R.drawable.user_img)).into(profilePicture);
-            }
-            mCurrentPhotoPath = customerModel.getPhotoUrl();
-            firstName.setText(customerModel.getFirstName());
-            lastName.setText(customerModel.getLastName());
-            middleName.setText(customerModel.getMiddleName());
-            address.setText(customerModel.getAddress());
-            birthday.setText(customerModel.getBirthday());
-            email.setText(customerModel.getEmail());
-            occupation.setText(customerModel.getOccupation());
-            age.setText(customerModel.getAge());
-            bestTimeToBeContacted.setText(customerModel.getBestTimeToBeContacted());
-            referredBy.setText(customerModel.getReferredBy());
-            contactNumber.setText(customerModel.getContactNumber());
-            remarks.setText(customerModel.getRemarks());
-
-            if (customerModel.getSkinType().isEmpty()) {
-                skinType.setSelection(0);
-            } else {
-
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.skin_type, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                skinType.setAdapter(adapter);
-                int spinnerPosition = adapter.getPosition(customerModel.getSkinType());
-                skinType.setSelection(spinnerPosition);
-            }
-
-            if (customerModel.getSkinTone().isEmpty()) {
-                skinTone.setSelection(0);
-            } else {
-
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.skin_tone, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                skinTone.setAdapter(adapter);
-                int spinnerPosition = adapter.getPosition(customerModel.getSkinTone());
-                skinTone.setSelection(spinnerPosition);
-            }
-
-            List<String> skinConcernList = new ArrayList<>();
-            skinConcernList = Arrays.asList(customerModel.getSkinConcern().split(","));
-            List<String> interestList = new ArrayList<>();
-            interestList = Arrays.asList(customerModel.getInterests().split(","));
-
-            skinConcern.setSelection(skinConcernList);
-            interest.setSelection(interestList);
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
 
     }
@@ -371,37 +377,36 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             }
 
             if (birthday.getText().toString().equals("Birth Date")) {
-               birthday();
+                birthday();
                 Toast.makeText(getApplicationContext(), "Birth Date is Required", Toast.LENGTH_LONG).show();
                 return true;
             }
 
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Confirm");
+            builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+            builder.setMessage("Are you sure you want to save customer data ?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                builder.setTitle("Confirm");
-                builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
-                builder.setMessage("Are you sure you want to save customer data ?");
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
 
-                    public void onClick(DialogInterface dialog, int which) {
+                    saveCustomer(ModGlobal.isCreateNew);
 
-                        saveCustomer(ModGlobal.isCreateNew);
+                }
 
-                    }
+            });
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-                });
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.show();
+            AlertDialog alert = builder.create();
+            alert.show();
 
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
@@ -485,7 +490,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     }
 
 
-    void birthday(){
+    void birthday() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View alertLayout = inflater.inflate(R.layout.datetime, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

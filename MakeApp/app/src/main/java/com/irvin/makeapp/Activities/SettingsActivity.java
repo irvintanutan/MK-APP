@@ -3,6 +3,7 @@ package com.irvin.makeapp.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.webkit.WebView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,10 @@ public class SettingsActivity extends AppCompatActivity {
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
+
+        webView = findViewById(R.id.web_view);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl("https://play.google.com/store/account/subscriptions?sku=pink_heart_full&package=com.irvin.makeapp");
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
