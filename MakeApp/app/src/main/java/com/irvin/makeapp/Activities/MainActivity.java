@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -24,6 +25,8 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -68,47 +71,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-            billingClient = BillingClient.newBuilder(this).setListener(new PurchasesUpdatedListener() {
-                @Override
-                public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
-
-                }
-            }).enablePendingPurchases().build();
-
-            billingClient.startConnection(new BillingClientStateListener() {
-                @Override
-                public void onBillingSetupFinished(BillingResult billingResult) {
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                        // The BillingClient is ready. You can query purchases here.
-
-                        skuList.add("pink_heart_full");
-                        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
-                        billingClient.querySkuDetailsAsync(params.build(),
-                                new SkuDetailsResponseListener() {
-                                    @Override
-                                    public void onSkuDetailsResponse(BillingResult billingResult,
-                                                                     List<SkuDetails> skuDetailsList) {
-                                        // Process the result.
-                                        // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
-                                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                                .setSkuDetails(skuDetailsList.get(0))
-                                                .build();
-                                        BillingResult responseCode = billingClient.launchBillingFlow(MainActivity.this ,flowParams);
-                                    }
-                                });
-                    }
-                }
-
-                @Override
-                public void onBillingServiceDisconnected() {
-                    // Try to restart the connection on the next request to
-                    // Google Play by calling the startConnection() method.
-                }
-            });
-
 
 
         TextView version = findViewById(R.id.versionName);
@@ -226,6 +188,61 @@ public class MainActivity extends AppCompatActivity {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM");
         thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
         totalSales.setText(databaseInvoice.getTotalSales());
+
+
+        if (!ModGlobal.settingPref.getBoolean("license", false)) {
+            billingClient = BillingClient.newBuilder(this).setListener(new PurchasesUpdatedListener() {
+                @Override
+                public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> list) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                            && list != null) {
+                        for (Purchase purchase : list) {
+                            handlePurchase(purchase);
+                        }
+                    } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                        // Handle an error caused by a user cancelling the purchase flow.
+                    } else {
+                        // Handle any other error codes.
+                    }
+                }
+            }).enablePendingPurchases().build();
+
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(BillingResult billingResult) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        // The BillingClient is ready. You can query purchases here.
+
+
+                        skuList.add("pink_heart_full");
+                        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+                        billingClient.querySkuDetailsAsync(params.build(),
+                                new SkuDetailsResponseListener() {
+                                    @Override
+                                    public void onSkuDetailsResponse(BillingResult billingResult,
+                                                                     List<SkuDetails> skuDetailsList) {
+                                        // Process the result.
+                                        // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+                                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                .setSkuDetails(skuDetailsList.get(0))
+                                                .build();
+                                        BillingResult responseCode = billingClient.launchBillingFlow(MainActivity.this, flowParams);
+                                    }
+                                });
+                    }else {
+                        System.exit(0);
+                    }
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+                    System.exit(0);
+                }
+            });
+        }
     }
 
 
@@ -422,6 +439,29 @@ public class MainActivity extends AppCompatActivity {
         icon.setDrawableByLayerId(R.id.ic_group_count, badge);
     }
 
+    void handlePurchase(Purchase purchase) {
+        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+            // Grant entitlement to the user.
+            SharedPreferences.Editor editor;
+            editor = ModGlobal.settingPref.edit();
+            editor.putBoolean("license" , true);
+            editor.apply();
+
+            // Acknowledge the purchase if it hasn't already been acknowledged.
+            if (!purchase.isAcknowledged()) {
+                AcknowledgePurchaseParams acknowledgePurchaseParams =
+                        AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.getPurchaseToken())
+                                .build();
+                billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
+                    @Override
+                    public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
+
+                    }
+                });
+            }
+        }
+    }
 
     public void month(View view) {
     }

@@ -28,4 +28,17 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="License Setting">
+
+
+        <SwitchPreferenceCompat
+            app:key="license"
+            app:defaultValue="false"
+            app:enabled="false"
+            app:summaryOff="License is not active please activate your account"
+            app:summaryOn="License Activated"
+            app:title="License Status" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

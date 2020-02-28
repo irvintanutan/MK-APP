@@ -41,9 +41,9 @@ public class SettingsActivity extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
 
-        webView = findViewById(R.id.web_view);
+        /*webView = findViewById(R.id.web_view);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("https://play.google.com/store/account/subscriptions?sku=pink_heart_full&package=com.irvin.makeapp");
+        webView.loadUrl("https://play.google.com/store/account/subscriptions?sku=pink_heart_full&package=com.irvin.makeapp");*/
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
