@@ -1,17 +1,20 @@
 package com.irvin.makeapp.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
 
 import java.util.List;
+
+import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private List<Products> products;
@@ -28,15 +31,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(ProductAdapter.ViewHolder viewHolder, int position) {
 
         viewHolder.fullName.setText(products.get(position).getProduct_name());
         viewHolder.age.setText("ID: " + products.get(position).getProduct_id());
-        if (products.get(position).getProduct_quantity() != null)
+        if (products.get(position).getProduct_quantity() != null) {
             viewHolder.skinType.setText("QTY: " + products.get(position).getProduct_quantity());
-        else
+
+            if (Integer.parseInt(products.get(position).getProduct_quantity()) < 0){
+                viewHolder.skinType.setTextColor(Color.RED);
+            }
+        } else {
             viewHolder.skinType.setText("QTY: 0");
+        }
+
             viewHolder.contactNumber.setText("₱ " + products.get(position).getProduct_price());
     }
 

@@ -21,38 +21,38 @@
 21
 22    <uses-sdk
 23        android:minSdkVersion="19"
-23-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml
+23-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml
 24        android:targetSdkVersion="28" />
-24-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml
+24-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml
 25    <!-- Required permission to check licensing. -->
 26    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
-26-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:31:5-73
-26-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:31:22-70
+26-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:31:5-73
+26-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:31:22-70
 27
 28    <application
-28-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:20:5-29:19
+28-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:20:5-29:19
 29        android:debuggable="true"
 30        android:icon="@drawable/icon"
-30-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:20:18-47
+30-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:20:18-47
 31        android:label="@string/app_name" >
-31-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:20:48-80
+31-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:20:48-80
 32        <activity
-32-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:21:9-28:20
+32-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:21:9-28:20
 33            android:name="com.example.google.play.licensing.MainActivity"
-33-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:21:19-47
+33-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:21:19-47
 34            android:configChanges="orientation|keyboardHidden"
-34-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:23:13-63
+34-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:23:13-63
 35            android:label="@string/app_name" >
-35-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:22:13-45
+35-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:22:13-45
 36            <intent-filter>
-36-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:24:13-27:29
+36-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:24:13-27:29
 37                <action android:name="android.intent.action.MAIN" />
-37-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:25:17-69
-37-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:25:25-66
+37-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:25:17-69
+37-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:25:25-66
 38
 39                <category android:name="android.intent.category.LAUNCHER" />
-39-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:26:17-77
-39-->/home/irvin/Documents/MK-APP/MakeApp/lvl_sample/src/main/AndroidManifest.xml:26:27-74
+39-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:26:17-77
+39-->E:\My PROJECTS\MK-APP\MakeApp\lvl_sample\src\main\AndroidManifest.xml:26:27-74
 40            </intent-filter>
 41        </activity>
 42    </application>

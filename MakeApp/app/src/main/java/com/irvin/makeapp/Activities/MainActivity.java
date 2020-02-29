@@ -18,24 +18,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.BuildConfig;
 import com.irvin.makeapp.Constant.CountDrawable;
@@ -56,6 +43,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private BillingClient billingClient;
@@ -189,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
         totalSales.setText(databaseInvoice.getTotalSales());
 
-
+/*
         if (!ModGlobal.settingPref.getBoolean("license", false)) {
             billingClient = BillingClient.newBuilder(this).setListener(new PurchasesUpdatedListener() {
                 @Override
@@ -242,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     System.exit(0);
                 }
             });
-        }
+        }*/
     }
 
 

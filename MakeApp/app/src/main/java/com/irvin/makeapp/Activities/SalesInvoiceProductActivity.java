@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,22 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Adapters.CategoryAdapter;
@@ -50,6 +36,16 @@ import com.irvin.makeapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SalesInvoiceProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -75,19 +71,24 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
+        assert ab != null;
         ab.setTitle("Production Selection");
-        ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
+        // show or hide the default home button
+        ab.setDisplayShowHomeEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
-        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
+        // enable overriding the default toolbar layout
+        ab.setDisplayShowCustomEnabled(true);
+        // disable the default title element here (for centered title)
+        ab.setDisplayShowTitleEnabled(true);
 
         init();
         customerName.setText(ModGlobal.customerName);
-        if (ModGlobal.customerName.isEmpty())
+        if (ModGlobal.customerName.isEmpty()) {
             searchCustomer();
+        }
     }
 
-    void init() {
+    private void init() {
 
         customerName = findViewById(R.id.customerName);
         btnView = findViewById(R.id.btnView);
@@ -291,9 +292,9 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
                 tempCust = new ArrayList();
                 String text = searchCustomer.getText().toString();
-                if (text.equals(""))
+                if ("".equals(text)) {
                     tempCust = ModGlobal.customerModelList;
-                else {
+                } else {
                     for (CustomerModel p : ModGlobal.customerModelList) {
                         //or use .contains(text)
                         if (p.getFirstName().toLowerCase().contains(text.toLowerCase()) ||
@@ -327,9 +328,9 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
         temp = new ArrayList();
 
-        if (text.equals(""))
+        if ("".equals(text)) {
             temp = ModGlobal.ProductModelList;
-        else {
+        } else {
             for (Products p : ModGlobal.ProductModelList) {
                 //or use .contains(text)
                 if (p.getProduct_category().toLowerCase().contains(text.toLowerCase()) ||
@@ -409,8 +410,9 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         categories = new ArrayList<>();
         categories = ModGlobal.categories;
 
-        for (int a = 0; a < categories.size(); a++)
+        for (int a = 0; a < categories.size(); a++) {
             categories.set(a, new Category(categories.get(a).getName(), false));
+        }
 
 
         categories.set(position, new Category(categories.get(position).getName(), true));
@@ -422,9 +424,9 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
 
         temp = new ArrayList<>();
 
-        if (text.equals("ALL"))
+        if ("ALL".equals(text)) {
             temp = ModGlobal.ProductModelList;
-        else {
+        } else {
             for (Products p : ModGlobal.ProductModelList) {
                 //or use .contains(text)
                 if (p.getProduct_category().equals(text)) {
@@ -446,6 +448,7 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
         builder.setMessage("Are you sure you want to quit ? Your data won't be saved.");
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int which) {
 
 

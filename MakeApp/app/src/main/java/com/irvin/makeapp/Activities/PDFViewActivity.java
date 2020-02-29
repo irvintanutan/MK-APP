@@ -47,8 +47,10 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
         final ActionBar ab = getSupportActionBar();
 
         ab.setTitle("Sales Invoice Report");
-        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
-        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
+        ab.setDisplayShowCustomEnabled(true);
+        // enable overriding the default toolbar layout
+        ab.setDisplayShowTitleEnabled(true);
+        // disable the default title element here (for centered title)
 
         init();
     }
@@ -62,8 +64,7 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
     private void displayFromSdcard() {
 
         pdfFileName = ModGlobal.imageFilePath;
-        File file = new File(pdfFileName);
-
+        File file = new File(pdfFileName); 
         Log.e("File path", file.getAbsolutePath());
         pdfView.fromFile(file)
                 .defaultPage(pageNumber)

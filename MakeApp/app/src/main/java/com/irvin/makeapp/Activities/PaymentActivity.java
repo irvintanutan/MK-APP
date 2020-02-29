@@ -7,16 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
-import android.os.TransactionTooLargeException;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,15 +56,11 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -758,8 +750,9 @@ public class PaymentActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
                 marshMallowPermission.requestPermissionForCallPhone();
-            } else
+            } else {
                 callCustomer();
+            }
 
         } else if (item.getItemId() == R.id.action_message) {
 

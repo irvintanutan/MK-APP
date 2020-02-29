@@ -1,0 +1,4 @@
+#Sat Feb 29 14:41:53 SGT 2020
+base.0=E\:\\My PROJECTS\\MK-APP\\MakeApp\\lvl_sample\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

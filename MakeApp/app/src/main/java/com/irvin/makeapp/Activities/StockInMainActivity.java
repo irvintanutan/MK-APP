@@ -1,55 +1,26 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
-import com.irvin.makeapp.Adapters.DataAdapter;
-import com.irvin.makeapp.Adapters.StockInMainAdapter;
-import com.irvin.makeapp.Constant.ClickListener;
+import com.google.android.material.tabs.TabLayout;
+import com.irvin.makeapp.Adapters.ViewPagerAdapterStockIn;
 import com.irvin.makeapp.Constant.ModGlobal;
-import com.irvin.makeapp.Constant.RecyclerTouchListener;
-import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Database.DatabaseStockin;
-import com.irvin.makeapp.Models.StockIn;
-import com.irvin.makeapp.Models.StockInList;
 import com.irvin.makeapp.R;
-import com.irvin.makeapp.Services.Logger;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 public class StockInMainActivity extends AppCompatActivity {
 
-
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    DatabaseStockin databaseStockin = new DatabaseStockin(this);
-    List<StockInList> stockInListList;
-    LinearLayout nothing;
-    RecyclerView recyclerView;
-    StockInMainAdapter stockInMainAdapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapterStockIn viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,73 +31,123 @@ public class StockInMainActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         final ActionBar ab = getSupportActionBar();
 
-        ab.setTitle("Stock In");
-        ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
+        ab.setTitle("Inventory Management");
+        ab.setDisplayShowHomeEnabled(true);
+        // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
-        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
+        ab.setDisplayShowCustomEnabled(true);
+        // enable overriding the default toolbar layout
+        ab.setDisplayShowTitleEnabled(true);
+        // disable the default title element here (for centered title)
 
         init();
     }
 
     private void init() {
-        nothing = findViewById(R.id.nothing);
-        stockInListList = new ArrayList<>();
-        stockInListList = databaseStockin.getAllStockIn();
 
-        if (stockInListList.size() > 0) {
-            nothing.setVisibility(View.GONE);
-        }
+        tabLayout = findViewById(R.id.tabs);
+        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        viewPager = findViewById(R.id.viewpager);
+        //tabLayout.setupWithViewPager(viewPager);
 
 
-        recyclerView = findViewById(R.id.stock_in_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(layoutManager);
-        stockInMainAdapter = new StockInMainAdapter(stockInListList, this);
-        recyclerView.setAdapter(stockInMainAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+        //
+        //Creating Adapter and setting that adapter to the viewPager
+        //setSupportActionBar method takes the toolbar and sets it as
+        //the default action bar thus making the toolbar work like a normal
+        //action bar.
+        //
+        viewPagerAdapter = new ViewPagerAdapterStockIn(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+
+        /*
+        TabLayout.newTab() method creates a tab view, Now a Tab view is not the view
+        which is below the tabs, its the tab itself.
+         */
+
+        final TabLayout.Tab stockin = tabLayout.newTab();
+        final TabLayout.Tab inventory = tabLayout.newTab();
+
+        /*
+        Setting Title text for our tabs respectively
+         */
+        stockin.setText("Stock In");
+
+        inventory.setText("Inventory");
+/*
+        //set custom view
+        pending.setCustomView(R.layout.notification_badge);
+
+        TextView textView = pending.getCustomView().findViewById(R.id.text);
+        textView.setText("5");
+        TextView textView2 = pending.getCustomView().findViewById(R.id.textTab);
+        textView2.setText("Outstanding");*/
+
+
+
+        /*
+        Adding the tab view to our tablayout at appropriate positions
+        As I want home at first position I am passing home and 0 as argument to
+        the tablayout and like wise for other tabs as well
+         */
+        tabLayout.addTab(stockin, 0);
+        tabLayout.addTab(inventory, 1);
+
+
+
+        /*
+        TabTextColor sets the color for the title of the tabs, passing a ColorStateList here makes
+        tab change colors in different situations such as selected, active, inactive etc
+
+        TabIndicatorColor sets the color for the indiactor below the tabs
+         */
+
+        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.white));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
+
+
+        /*
+        Adding a onPageChangeListener to the viewPager
+        1st we add the PageChangeListener and pass a TabLayoutPageChangeListener so that Tabs Selection
+        changes when a viewpager page changes.
+         */
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
             @Override
-            public void onClick(View view, int position) {
-                try {
-                    StockInList stockInList = databaseStockin.getAllStockIn(stockInListList.get(position).getId());
-
-
-                    JSONArray jsonArray = new JSONArray(stockInList.getDetails());
-                    ArrayList<StockIn> stockIns = new ArrayList<>();
-                    for (int a = 0 ; a < jsonArray.length() ; a++){
-
-                        JSONObject object = jsonArray.getJSONObject(a);
-                        StockIn stockIn = new StockIn(object.getString("productName")
-                                ,object.getString("productCode") , object.getString("quantity")
-                                , object.getString("price"));
-
-                        stockIns.add(stockIn);
-                    }
-
-                    ModGlobal.stockIns = stockIns;
-
-                    Intent intent = new Intent(StockInMainActivity.this, StockInDetailsActivity.class);
-                    ModGlobal.indicator = true;
-                    startActivity(intent);
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
-                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
-                }
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
             @Override
-            public void onLongClick(View view, int position) {
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
 
+        });
 
-        }));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -153,14 +174,5 @@ public class StockInMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void stockIn(View view) {
-        ModGlobal.stockIns.clear();
-        Intent intent = new Intent(StockInMainActivity.this, StockInActivity.class);
-        startActivity(intent);
-        finish();
-        ModGlobal.ProductModelListCopy.clear();
-        ModGlobal.stockIns.clear();
-        ModGlobal.ProductModelList.clear();
 
-    }
 }

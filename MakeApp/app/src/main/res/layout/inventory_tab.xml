@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/invoice"
+        android:scrollbars="none" />
+
+
+    <LinearLayout
+        android:id="@+id/nothing"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Nothing to show"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#9E9E9E"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:textIsSelectable="false"
+            android:textSize="30dp" />
+
+        <ImageView
+            android:alpha=".4"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/garbage"/>
+
+    </LinearLayout>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/invoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:onClick="invoice"
+        android:layout_alignParentTop="true"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp"
+        app:contentPadding="@dimen/_10sdp">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/box" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Total Amount of Product/s : "
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" P 10.00"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/green"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

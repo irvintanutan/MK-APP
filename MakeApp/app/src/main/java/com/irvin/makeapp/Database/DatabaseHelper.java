@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Products;
@@ -253,6 +252,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
+
+
+    public List<Products> getAllProducts2() {
+        List<Products> products = new ArrayList<Products>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_product + " WHERE " + productQuantity + " != 0 order by " + productQuantity + " desc";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Products p = new Products();
+
+                p.setProduct_id(cursor.getString(0));
+                p.setProduct_name(cursor.getString(1));
+                p.setProduct_price(cursor.getString(2).replace("PHP", ""));
+                p.setProduct_category(cursor.getString(3));
+                p.setProduct_quantity(cursor.getString(4));
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
+
     public List<Products> getAllProducts(String id) {
         List<Products> products = new ArrayList<Products>();
         // Select All Query
@@ -334,13 +364,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.getString(0) != null) {
 
-            if (isAdd)
+            if (isAdd) {
                 quantity = q1 + Integer.parseInt(cursor.getString(0));
-            else
+            } else {
                 quantity = Integer.parseInt(cursor.getString(0)) - q1;
+            }
 
         } else {
-            quantity = q1;
+            if (isAdd) {
+                quantity = q1;
+            } else {
+                quantity = -q1;
+            }
         }
         values.put(productQuantity, quantity);
 

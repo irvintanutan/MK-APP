@@ -21,14 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.irvin.makeapp.Adapters.SalesInvoiceDetailsAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -46,10 +38,17 @@ import com.irvin.makeapp.Services.Logger;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
@@ -102,8 +101,9 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
         layoutBottom = findViewById(R.id.layoutBottom);
         LinearLayout stockIn = findViewById(R.id.stockIn);
 
-        if (indicator)
+        if (indicator) {
             stockIn.setVisibility(View.GONE);
+        }
         //else
         //layoutBottom.setVisibility(View.GONE);
 
@@ -287,6 +287,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                             if (finalCash < finalTotal) {
@@ -632,10 +633,12 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                             dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                     Log.e("asd", e.getMessage());
                 }
-            } else invoice.setStatus(TranStatus.PAID.toString());
+            } else {
+                invoice.setStatus(TranStatus.PAID.toString());
+            }
             invoice.setInvoiceDetail(json);
 
 

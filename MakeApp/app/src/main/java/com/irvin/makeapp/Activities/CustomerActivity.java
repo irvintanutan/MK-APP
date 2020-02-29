@@ -1,26 +1,13 @@
 package com.irvin.makeapp.Activities;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Adapters.CustomerAdapter;
@@ -33,10 +20,15 @@ import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -106,6 +98,8 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + which);
                         }
                     }
                 };
@@ -186,9 +180,9 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
         List<CustomerModel> temp = new ArrayList();
 
-        if (text.equals(""))
+        if ("".equals(text)) {
             temp = ModGlobal.customerModelList;
-        else {
+        } else {
             for (CustomerModel p : ModGlobal.customerModelList) {
                 //or use .contains(text)
                 if (p.getFirstName().toLowerCase().contains(text.toLowerCase()) ||

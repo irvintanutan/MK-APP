@@ -1,12 +1,5 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -22,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,7 +25,6 @@ import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
-import com.irvin.makeapp.Constant.MultiSelectionSpinner;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -51,6 +42,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomerProfileViewActivity extends AppCompatActivity {
@@ -122,9 +118,23 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
 
 
             customerName.setText(customerModel.getFullName());
-            phoneNumber.setText(customerModel.getContactNumber());
-            email.setText(customerModel.getEmail());
-            location.setText(customerModel.getAddress());
+
+            if (!customerModel.getContactNumber().equals(" ") || customerModel.getContactNumber() != null) {
+                phoneNumber.setText(customerModel.getContactNumber());
+            }else {
+                phoneNumber.setText("none");
+            }
+            if (!customerModel.getEmail().equals(" ") || customerModel.getEmail() != null) {
+                email.setText(customerModel.getEmail());
+            } else {
+                email.setText("none");
+            }
+            if (!customerModel.getAddress().equals(" ") || customerModel.getAddress() != null) {
+                location.setText(customerModel.getAddress());
+            } else {
+                location.setText("none");
+            }
+
             skinType.setText(customerModel.getSkinType());
             skinConcern.setText(customerModel.getSkinConcern());
             skinTone.setText(customerModel.getSkinTone());

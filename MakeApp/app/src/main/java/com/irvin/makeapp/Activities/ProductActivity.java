@@ -13,15 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +35,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class ProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
@@ -64,10 +64,13 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         final ActionBar ab = getSupportActionBar();
 
         ab.setTitle("Products View");
-        ab.setDisplayShowHomeEnabled(true); // show or hide the default home button
+        ab.setDisplayShowHomeEnabled(true);
+        // show or hide the default home button
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
-        ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
+        ab.setDisplayShowCustomEnabled(true);
+        // enable overriding the default toolbar layout
+        ab.setDisplayShowTitleEnabled(true);
+        // disable the default title element here (for centered title)
 
 
         init();
@@ -144,8 +147,9 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         categories = new ArrayList<>();
         categories = ModGlobal.categories;
 
-        for (int a = 0; a < categories.size(); a++)
+        for (int a = 0; a < categories.size(); a++) {
             categories.set(a, new Category(categories.get(a).getName(), false));
+        }
 
 
         categories.set(position, new Category(categories.get(position).getName(), true));
@@ -157,9 +161,9 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
         List<Products> temp = new ArrayList();
 
-        if (text.equals("ALL"))
+        if (text.equals("ALL")) {
             temp = ModGlobal.ProductModelList;
-        else {
+        } else {
             for (Products p : ModGlobal.ProductModelList) {
                 //or use .contains(text)
                 if (p.getProduct_category().equals(text)) {
@@ -176,9 +180,9 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
         List<Products> temp = new ArrayList();
 
-        if (text.equals(""))
+        if ("".equals(text)) {
             temp = ModGlobal.ProductModelList;
-        else {
+        } else {
             for (Products p : ModGlobal.ProductModelList) {
                 //or use .contains(text)
                 if (p.getProduct_category().toLowerCase().contains(text.toLowerCase()) ||
@@ -283,6 +287,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         }
 
 
+        @Override
         protected void onProgressUpdate(String... progUpdate) {
 
             int max = Integer.parseInt(progUpdate[0]), prog = Integer.parseInt(progUpdate[1]);
