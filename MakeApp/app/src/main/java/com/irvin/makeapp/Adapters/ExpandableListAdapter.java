@@ -16,10 +16,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import com.bumptech.glide.Glide;
 import com.hbb20.GThumb;
 import com.irvin.makeapp.Activities.PaymentActivity;
@@ -44,6 +40,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -69,15 +68,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     }
 
+    @Override
     public Object getChild(int groupPosition, int childPosition) {
         return formDetails.get(formName.get(groupPosition)).get(childPosition);
     }
 
+    @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
     }
 
 
+    @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -124,8 +126,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             if (invoices.getStatus().equals(TranStatus.PENDING.toString())) {
                 dateCreated.setText("DUE DATE : " + formatter2.format(date2));
 
-            } else
+            } else {
                 dateCreated.setText(formatter.format(date));
+            }
 
 
             invoiceId.setText("#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(invoices.getInvoiceId())));
@@ -143,22 +146,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @Override
     public int getChildrenCount(int groupPosition) {
         return formDetails.get(formName.get(groupPosition)).size();
     }
 
+    @Override
     public Object getGroup(int groupPosition) {
         return formName.get(groupPosition);
     }
 
+    @Override
     public int getGroupCount() {
         return formName.size();
     }
 
+    @Override
     public long getGroupId(int groupPosition) {
         return groupPosition;
     }
 
+    @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
 
@@ -217,18 +225,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @Override
     public boolean hasStableIds() {
         return true;
     }
 
+    @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
 
 
     public void update(Map<MainForm, List<Invoice>> details, List<MainForm> mainForm) {
-        if (formName == null || formName.size() == 0)
+        if (formName == null || formName.size() == 0) {
             return;
+        }
         if (formName != null && formName.size() > 0) {
             formDetails.clear();
             formName.clear();

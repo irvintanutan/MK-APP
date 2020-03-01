@@ -15,8 +15,10 @@ import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +36,7 @@ public class TabFragmentStockInInventory extends Fragment {
     List<Products> products;
     LinearLayout nothing;
     TextView totalAmount;
+    SearchView searchView;
     DecimalFormat dec = new DecimalFormat("#,##0.00");
 
 
@@ -50,7 +53,45 @@ public class TabFragmentStockInInventory extends Fragment {
 
         loadList();
 
+        searchView = view.findViewById(R.id.searchLayout);
+        searchView.setQuery("", false);
+        searchView.setQueryHint("Search Product");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                filter(newText);
+
+                return false;
+            }
+        });
+
         return view;
+    }
+
+    private void filter(String text) {
+
+        List<Products> temp = new ArrayList();
+
+        if ("".equals(text)) {
+            temp = ModGlobal.ProductModelList;
+        } else {
+            for (Products p : ModGlobal.ProductModelList) {
+                //or use .contains(text)
+                if (p.getProduct_category().toLowerCase().contains(text.toLowerCase()) ||
+                        p.getProduct_name().toLowerCase().contains(text.toLowerCase())) {
+                    temp.add(p);
+                }
+            }
+        }
+        //update recyclerview
+        productAdapter.update(temp);
+
     }
 
     private void loadList() {

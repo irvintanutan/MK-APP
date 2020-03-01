@@ -2,19 +2,20 @@ package com.irvin.makeapp.Adapters;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.R;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
@@ -37,6 +38,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
         int size = databaseInvoice.getAllDueInvoices().size();
+
+        Log.e("jhkasdhkjasdhk sak" , Integer.toString(size));
 
         if (form.get(i).getMenuName().equals("Sales Invoice")){
             if (size > 0) {

@@ -42,6 +42,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
             if (Integer.parseInt(products.get(position).getProduct_quantity()) < 0){
                 viewHolder.skinType.setTextColor(Color.RED);
+            }else {
+                viewHolder.skinType.setTextColor(Color.BLACK);
             }
         } else {
             viewHolder.skinType.setText("QTY: 0");

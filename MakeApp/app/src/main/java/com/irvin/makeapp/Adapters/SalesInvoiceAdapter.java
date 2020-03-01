@@ -1,24 +1,16 @@
 package com.irvin.makeapp.Adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Invoice;
-import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.Logger;
 
@@ -29,6 +21,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapter.ViewHolder> {
     private List<Invoice> invoices;
@@ -63,8 +57,9 @@ public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapte
 
                 Log.e("asd", invoices.get(position).getDueDate());
 
-            } else
+            } else {
                 viewHolder.dateCreated.setText(formatter.format(date));
+            }
 
             Log.e("asd", invoices.get(position).getStatus());
 

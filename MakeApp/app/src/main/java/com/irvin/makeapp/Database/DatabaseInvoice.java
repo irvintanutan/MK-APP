@@ -232,41 +232,46 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
 
     public List<Invoice> getAllDueInvoices() {
 
-        Date date = Calendar.getInstance().getTime();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         List<Invoice> products = new ArrayList<>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = 'PENDING' " +
-                " and date('" + formatter.format(date) + "') >= date(dueDate) " +
-                " ORDER BY dateCreated DESC";
+        try {
+            Date date = Calendar.getInstance().getTime();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        SQLiteDatabase db = this.getWritableDatabase();
+            Log.e("asdasda" , formatter.format(date));
 
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                Invoice p = new Invoice();
-                CustomerModel
-                        customer = databaseCustomer.getAllCustomer(Integer.parseInt(cursor.getString(2)));
-                p.setInvoiceId(cursor.getString(0));
-                p.setDiscount(cursor.getString(1));
-                p.setCustomerId(cursor.getString(2));
-                p.setCustomerName(ModGlobal.toTitleCase(customer.getFirstName() + " " + customer.getLastName()));
-                p.setTotalAmount(cursor.getString(4));
-                p.setStatus(cursor.getString(5));
-                p.setInvoiceDetail(cursor.getString(6));
-                p.setDateCreated(cursor.getString(7));
-                p.setDueDate(cursor.getString(8));
+            // Select All Query
+            String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = 'PENDING' " +
+                  " and date('" + formatter.format(date) + "') >= date(dueDate) " +
+                    " ORDER BY dateCreated DESC";
 
+            SQLiteDatabase db = this.getWritableDatabase();
 
-                products.add(p);
-            } while (cursor.moveToNext());
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    Invoice p = new Invoice();
+                    CustomerModel
+                            customer = databaseCustomer.getAllCustomer(Integer.parseInt(cursor.getString(2)));
+                    p.setInvoiceId(cursor.getString(0));
+                    p.setDiscount(cursor.getString(1));
+                    p.setCustomerId(cursor.getString(2));
+                    p.setCustomerName(ModGlobal.toTitleCase(customer.getFirstName() + " " + customer.getLastName()));
+                    p.setTotalAmount(cursor.getString(4));
+                    p.setStatus(cursor.getString(5));
+                    p.setInvoiceDetail(cursor.getString(6));
+                    p.setDateCreated(cursor.getString(7));
+                    p.setDueDate(cursor.getString(8));
+
+                    products.add(p);
+                } while (cursor.moveToNext());
+            }
+            // return quote list
+
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // return quote list
-
-        db.close();
         return products;
     }
 

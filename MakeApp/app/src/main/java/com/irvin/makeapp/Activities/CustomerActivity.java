@@ -38,7 +38,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     RecyclerView recyclerView;
     CustomerAdapter customerAdapter;
     List<CustomerModel> customerModelList;
-
+    List<CustomerModel> temp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +75,8 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
             @Override
             public void onClick(View view, int position) {
                 ModGlobal.isCreateNew = false;
-                ModGlobal.customerId = customerModelList.get(position).getId();
-                ModGlobal.customerName = customerModelList.get(position).getFullName();
+                ModGlobal.customerId = temp.get(position).getId();
+                ModGlobal.customerName = temp.get(position).getFullName();
                 Intent i = new Intent(CustomerActivity.this, CustomerProfileViewActivity.class);
                 i.putExtra("toolBarTitle" , "");
                 startActivity(i);
@@ -133,6 +133,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     private void loadList(){
         customerModelList = databaseCustomer.getAllCustomer();
         ModGlobal.customerModelList = customerModelList;
+        temp = ModGlobal.customerModelList;
 
         Log.e("size" , Integer.toString(customerModelList.size()));
 
@@ -178,7 +179,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
     private void filter(String text){
 
-        List<CustomerModel> temp = new ArrayList();
+         temp = new ArrayList();
 
         if ("".equals(text)) {
             temp = ModGlobal.customerModelList;

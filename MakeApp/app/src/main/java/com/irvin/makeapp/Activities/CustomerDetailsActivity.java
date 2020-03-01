@@ -4,8 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,9 +29,25 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.irvin.makeapp.Adapters.ReminderAdapter;
+import com.irvin.makeapp.Constant.MarshMallowPermission;
+import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Constant.MultiSelectionSpinner;
+import com.irvin.makeapp.Database.DatabaseCustomer;
+import com.irvin.makeapp.Database.DatabaseHelper;
+import com.irvin.makeapp.Models.CustomerModel;
+import com.irvin.makeapp.Models.Reminder;
+import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -42,32 +56,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.irvin.makeapp.Adapters.ReminderAdapter;
-import com.irvin.makeapp.Constant.ClickListener;
-import com.irvin.makeapp.Constant.MarshMallowPermission;
-import com.irvin.makeapp.Constant.ModGlobal;
-import com.irvin.makeapp.Constant.MultiSelectionSpinner;
-import com.irvin.makeapp.Constant.RecyclerTouchListener;
-import com.irvin.makeapp.Database.DatabaseCustomer;
-import com.irvin.makeapp.Database.DatabaseHelper;
-import com.irvin.makeapp.Models.CustomerModel;
-import com.irvin.makeapp.Models.Reminder;
-import com.irvin.makeapp.R;
-import com.irvin.makeapp.Services.CalendarReminder;
-import com.irvin.makeapp.Services.Logger;
-
-import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -518,9 +507,16 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();
 
-                if (month < 10) appendMonth = "0";
+                if (month < 10) {
+                    appendMonth = "0";
+                }
 
-                String date = year + "-" + appendMonth + month + "-" + day;
+                if (day < 10){
+                    append = "0";
+                }
+
+
+                String date = year + "-" + appendMonth + month + "-" + append+day;
                 birthday.setText(date);
 
             }

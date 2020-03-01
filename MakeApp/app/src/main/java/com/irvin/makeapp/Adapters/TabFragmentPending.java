@@ -7,15 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.irvin.makeapp.Activities.PaymentActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -34,7 +28,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -103,6 +100,7 @@ public class TabFragmentPending extends Fragment {
         expListView.setAdapter(expListAdapter);
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
+            @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
 
@@ -138,6 +136,7 @@ public class TabFragmentPending extends Fragment {
 
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing but close the dialog
                             // Do nothing
@@ -207,8 +206,9 @@ public class TabFragmentPending extends Fragment {
         childList = new ArrayList<>();
         for (Invoice model : invoices) {
 
-            if (model.getCustomerId().equals(customerId))
+            if (model.getCustomerId().equals(customerId)) {
                 childList.add(model);
+            }
         }
 
     }

@@ -8,7 +8,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/invoice"
+        android:layout_below="@id/searchLayout"
         android:scrollbars="none" />
 
 
@@ -39,7 +39,17 @@
             android:src="@drawable/garbage"/>
 
     </LinearLayout>
-
+    <androidx.appcompat.widget.SearchView
+        android:layout_below="@+id/invoice"
+        android:id="@+id/searchLayout"
+        android:background="@drawable/round_quantity4"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_3sdp"
+        app:iconifiedByDefault="false"
+        />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/invoice"

@@ -622,7 +622,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
                     String eventId = "";
                     eventId = CalendarReminder.addEvent(new Reminder("Due for " + ModGlobal.toTitleCase(invoice.getCustomerName()),
-                                    Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(databaseInvoice.getLastInvoiceId())) +
+                                    Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt  (databaseInvoice.getLastInvoiceId())) +
                                     " - ₱" + dec.format(finalTotal - finalCash),
                                     dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()), mCalendar, invoice.getCustomerName(),
                             SalesInvoiceProductDetailsActivity.this, Long.parseLong("1"));
@@ -712,9 +712,14 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                 int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();
 
-                if (month < 10) appendMonth = "0";
+                if (month < 10) {
+                    appendMonth = "0";
+                }
+                if (day < 10){
+                    append = "0";
+                }
 
-                String date = year + "-" + appendMonth + month + "-" + day;
+                String date = year + "-" + appendMonth + month + "-" + append + day;
                 dueDate = date;
 
                 new InvoiceTask(SalesInvoiceProductDetailsActivity.this).execute("");
