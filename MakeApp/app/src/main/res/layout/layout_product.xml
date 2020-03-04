@@ -2,13 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
-    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/corner_radius"
-    android:layout_marginTop="@dimen/card_view_margin"
     android:layout_marginLeft="@dimen/card_view_margin"
-    android:layout_marginRight="@dimen/card_view_margin" >
+    android:layout_marginTop="@dimen/card_view_margin"
+    android:layout_marginRight="@dimen/card_view_margin"
+    android:clickable="true"
+    app:cardCornerRadius="@dimen/corner_radius">
 
 
     <LinearLayout
@@ -25,28 +25,45 @@
             android:gravity="center"
             android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/fullName"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SAMPLE TITLE"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/_12sdp" />
+                android:layout_height="wrap_content">
 
+                <LinearLayout
+                    android:id="@+id/message_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/_40sdp">
+
+                    <TextView
+                        android:id="@+id/fullName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SAMPLE TITLE"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/editQuantity"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_alignParentRight="true"
+                    app:srcCompat="@drawable/baseline_edit_24" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_10sdp"
-                android:text="SAMPLE TITLE" />
+                android:text="SAMPLE TITLE"
+                android:textSize="@dimen/_10sdp" />
 
             <LinearLayout
-                android:layout_weight="5"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/contactNumber"
@@ -60,18 +77,17 @@
                     android:textStyle="bold" />
 
 
-                    <TextView
-                        android:id="@+id/skinType"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:paddingRight="@dimen/_10sdp"
-                        android:gravity="end"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/_10sdp"
-                        android:text="qty" />
+                <TextView
+                    android:id="@+id/skinType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="end"
+                    android:text="qty"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </LinearLayout>

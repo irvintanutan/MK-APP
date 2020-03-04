@@ -224,6 +224,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void updateProductQuantity(Products products) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+
+        values.put(productQuantity, products.getProduct_quantity());
+
+        db.update(tbl_product, values, "productId= ?", new String[]{products.getProduct_id()});
+        db.close();
+
+    }
+
     public List<Products> getAllProducts() {
         List<Products> products = new ArrayList<Products>();
         // Select All Query
