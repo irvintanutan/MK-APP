@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.hbb20.GThumb;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -16,9 +14,9 @@ import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.R;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
@@ -52,16 +50,20 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
                     customerModelList.get(position).getLastName());
         }
 
-        String [] splitDateValues = customerModelList.get(position).getBirthday().split("-");
-        int year = Integer.parseInt(splitDateValues[0]);
-        int month = Integer.parseInt(splitDateValues[1]) -1;
-        int day = Integer.parseInt(splitDateValues[2]);
 
+        try {
+            String[] splitDateValues = customerModelList.get(position).getBirthday().split("-");
+            int year = Integer.parseInt(splitDateValues[0]);
+            int month = Integer.parseInt(splitDateValues[1]) - 1;
+            int day = Integer.parseInt(splitDateValues[2]);
+            viewHolder.age.setText("Age : " + ModGlobal.getAge(year, month, day));
+        } catch (Exception e) {
+            viewHolder.age.setText("Age : " + customerModelList.get(position).getAge());
+        }
 
 
         viewHolder.fullName.setText(ModGlobal.toTitleCase(customerModelList.get(position).getFirstName() +
                 " " + customerModelList.get(position).getLastName()));
-        viewHolder.age.setText("Age : " + ModGlobal.getAge(year , month , day));
         viewHolder.contactNumber.setText("Contact # : " + customerModelList.get(position).getContactNumber());
         viewHolder.skinType.setText(customerModelList.get(position).getSkinType());
     }
@@ -70,7 +72,6 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         this.customerModelList = customerModelList;
         notifyDataSetChanged();
     }
-
 
 
     @Override

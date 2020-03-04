@@ -116,13 +116,16 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
                         customerModel.getLastName());
             }
 
-            String [] splitDateValues = customerModel.getBirthday().split("-");
-            int year = Integer.parseInt(splitDateValues[0]);
-            int month = Integer.parseInt(splitDateValues[1]) -1;
-            int day = Integer.parseInt(splitDateValues[2]);
+            try {
+                String[] splitDateValues = customerModel.getBirthday().split("-");
+                int year = Integer.parseInt(splitDateValues[0]);
+                int month = Integer.parseInt(splitDateValues[1]) - 1;
+                int day = Integer.parseInt(splitDateValues[2]);
 
-            customerName.setText(customerModel.getFullName() + ", "  + ModGlobal.getAge(year , month , day));
-
+                customerName.setText(customerModel.getFullName() + ", " + ModGlobal.getAge(year, month, day));
+            }catch (Exception e) {
+                customerName.setText(customerModel.getFullName());
+            }
             if (!customerModel.getContactNumber().equals(" ") || customerModel.getContactNumber() != null) {
                 phoneNumber.setText(customerModel.getContactNumber());
             }else {

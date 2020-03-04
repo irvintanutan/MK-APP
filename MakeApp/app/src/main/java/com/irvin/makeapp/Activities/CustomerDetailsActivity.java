@@ -110,7 +110,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     Button customer;
     String topic, body, strDate, strTime;
     String eventId = "";
-    int day, month, year;
+    int day = 0 , month = 0 , year = 0;
     private Long mRowId;
 
 
@@ -248,11 +248,15 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 remarks.setText(customerModel.getRemarks());
                 eventId = customerModel.getBirthdayEventId();
 
-                String [] splitDateValues = customerModel.getBirthday().split("-");
-                year = Integer.parseInt(splitDateValues[0]);
-                month = Integer.parseInt(splitDateValues[1]) -1;
-                day = Integer.parseInt(splitDateValues[2]);
-
+                try {
+                    String[] splitDateValues = customerModel.getBirthday().split("-");
+                    year = Integer.parseInt(splitDateValues[0]);
+                    month = Integer.parseInt(splitDateValues[1]) - 1;
+                    day = Integer.parseInt(splitDateValues[2]);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                }
 
                 if (customerModel.getSkinType().isEmpty()) {
                     skinType.setSelection(0);
