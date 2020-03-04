@@ -47,7 +47,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
     private static final String interests = "interests";
     private static final String photoUrl = "photoUrl";
     private static final String remarks = "remarks";
-
+    private static final String birthdayEventId = "birthdayEventId";
 
 
     public DatabaseCustomer(Context context) {
@@ -90,6 +90,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
         values.put(remarks, customerModel.getRemarks());
+        values.put(birthdayEventId, customerModel.getBirthdayEventId());
 
 
 
@@ -131,6 +132,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                 c.setInterests(cursor.getString(15));
                 c.setPhotoUrl(cursor.getString(16));
                 c.setRemarks(cursor.getString(17));
+                c.setBirthdayEventId(cursor.getString(18));
 
 
                 personList.add(c);
@@ -264,7 +266,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
                 c.setInterests(cursor.getString(15));
                 c.setPhotoUrl(cursor.getString(16));
                 c.setRemarks(cursor.getString(17));
-
+                c.setBirthdayEventId(cursor.getString(18));
 
             } while (cursor.moveToNext());
         }
@@ -295,6 +297,7 @@ public class DatabaseCustomer extends SQLiteOpenHelper {
         values.put(interests, customerModel.getInterests());
         values.put(photoUrl, customerModel.getPhotoUrl());
         values.put(remarks, customerModel.getRemarks());
+        values.put(birthdayEventId, customerModel.getBirthdayEventId());
 
         db.update(tbl_customer, values, "id= ?", new String[]{Integer.toString(id)});
         db.close();

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -77,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        if (!marshMallowPermission.checkPermissionForReadCalendar()) {
+            marshMallowPermission.requestPermissionForReadCalendar();
+        }
+
+
         if (databaseHelper.getAllProducts().size() == 0) {
             new GetProductTask(MainActivity.this).execute("0");
         }
@@ -89,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         form = new ArrayList<>();
-
 
         form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
         form.add(new MenuForm("Products", R.drawable.product, "View Products"));

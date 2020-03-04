@@ -26,6 +26,7 @@ public class MarshMallowPermission {
     public static final int CALL_PHONE_REQUEST_CODE = 9;
     public static final int SEND_SMS_REQUEST_CODE = 10;
     public static final int CALENDAR_WRITE = 11;
+    public static final int CALENDAR_READ = 12;
 
 
 
@@ -134,6 +135,15 @@ public class MarshMallowPermission {
         }
     }
 
+    public boolean checkPermissionForReadCalendar(){
+        int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CALENDAR);
+        if (result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public void requestPermissionForSms(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.SEND_SMS)){
@@ -223,6 +233,14 @@ public class MarshMallowPermission {
             Toast.makeText(activity, "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_CALENDAR},CALENDAR_WRITE);
+        }
+    }
+
+    public void requestPermissionForReadCalendar(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_CALENDAR)){
+            Toast.makeText(activity, "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.READ_CALENDAR},CALENDAR_READ);
         }
     }
 }

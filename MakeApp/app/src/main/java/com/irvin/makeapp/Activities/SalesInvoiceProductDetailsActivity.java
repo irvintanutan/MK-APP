@@ -625,7 +625,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                                     Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt  (databaseInvoice.getLastInvoiceId())) +
                                     " - ₱" + dec.format(finalTotal - finalCash),
                                     dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()), mCalendar, invoice.getCustomerName(),
-                            SalesInvoiceProductDetailsActivity.this, Long.parseLong("1"));
+                            SalesInvoiceProductDetailsActivity.this, Long.parseLong("1") , false);
 
                     long id = databaseHelper.createReminder(new Reminder("Due for " + ModGlobal.toTitleCase(invoice.getCustomerName()),
                             Integer.toString(ModGlobal.customerId), "#INV-" + String.format("%0" + ModGlobal.receiptLimit.length() + "d", Integer.parseInt(databaseInvoice.getLastInvoiceId())) +

@@ -41,12 +41,16 @@ import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
+import com.irvin.makeapp.Services.CalendarReminder;
 import com.irvin.makeapp.Services.Logger;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
@@ -67,6 +71,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     CustomerModel customerModel = new CustomerModel();
     String mCurrentPhotoPath = "";
+
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 20;
     AppCompatImageView profilePicture;
@@ -105,6 +110,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     Button customer;
     String topic, body, strDate, strTime;
     String eventId = "";
+    int day, month, year;
     private Long mRowId;
 
 
@@ -153,6 +159,14 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     private void init() {
 
         try {
+
+            Calendar cal = Calendar.getInstance();
+            year = cal.get(Calendar.YEAR);
+            day = cal.get(Calendar.DATE);
+            month = cal.get(Calendar.MONTH);
+
+
+
             profilePicture = findViewById(R.id.profilePicture);
             firstName = findViewById(R.id.firstName);
             lastName = findViewById(R.id.lastName);
@@ -232,6 +246,13 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 referredBy.setText(customerModel.getReferredBy());
                 contactNumber.setText(customerModel.getContactNumber());
                 remarks.setText(customerModel.getRemarks());
+                eventId = customerModel.getBirthdayEventId();
+
+                String [] splitDateValues = customerModel.getBirthday().split("-");
+                year = Integer.parseInt(splitDateValues[0]);
+                month = Integer.parseInt(splitDateValues[1]) -1;
+                day = Integer.parseInt(splitDateValues[2]);
+
 
                 if (customerModel.getSkinType().isEmpty()) {
                     skinType.setSelection(0);
@@ -359,12 +380,6 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 return true;
             }
 
-            if (age.getText() == null || age.getText().toString().isEmpty()) {
-                age.setError("Age is Required");
-                age.requestFocus();
-                return true;
-            }
-
             if (birthday.getText().toString().equals("Birth Date")) {
                 birthday();
                 Toast.makeText(getApplicationContext(), "Birth Date is Required", Toast.LENGTH_LONG).show();
@@ -457,11 +472,67 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         customerModel.setPhotoUrl(mCurrentPhotoPath == null ? " " : mCurrentPhotoPath);
         customerModel.setRemarks(remarks.getText().toString() == null ? " " : remarks.getText().toString());
 
-        if (isCreateNew)
-            databaseCustomer.addCustomer(customerModel);
-        else
-            databaseCustomer.updateCustomer(customerModel, ModGlobal.customerId);
 
+        // Get Current Date
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+        mCalendar = Calendar.getInstance();
+        int finalYear = mCalendar.get(Calendar.YEAR);
+        mCalendar.set(Calendar.YEAR, finalYear);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, day);
+
+        Date date = null;
+        try {
+            date = dateTimeFormat.parse(finalYear + "-" + month + "-" + day + " 07:00:00");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mCalendar.setTime(date);
+
+        mCalendar.add(Calendar.DATE , 1);
+
+
+        if (isCreateNew) {
+
+            eventId = CalendarReminder.addEvent(new Reminder("Happy Birthday " + customerModel.getFullName(),
+                            Integer.toString(ModGlobal.customerId), "It's " + customerModel.getFullName() + " birthday!.",
+                            birthday.getText().toString() + " 07:00:00", "", eventId, ""), mCalendar, customerModel.getFullName(),
+                    CustomerDetailsActivity.this, Long.parseLong("1"), true);
+
+            customerModel.setBirthdayEventId(eventId);
+
+            databaseCustomer.addCustomer(customerModel);
+        } else {
+
+
+            try {
+                if (eventId.equals("NONE")){
+
+                    eventId = CalendarReminder.addEvent(new Reminder("Happy Birthday " + customerModel.getFullName(),
+                                    Integer.toString(ModGlobal.customerId), "It's " + customerModel.getFullName() + " birthday!.",
+                                    birthday.getText().toString() + " 07:00:00", "", eventId, ""), mCalendar, customerModel.getFullName(),
+                            CustomerDetailsActivity.this, Long.parseLong("1"), true);
+
+                    customerModel.setBirthdayEventId(eventId);
+                } else {
+
+
+
+                    CalendarReminder.updateEvent(Long.parseLong(eventId), CustomerDetailsActivity.this,
+                            mCalendar, new Reminder("Happy Birthday " + customerModel.getFullName(),
+                                    Integer.toString(ModGlobal.customerId), "It's " + customerModel.getFullName() + " birthday!.",
+                                    birthday.getText().toString() + " 07:00:00", "", eventId, ""), customerModel.getFullName());
+
+                }
+                databaseCustomer.updateCustomer(customerModel, ModGlobal.customerId);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            }
+
+
+        }
         if (ModGlobal.isInSalesInvoice) {
             startActivity(new Intent(CustomerDetailsActivity.this, SalesInvoiceProductActivity.class));
             finish();
@@ -484,6 +555,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         View alertLayout = inflater.inflate(R.layout.datetime, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DatePicker datePicker = alertLayout.findViewById(R.id.date_picker);
+        datePicker.init(year , month , day , null);
 
         builder.setView(alertLayout);
         builder.setNegativeButton("Cancel", null);
@@ -503,20 +575,20 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             public void onClick(DialogInterface dialog, int which) {
                 String append = "";
                 String appendMonth = "";
-                int day = datePicker.getDayOfMonth();
-                int month = datePicker.getMonth() + 1;
-                int year = datePicker.getYear();
+                day = datePicker.getDayOfMonth();
+                month = datePicker.getMonth() + 1;
+                year = datePicker.getYear();
 
                 if (month < 10) {
                     appendMonth = "0";
                 }
 
-                if (day < 10){
+                if (day < 10) {
                     append = "0";
                 }
 
 
-                String date = year + "-" + appendMonth + month + "-" + append+day;
+                String date = year + "-" + appendMonth + month + "-" + append + day;
                 birthday.setText(date);
 
             }

@@ -22,12 +22,13 @@ public class CustomerModel {
     private String interests;
     private String photoUrl;
     private String remarks;
+    private String birthdayEventId;
 
 
     public CustomerModel(String firstName, String lastName, String middleName, String address,
                          String birthday, String age, String occupation, String email, String contactNumber,
                          String bestTimeToBeContacted, String referredBy,
-                         String skinType, String skinConcern, String skinTone, String interests, String photoUrl, String remarks) {
+                         String skinType, String skinConcern, String skinTone, String interests, String photoUrl, String remarks, String birthdayEventId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -45,6 +46,7 @@ public class CustomerModel {
         this.interests = interests;
         this.photoUrl = photoUrl;
         this.remarks = remarks;
+        this.birthdayEventId = birthdayEventId;
     }
 
     public CustomerModel(){}
@@ -197,4 +199,14 @@ public class CustomerModel {
     public String getFullName(){
         return ModGlobal.toTitleCase(this.firstName + " " + this.lastName);
     }
+
+
+    public String getBirthdayEventId() {
+        return birthdayEventId;
+    }
+
+    public void setBirthdayEventId(String birthdayEventId) {
+        this.birthdayEventId = birthdayEventId;
+    }
+
 }

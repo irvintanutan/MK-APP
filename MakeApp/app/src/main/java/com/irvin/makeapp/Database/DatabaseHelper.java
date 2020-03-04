@@ -45,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String interests = "interests";
     private static final String photoUrl = "photoUrl";
     private static final String remarks = "remarks";
+    private static final String birthdayEventId = "birthdayEventId";
 
 
     //table name
@@ -119,7 +120,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + skinTone + " TEXT , "
                 + interests + " TEXT , "
                 + photoUrl + " TEXT , "
-                + remarks + " TEXT );";
+                + remarks + " TEXT , "
+                + birthdayEventId + " TEXT );";
         db.execSQL(CREATE_PERSON_TABLE);
 
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + tbl_product + "( productId TEXT primary key  , "
@@ -182,6 +184,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + KEY_EVENT_ID + " text not null, "
                     + KEY_INVOICE_ID + " text not null);";
 
+    private static final String BIRTH_EVENT_ID_ADD_COLUMN = "ALTER TABLE " + tbl_customer +
+            " ADD COLUMN " + birthdayEventId + " TEXT DEFAULT 'NONE'";
+
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -189,6 +195,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(REMARKS_ADD_COLUMN);
             db.execSQL(DATABASE_CREATE_REMINDER);
         }
+
+        if (oldVersion < 3) {
+            db.execSQL(BIRTH_EVENT_ID_ADD_COLUMN);
+        }
+
+
     }
 
     public void addProduct(Products products) {

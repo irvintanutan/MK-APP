@@ -28,8 +28,7 @@ public class CalendarReminder {
     private Context context;
 
 
-
-    public static String addEvent(Reminder reminder , Calendar mCalendar , String fullName,  Activity activity ,Long calID) {
+    public static String addEvent(Reminder reminder, Calendar mCalendar, String fullName, Activity activity, Long calID, boolean isBirthday) {
         String eventId = "";
         ContentResolver cr = activity.getContentResolver();
         ContentValues values = new ContentValues();
@@ -39,6 +38,12 @@ public class CalendarReminder {
         values.put(CalendarContract.Events.DESCRIPTION, fullName + "\n" + reminder.getKEY_BODY());
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+
+        if (isBirthday) {
+            values.put(CalendarContract.EXTRA_EVENT_ALL_DAY , true);
+            values.put(CalendarContract.Events.RRULE, "FREQ=YEARLY");
+        }
+
 
 
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -57,9 +62,9 @@ public class CalendarReminder {
             reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
             reminders.put(CalendarContract.Reminders.MINUTES, 60 * 24);
 
-
-            cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
-
+            if (!isBirthday) {
+                cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
+            }
         } else {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
         }
@@ -68,13 +73,13 @@ public class CalendarReminder {
 
     }
 
-    public static void deleteEvent(long eventID , Context context) {
+    public static void deleteEvent(long eventID, Context context) {
         Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
         int rows = context.getContentResolver().delete(deleteUri, null, null);
         Log.i("Calendar", "Rows deleted: " + rows);
     }
 
-    public static void updateEvent(long eventID , Context context , Calendar mCalendar , Reminder reminder , String fullName) {
+    public static void updateEvent(long eventID, Context context, Calendar mCalendar, Reminder reminder, String fullName) {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, mCalendar.getTimeInMillis());
         values.put(CalendarContract.Events.DTEND, mCalendar.getTimeInMillis());

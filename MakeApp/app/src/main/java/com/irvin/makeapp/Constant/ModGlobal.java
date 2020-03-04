@@ -11,6 +11,7 @@ import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ModGlobal {
     public static Invoice invoice = new Invoice();
     public static String searchFilter = "";
     ////please beware of changing value of database version
-    public static int DATABASE_VERSION = 2;
+    public static int DATABASE_VERSION = 3;
     public static String imageFilePath;
     public static String totalBalance;
     public static final char[] delimiters = { ' ', '_' };
@@ -112,5 +113,24 @@ public class ModGlobal {
 
         return builder.toString();
     }
+
+    public static String getAge(int year, int month, int day){
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
+    }
+
 
 }

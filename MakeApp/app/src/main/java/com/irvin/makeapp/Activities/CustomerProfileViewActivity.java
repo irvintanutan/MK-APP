@@ -116,8 +116,12 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
                         customerModel.getLastName());
             }
 
+            String [] splitDateValues = customerModel.getBirthday().split("-");
+            int year = Integer.parseInt(splitDateValues[0]);
+            int month = Integer.parseInt(splitDateValues[1]) -1;
+            int day = Integer.parseInt(splitDateValues[2]);
 
-            customerName.setText(customerModel.getFullName());
+            customerName.setText(customerModel.getFullName() + ", "  + ModGlobal.getAge(year , month , day));
 
             if (!customerModel.getContactNumber().equals(" ") || customerModel.getContactNumber() != null) {
                 phoneNumber.setText(customerModel.getContactNumber());
@@ -320,7 +324,7 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
                         eventId = CalendarReminder.addEvent(new Reminder(editTextTopic.getText().toString(),
                                         Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
                                         reminderDateTime, "", eventId, ""), mCalendar, customerModel.getFullName(),
-                                CustomerProfileViewActivity.this, Long.parseLong("1"));
+                                CustomerProfileViewActivity.this, Long.parseLong("1") , false);
 
                         long id = databaseHelper.createReminder(new Reminder(editTextTopic.getText().toString(),
                                 Integer.toString(ModGlobal.customerId), editTextBody.getText().toString(),
