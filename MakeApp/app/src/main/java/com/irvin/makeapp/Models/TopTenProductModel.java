@@ -36,5 +36,9 @@ public class TopTenProductModel {
         this.total = total;
     }
 
+    public TopTenProductModel(){
+
+    }
+
 
 }

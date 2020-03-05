@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.Reminder;
+import com.irvin.makeapp.Models.TopTenProductModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String productPrice = "productPrice";
     private static final String productCategory = "productCategory";
     private static final String productQuantity = "productQuantity";
+    private static final String productTotalPurchaseQuantity = "productTotalPurchaseQuantity";
 
 
     //table name
@@ -128,7 +131,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + productName + " TEXT , "
                 + productPrice + " TEXT , "
                 + productCategory + " TEXT , "
-                + productQuantity + " TEXT default '0');";
+                + productQuantity + " TEXT default '0' , "
+                + productTotalPurchaseQuantity + " TEXT default '0');";
         db.execSQL(CREATE_PRODUCT_TABLE);
 
 
@@ -187,6 +191,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String BIRTH_EVENT_ID_ADD_COLUMN = "ALTER TABLE " + tbl_customer +
             " ADD COLUMN " + birthdayEventId + " TEXT DEFAULT 'NONE'";
 
+    private static final String TOTAL_PURCHASE_QUANTITY = "ALTER TABLE " + tbl_product +
+            " ADD COLUMN " + productTotalPurchaseQuantity + " TEXT DEFAULT '0'";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -198,6 +204,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 3) {
             db.execSQL(BIRTH_EVENT_ID_ADD_COLUMN);
+        }
+
+        if (oldVersion < 4) {
+            db.execSQL(TOTAL_PURCHASE_QUANTITY);
         }
 
 
@@ -266,6 +276,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
                 p.setProduct_quantity(cursor.getString(4));
+                p.setProduct_total_purchase_quantity(cursor.getString(5));
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -275,7 +286,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return products;
     }
-
 
 
     public List<Products> getAllProducts2() {
@@ -296,6 +306,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
                 p.setProduct_quantity(cursor.getString(4));
+                p.setProduct_total_purchase_quantity(cursor.getString(5));
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -325,6 +336,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
                 p.setProduct_quantity(cursor.getString(4));
+                p.setProduct_total_purchase_quantity(cursor.getString(5));
 
                 products.add(p);
             } while (cursor.moveToNext());
@@ -342,7 +354,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery;
         if (ModGlobal.settingPref.getBoolean("trackInventory", true)) {
             selectQuery = "SELECT  * FROM " + tbl_product + " where " + productQuantity + " > 0";
-        }else {
+        } else {
             selectQuery = "SELECT  * FROM " + tbl_product;
         }
         SQLiteDatabase db = this.getWritableDatabase();
@@ -359,6 +371,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 p.setProduct_price(cursor.getString(2).replace("PHP", ""));
                 p.setProduct_category(cursor.getString(3));
                 p.setProduct_quantity(cursor.getString(4));
+                p.setProduct_total_purchase_quantity(cursor.getString(5));
                 p.setPosition(counter);
                 p.setSelected(false);
 
@@ -406,6 +419,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(tbl_product, values, "productId= '" + code + "'", null);
         db.close(); // Closing database connection
     }
+
+
+    public void updateTotalPurchaseQuantity(String code, String qty) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        int quantity;
+        int q1 = Integer.parseInt(qty);
+
+        String selectQuery = "SELECT  productTotalPurchaseQuantity FROM " + tbl_product + " where " + productId + " = '" + code + "'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        cursor.moveToFirst();
+
+        if (cursor.getString(0) != null) {
+            quantity = q1 + Integer.parseInt(cursor.getString(0));
+        } else {
+            quantity = q1;
+        }
+        values.put(productTotalPurchaseQuantity, quantity);
+
+        db.update(tbl_product, values, "productId= '" + code + "'", null);
+        db.close(); // Closing database connection
+    }
+
+
+    public List<TopTenProductModel> getTopTenProduct() {
+        List<TopTenProductModel> products = new ArrayList<TopTenProductModel>();
+        // Select All Query
+
+        String selectQuery = "SELECT productId , productName , productTotalPurchaseQuantity , productPrice " +
+                " FROM " + tbl_product + " where productTotalPurchaseQuantity > 0 order by productTotalPurchaseQuantity DESC limit 10";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TopTenProductModel p = new TopTenProductModel();
+                p.setProductCode(cursor.getString(0));
+                p.setProductName(cursor.getString(1));
+                double total = Double.parseDouble(cursor.getString(3).replace("PHP","").replace(",","")) * cursor.getInt(2);
+                p.setTotal(total);
+
+                products.add(p);
+
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
 
     private String getDateToday() {
         Date date = Calendar.getInstance().getTime();

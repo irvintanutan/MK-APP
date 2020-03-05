@@ -36,7 +36,9 @@ import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -66,126 +68,126 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try {
+            TextView version = findViewById(R.id.versionName);
+            version.setText("PinkHeartV" + BuildConfig.VERSION_NAME);
 
-        TextView version = findViewById(R.id.versionName);
-        version.setText("PinkHeartV" + BuildConfig.VERSION_NAME);
+            ModGlobal.settingPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ModGlobal.settingPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
-        if (!marshMallowPermission.checkPermissionForWriteCalendar()) {
-            marshMallowPermission.requestPermissionForWriteCalendar();
-        }
-
-
-        if (!marshMallowPermission.checkPermissionForReadCalendar()) {
-            marshMallowPermission.requestPermissionForReadCalendar();
-        }
+            MarshMallowPermission marshMallowPermission = new MarshMallowPermission(this);
+            if (!marshMallowPermission.checkPermissionForWriteCalendar()) {
+                marshMallowPermission.requestPermissionForWriteCalendar();
+            }
 
 
-        if (databaseHelper.getAllProducts().size() == 0) {
-            new GetProductTask(MainActivity.this).execute("0");
-        }
+            if (!marshMallowPermission.checkPermissionForReadCalendar()) {
+                marshMallowPermission.requestPermissionForReadCalendar();
+            }
 
 
-        RecyclerView recyclerView = findViewById(R.id.user_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(layoutManager);
+            if (databaseHelper.getAllProducts().size() == 0) {
+                new GetProductTask(MainActivity.this).execute("0");
+            }
 
 
-        form = new ArrayList<>();
+            RecyclerView recyclerView = findViewById(R.id.user_view);
+            recyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
+            recyclerView.setLayoutManager(layoutManager);
 
-        form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
-        form.add(new MenuForm("Products", R.drawable.product, "View Products"));
-        form.add(new MenuForm("Inventory", R.drawable.box, "Manage Inventory"));
-        form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
-        form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
-        form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
-        form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
-        form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
+
+            form = new ArrayList<>();
+
+            form.add(new MenuForm("Customer", R.drawable.account, "Manage Customers"));
+            form.add(new MenuForm("Products", R.drawable.product, "View Products"));
+            form.add(new MenuForm("Inventory", R.drawable.box, "Manage Inventory"));
+            form.add(new MenuForm("Sales Invoice", R.drawable.invoice, "Customer Purchase"));
+            form.add(new MenuForm("Reports", R.drawable.analytics, "View Reports"));
+            form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
+            form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
+            form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
 
 
         /*form.add(new MenuForm("Site Survey", R.drawable.salesentry));
         //form.add(new MenuForm("Edit Site", R.drawable.radiotower));*/
 
 
-        RecyclerView.Adapter adapter = new DataAdapter(form, this);
-        recyclerView.setAdapter(adapter);
+            RecyclerView.Adapter adapter = new DataAdapter(form, this);
+            recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                GestureDetector gestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-                View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && gestureDetector.onTouchEvent(e)) {
-                    int position = rv.getChildAdapterPosition(child);
-
-                    switch (position) {
-
-                        case 0:
-                            customer();
-                            break;
-                        case 1:
-                            products();
-                            //tickets(true);
-                            break;
-                        case 5:
-                            reminder();
-                            break;
-                        case 2:
-                            stockIn();
-                            break;
-                        case 3:
-                            invoice();
-                            break;
-                        case 4:
-                            reports();
-                            break;
-                        case 6:
-                            groupSales();
-                            break;
-                        case 7:
-                            setting();
-                            break;
-                        default:
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        return true;
                     }
 
+                });
+
+                @Override
+                public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                    View child = rv.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && gestureDetector.onTouchEvent(e)) {
+                        int position = rv.getChildAdapterPosition(child);
+
+                        switch (position) {
+
+                            case 0:
+                                customer();
+                                break;
+                            case 1:
+                                products();
+                                //tickets(true);
+                                break;
+                            case 5:
+                                reminder();
+                                break;
+                            case 2:
+                                stockIn();
+                                break;
+                            case 3:
+                                invoice();
+                                break;
+                            case 4:
+                                reports();
+                                break;
+                            case 6:
+                                groupSales();
+                                break;
+                            case 7:
+                                setting();
+                                break;
+                            default:
+                        }
+
+                    }
+
+                    return false;
                 }
 
-                return false;
-            }
+                @Override
+                public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                }
 
-            }
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+                }
+            });
 
 
-        receivables = findViewById(R.id.receivables);
-        thisMonth = findViewById(R.id.thisMonth);
-        totalSales = findViewById(R.id.totalSales);
+            receivables = findViewById(R.id.receivables);
+            thisMonth = findViewById(R.id.thisMonth);
+            totalSales = findViewById(R.id.totalSales);
 
-        receivables.setText(accountReceivable());
-        Date date = Calendar.getInstance().getTime();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM");
-        thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
-        totalSales.setText(databaseInvoice.getTotalSales());
+            receivables.setText(accountReceivable());
+            Date date = Calendar.getInstance().getTime();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM");
+            thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
+            totalSales.setText(databaseInvoice.getTotalSales());
 
 /*
         if (!ModGlobal.settingPref.getBoolean("license", false)) {
@@ -241,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+        }
     }
 
 

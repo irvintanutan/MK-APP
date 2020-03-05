@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,30 +33,16 @@ import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseCustomer;
+import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
-import com.irvin.makeapp.Models.Invoice;
-import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.Models.TopTenProductModel;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.Logger;
-import com.whiteelephant.monthpicker.MonthPickerDialog;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
@@ -65,6 +50,7 @@ public class ReportActivity extends AppCompatActivity {
     DecimalFormat dec = new DecimalFormat("#,##0.00");
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
     List<TopTenProductModel> topTenProductModels = new ArrayList<>();
 
     @SuppressLint("NewApi")
@@ -142,55 +128,17 @@ public class ReportActivity extends AppCompatActivity {
             AnyChartView anyChartView = findViewById(R.id.any_chart_view);
 
             APIlib.getInstance().setActiveAnyChartView(anyChartView);
-            int counter = 0;
+
 
             Cartesian cartesian = AnyChart.column();
 
 
-            List<Invoice> invoices = databaseInvoice.getAllInvoices();
-
-
-            for (Invoice invoice : invoices) {
-
-                try {
-
-
-                    JSONArray jsonArray = new JSONArray(invoice.getInvoiceDetail());
-
-                    for (int a = 0; a < jsonArray.length(); a++) {
-
-                        JSONObject object = jsonArray.getJSONObject(a);
-                        StockIn stockIn = new StockIn(object.getString("productName")
-                                , object.getString("productCode"), object.getString("quantity")
-                                , object.getString("price"));
-
-                        addProduct(stockIn);
-                        counter++;
-                        if (counter == 12) break;
-                    }
-
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-
-                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
-
-                }
-
-
-            }
-
-
-            Collections.sort(topTenProductModels, new Comparator<TopTenProductModel>() {
-                @Override
-                public int compare(TopTenProductModel topTenProductModel, TopTenProductModel t1) {
-                    return Double.toString(topTenProductModel.getTotal()).compareTo(Double.toString(t1.getTotal()));
-                }
-            });
+            topTenProductModels = databaseHelper.getTopTenProduct();
 
             List<DataEntry> data = new ArrayList<>();
-            for (int a = topTenProductModels.size() - 1; a >= 0; a--) {
+            for (int a = 0; a < topTenProductModels.size(); a++) {
                 TopTenProductModel topTenProductModel = topTenProductModels.get(a);
+                Log.e(topTenProductModel.getProductName() , Double.toString(topTenProductModel.getTotal()));
                 data.add(new ValueDataEntry(topTenProductModel.getProductName(), topTenProductModel.getTotal()));
             }
 
@@ -206,7 +154,7 @@ public class ReportActivity extends AppCompatActivity {
                     .format("₱{%Value}{groupsSeparator: }");
 
             cartesian.animation(true);
-            cartesian.title("Top Products by Revenue");
+            cartesian.title("Top 10 Products by Revenue");
 
             cartesian.yScale().minimum(0d);
 
@@ -223,35 +171,6 @@ public class ReportActivity extends AppCompatActivity {
             e.printStackTrace();
             Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
-    }
-
-    void addProduct(StockIn stockIn) {
-
-        boolean indicator = false;
-        int index = 0;
-
-        String productCode = stockIn.getProductCode();
-        String productName = stockIn.getProductName();
-        double price = Double.parseDouble(stockIn.getPrice().replace(",", "")) * Integer.parseInt(stockIn.getQuantity());
-
-
-        for (int a = 0; a < topTenProductModels.size(); a++) {
-            if (stockIn.getProductCode().equals(topTenProductModels.get(a).getProductCode())) {
-                indicator = true;
-                index = a;
-            }
-        }
-
-        if (indicator) {
-            price += topTenProductModels.get(index).getTotal();
-            topTenProductModels.set(index, new TopTenProductModel(topTenProductModels.get(index).getProductCode(),
-                    topTenProductModels.get(index).getProductName(), price));
-        } else {
-            topTenProductModels.add(new TopTenProductModel(productCode, productName, price));
-
-        }
-
-
     }
 
 

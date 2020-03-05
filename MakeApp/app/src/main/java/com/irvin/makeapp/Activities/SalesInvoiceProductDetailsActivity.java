@@ -591,10 +591,12 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
             for (int a = 0; a < ModGlobal.stockIns.size(); a++) {
 
-                Log.e(ModGlobal.stockIns.get(a).getProductCode(), ModGlobal.stockIns.get(a).getQuantity());
-
                 databaseHelper.stockIn(ModGlobal.stockIns.get(a).getProductCode()
                         , ModGlobal.stockIns.get(a).getQuantity(), false);
+
+                databaseHelper.updateTotalPurchaseQuantity(ModGlobal.stockIns.get(a).getProductCode() ,
+                        ModGlobal.stockIns.get(a).getQuantity());
+
             }
 
             String json = new Gson().toJson(ModGlobal.stockIns);
