@@ -248,6 +248,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                 remarks.setText(customerModel.getRemarks());
                 eventId = customerModel.getBirthdayEventId();
 
+
                 try {
                     String[] splitDateValues = customerModel.getBirthday().split("-");
                     year = Integer.parseInt(splitDateValues[0]);
@@ -510,7 +511,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
 
             try {
-                if (eventId.equals("NONE")){
+                if ( eventId == null || eventId.equals("NONE") || eventId.isEmpty() || eventId.equals("")){
 
                     eventId = CalendarReminder.addEvent(new Reminder("Happy Birthday " + customerModel.getFullName(),
                                     Integer.toString(ModGlobal.customerId), "It's " + customerModel.getFullName() + " birthday!.",
@@ -520,8 +521,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     customerModel.setBirthdayEventId(eventId);
                 } else {
 
-
-
+                    customerModel.setBirthdayEventId(eventId);
                     CalendarReminder.updateEvent(Long.parseLong(eventId), CustomerDetailsActivity.this,
                             mCalendar, new Reminder("Happy Birthday " + customerModel.getFullName(),
                                     Integer.toString(ModGlobal.customerId), "It's " + customerModel.getFullName() + " birthday!.",
@@ -529,6 +529,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
                 }
                 databaseCustomer.updateCustomer(customerModel, ModGlobal.customerId);
+
 
             } catch (Exception e) {
                 e.printStackTrace();
