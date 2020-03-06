@@ -2,6 +2,7 @@ package com.irvin.makeapp.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,7 +11,10 @@ import android.util.Log;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.Invoice;
+import com.irvin.makeapp.Models.Payment;
+import com.irvin.makeapp.Services.Logger;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -98,7 +102,7 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         values.put(discount, invoice.getDiscount());
         values.put(status, invoice.getStatus());
         values.put(invoiceDetail, invoice.getInvoiceDetail());
-        values.put(dateCreated, getDateToday());
+        values.put(dateCreated, invoice.getDateCreated());
         values.put(dueDate, invoice.getDueDate());
 
         db.update(tbl_invoice, values, "invoiceId= ?", new String[]{id});
@@ -387,6 +391,41 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         databasePayment.deletePayment(id);
         return db.delete(tbl_invoice, invoiceId + "=" + id, null) > 0;
+    }
+
+    public void solution(){
+        try {
+            List<Invoice> invoices = getAllInvoices();
+            DatabasePayment databasePayment = new DatabasePayment(mContext);
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            for (Invoice invoice : invoices){
+                List<Payment> payments = databasePayment.getPaymentPerInvoice(invoice.getInvoiceId());
+
+                ContentValues values = new ContentValues();
+
+                if (payments.size() > 0) {
+                    values.put(dateCreated, payments.get(payments.size() - 1).getDateCreated());
+
+                    db.update(tbl_invoice, values, "invoiceId= ?", new String[]{invoice.getInvoiceId()});
+                }
+            }
+            deleteInvoice("25");
+            deleteInvoice("28");
+
+
+            SharedPreferences.Editor editor;
+            editor = ModGlobal.settingPref.edit();
+            editor.putBoolean("solution" , true);
+            editor.apply();
+
+
+            db.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Logger.CreateNewEntry(e, new File(mContext.getExternalFilesDir(""), ModGlobal.logFile));
+        }
+
     }
 
 

@@ -39,6 +39,16 @@
             app:summaryOn="License Activated"
             app:title="License Status" />
 
+
+        <SwitchPreferenceCompat
+            app:key="solution"
+            app:defaultValue="false"
+            app:isPreferenceVisible="false"
+            app:enabled="false"
+            app:summaryOff="License is not active please activate your account"
+            app:summaryOn="License Activated"
+            app:title="License Status" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

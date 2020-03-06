@@ -189,6 +189,15 @@ public class MainActivity extends AppCompatActivity {
             thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
             totalSales.setText(databaseInvoice.getTotalSales());
 
+
+            if (!ModGlobal.settingPref.getBoolean("solution", false)) {
+
+                databaseInvoice.solution();
+
+                Toast.makeText(this, "YEHAY!!!!", Toast.LENGTH_SHORT).show();
+
+            }
+
 /*
         if (!ModGlobal.settingPref.getBoolean("license", false)) {
             billingClient = BillingClient.newBuilder(this).setListener(new PurchasesUpdatedListener() {

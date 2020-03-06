@@ -677,11 +677,19 @@ public class PaymentActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 }
             } else {
-                Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
-                CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), PaymentActivity.this);
+                try {  Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
+
+                    CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), PaymentActivity.this);
+
                 databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                }
             }
 
             databaseInvoice.updateInvoice(invoice, invoice.getInvoiceId());
@@ -725,12 +733,12 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE")) {
-            startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
+        if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE_CUSTOMER")) {
+            startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
         } else {
-            startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
+            startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
             finish();
             overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
         }
@@ -748,7 +756,7 @@ public class PaymentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE")) {
+            if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE_CUSTOMER")) {
                 startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
                 finish();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
