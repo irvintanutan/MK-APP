@@ -13,9 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.irvin.makeapp.Activities.MainActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irvin.makeapp.Activities.CustomerProfileViewActivity;
 import com.irvin.makeapp.Activities.PaymentActivity;
-import com.irvin.makeapp.Activities.ReportActivity;
+import com.irvin.makeapp.Activities.SalesInvoiceActivity;
+import com.irvin.makeapp.Activities.SalesInvoiceProductActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -29,23 +31,30 @@ import java.util.List;
 /**
  * Created by irvin on 2/7/17.
  */
-public class TabFragmentPaid extends Fragment {
+public class TabFragmentCustomerOrders extends Fragment {
     DatabaseHelper databaseHelper;
     DatabaseInvoice databaseInvoice;
     List<Invoice> invoices;
     LinearLayout nothing;
     RecyclerView recyclerView;
     View view;
-    SalesInvoiceAdapter salesInvoiceAdapter;
+    SalesInvoiceAdapterCustomer salesInvoiceAdapter;
+    FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.tab_customer_order, container, false);
+
         invoices = new ArrayList<>();
         databaseInvoice = new DatabaseInvoice(getActivity());
         databaseHelper = new DatabaseHelper(getActivity());
-        invoices = databaseInvoice.getAllInvoices(TranStatus.PAID.toString());
+        invoices = databaseInvoice.getAllInvoicesByCustomer(ModGlobal.customerId, TranStatus.PENDING.toString());
+
+        nothing = view.findViewById(R.id.nothing);
+        fab = view.findViewById(R.id.floating_action_button);
         if (invoices.size() > 0) {
-            view = inflater.inflate(R.layout.paid_tab, container, false);
+            nothing.setVisibility(View.GONE);
+
 
             recyclerView = view.findViewById(R.id.pending_card_recycler_view);
             recyclerView.setHasFixedSize(true);
@@ -53,7 +62,7 @@ public class TabFragmentPaid extends Fragment {
             recyclerView.setLayoutManager(layoutManager);
 
 
-            salesInvoiceAdapter = new SalesInvoiceAdapter(invoices, getActivity());
+            salesInvoiceAdapter = new SalesInvoiceAdapterCustomer(invoices, getActivity());
             recyclerView.setAdapter(salesInvoiceAdapter);
 
 
@@ -74,7 +83,7 @@ public class TabFragmentPaid extends Fragment {
                     if (child != null && gestureDetector.onTouchEvent(e)) {
                         int position = rv.getChildAdapterPosition(child);
 
-                        ModGlobal.InvoiceOriginView = "SALES_INVOICE";
+
                         ModGlobal.invoice = new Invoice();
                         ModGlobal.invoice = invoices.get(position);
 
@@ -98,8 +107,24 @@ public class TabFragmentPaid extends Fragment {
 
                 }
             });
-
         }
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ModGlobal.InvoiceOriginView = "SALES_INVOICE_CUSTOMER";
+
+                Intent intent = new Intent(getActivity(), SalesInvoiceProductActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+
+                ModGlobal.ProductModelListCopy.clear();
+                ModGlobal.stockIns.clear();
+                ModGlobal.ProductModelList.clear();
+            }
+        });
 
         return view;
     }

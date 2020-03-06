@@ -678,7 +678,7 @@ public class PaymentActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else {
+            } else {
                 Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
                 CalendarReminder.deleteEvent(Long.parseLong(reminder.getKEY_EVENT_ID()), PaymentActivity.this);
                 databaseHelper.deleteReminder(Long.parseLong(reminder.getKEY_ROWID()));
@@ -725,9 +725,15 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
-        finish();
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE")) {
+            startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else {
+            startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
+            finish();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        }
     }
 
     @Override
@@ -742,9 +748,15 @@ public class PaymentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
-            finish();
-            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+            if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE")) {
+                startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
+                finish();
+                overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+            } else {
+                startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
+                finish();
+                overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+            }
         } else if (item.getItemId() == R.id.action_report) {
             generatePDF();
         } else if (item.getItemId() == R.id.action_call) {
@@ -901,10 +913,10 @@ public class PaymentActivity extends AppCompatActivity {
 
         } catch (DocumentException dex) {
             dex.printStackTrace();
-            Logger.CreateNewEntry(dex , new File(getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(dex, new File(getExternalFilesDir(""), ModGlobal.logFile));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.CreateNewEntry(ex , new File(getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(ex, new File(getExternalFilesDir(""), ModGlobal.logFile));
         } finally {
             if (doc != null) {
                 //close the document

@@ -108,6 +108,8 @@ public class TabFragmentPending extends Fragment {
                 ModGlobal.invoice = new Invoice();
                 ModGlobal.invoice = inv;
 
+
+                ModGlobal.InvoiceOriginView = "SALES_INVOICE";
                 Intent i = new Intent(getActivity(), PaymentActivity.class);
                 startActivity(i);
                 getActivity().finish();

@@ -42,6 +42,7 @@ public class ModGlobal {
     public static String totalBalance;
     public static final char[] delimiters = { ' ', '_' };
     public static String logFile = "logger.txt";
+    public static String InvoiceOriginView = "";
 
     public static boolean itemIsDuplicate(String prodCode) {
         boolean ind = false;

@@ -230,6 +230,42 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         return products;
     }
 
+
+
+    public List<Invoice> getAllInvoicesByCustomer(int customerId , String status) {
+        List<Invoice> products = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = '" + status + "' and  customerId = '" + customerId + "' ORDER BY dateCreated DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Invoice p = new Invoice();
+                CustomerModel
+                        customer = databaseCustomer.getAllCustomer(Integer.parseInt(cursor.getString(2)));
+
+                p.setInvoiceId(cursor.getString(0));
+                p.setDiscount(cursor.getString(1));
+                p.setCustomerId(cursor.getString(2));
+                p.setCustomerName(ModGlobal.toTitleCase(customer.getFirstName() + " " + customer.getLastName()));
+                p.setTotalAmount(cursor.getString(4));
+                p.setStatus(cursor.getString(5));
+                p.setInvoiceDetail(cursor.getString(6));
+                p.setDateCreated(cursor.getString(7));
+                p.setDueDate(cursor.getString(8));
+
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+        // return quote list
+
+        db.close();
+        return products;
+    }
+
     public List<Invoice> getAllDueInvoices() {
 
         List<Invoice> products = new ArrayList<>();

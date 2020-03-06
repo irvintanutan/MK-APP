@@ -6,386 +6,160 @@
     android:layout_height="match_parent"
     tools:context=".Activities.CustomerProfileViewActivity">
 
-    <RelativeLayout
-        android:id="@+id/nested"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profileMainContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/headerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_160sdp"
-            android:layout_marginTop="-20dp"
-            android:background="@drawable/customer_profile"
-            android:elevation="@dimen/_10sdp"
-            android:paddingLeft="@dimen/_20sdp"
-            android:paddingTop="@dimen/_20sdp"
-            android:paddingRight="@dimen/_20sdp"
-            android:paddingBottom="@dimen/_20sdp">
-
-        </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:onClick="invoice"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_7sdp"
+        app:contentPadding="@dimen/_5sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:elevation="@dimen/_10sdp"
-            android:gravity="left"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/_15sdp">
-
-            <TextView
-                android:id="@+id/customerName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="asdasdasd asdas d"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/phoneNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_phone_24"
-                android:drawablePadding="@dimen/_10sdp"
-                android:gravity="center"
-                android:text="asd asda dasdad"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_email_24"
-                android:drawablePadding="@dimen/_10sdp"
-                android:gravity="center"
-                android:text="asd asda dasdad"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_location_on_24"
-                android:drawablePadding="@dimen/_10sdp"
-                android:gravity="center"
-                android:text="asd asda dasdad"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_100sdp"
-            android:gravity="center_vertical"
-            android:elevation="@dimen/_10sdp"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:onClick="call"
-                    android:layout_margin="@dimen/_10sdp"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    app:srcCompat="@drawable/baseline_phone_in_talk_24" />
-
-
-                <ImageView
-                    android:layout_margin="@dimen/_10sdp"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:onClick="message"
-                    app:srcCompat="@drawable/baseline_sms_24" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/_5sdp"
-                android:layout_weight="1"
-                android:gravity="right">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/invoice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10sdp"
-                    android:onClick="invoice"
-                    app:cardCornerRadius="@dimen/_5sdp"
-                    app:cardElevation="@dimen/_10sdp"
-                    app:contentPadding="@dimen/_5sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
-                            android:layout_marginRight="@dimen/_5sdp"
-                            android:src="@drawable/invoice" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Create Invoice +"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/_8ssp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/profileContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_90sdp"
-            android:elevation="@dimen/_10sdp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp">
-
-            <com.hbb20.GThumb
-                android:id="@+id/profilePicture"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:visibility="gone" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profilePicture2"
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_marginLeft="@dimen/_8sdp"
-                android:layout_marginRight="@dimen/_14sdp"
-                android:src="@drawable/user_img">
-
-            </de.hdodenhof.circleimageview.CircleImageView>
-
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/profileContainer">
-
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/_10sdp">
+                android:orientation="horizontal">
 
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:padding="@dimen/_10sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Skin Type"
-                            android:textStyle="bold" />
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/skinType"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:background="@null"
-                            android:enabled="false"
-                            android:fontFamily="sans-serif-condensed"
-                            android:hint="Skin Type"
-                            android:inputType="textMultiLine"
-                            android:text="No Input"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:padding="@dimen/_10sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Skin Concern" />
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/skinConcern"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:background="@null"
-                            android:enabled="false"
-                            android:fontFamily="sans-serif-condensed"
-                            android:hint="Skin Concern"
-                            android:inputType="textMultiLine"
-                            android:text="No Input"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:padding="@dimen/_10sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Skin Tone" />
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/skinTone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:background="@null"
-                            android:enabled="false"
-                            android:fontFamily="sans-serif-condensed"
-                            android:hint="Skin Tone"
-                            android:inputType="textMultiLine"
-                            android:text="No Input"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:padding="@dimen/_10sdp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_5sdp"
-                            android:text="Interest" />
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/interest"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:background="@null"
-                            android:enabled="false"
-                            android:fontFamily="sans-serif-condensed"
-                            android:hint="Interest"
-                            android:inputType="textMultiLine"
-                            android:text="No Input"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/followUp"
+                <LinearLayout
+                    android:id="@+id/profileContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:text="Follow Up Reminders"
-                    android:textStyle="bold" />
+                    android:elevation="@dimen/_10sdp"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingBottom="@dimen/_5sdp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reminder_view"
+                    <com.hbb20.GThumb
+                        android:id="@+id/profilePicture"
+                        android:layout_width="@dimen/_75sdp"
+                        android:layout_height="@dimen/_75sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:visibility="gone" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profilePicture2"
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:layout_marginLeft="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_14sdp"
+                        android:src="@drawable/user_img">
+
+                    </de.hdodenhof.circleimageview.CircleImageView>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none" />
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/_15sdp">
+
+                    <TextView
+                        android:id="@+id/customerName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="asdasdasd asdas d"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/phoneNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/baseline_phone_24"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:text="asd asda dasdad"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/baseline_email_24"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:text="asd asda dasdad"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/baseline_location_on_24"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:text="asd asda dasdad"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/reminders"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
-                    android:background="@drawable/round_blue"
-                    android:onClick="reminder"
-                    android:text="+ ADD REMINDERS"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_customer_button"
+                    android:onClick="call"
+                    android:text="CALL"
                     android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_customer_button"
+                    android:onClick="message"
+                    android:text="MESSAGE"
+                    android:textColor="@color/white" />
+
+
 
             </LinearLayout>
 
+        </LinearLayout>
 
-        </ScrollView>
+    </androidx.cardview.widget.CardView>
 
-    </RelativeLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileMainContainer"
+        tools:ignore="MissingConstraints" />
 
-        <!-- Main content -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabs" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:onClick="edit"
-            android:src="@drawable/sales_invoice" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>
