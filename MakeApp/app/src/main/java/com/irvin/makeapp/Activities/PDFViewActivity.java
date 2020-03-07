@@ -134,7 +134,7 @@ public class PDFViewActivity extends AppCompatActivity implements OnPageChangeLi
             startActivityForResult(intent, 101);
         }catch (Exception e){
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e , new File(getExternalFilesDir("") , ModGlobal.logFile));
             Log.e("d" , e.toString());
         }
     }

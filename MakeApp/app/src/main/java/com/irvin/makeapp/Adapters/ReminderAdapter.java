@@ -49,9 +49,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             Date date2 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(reminders.get(position).getKEY_DATE_TIME());
             viewHolder.date.setText(formatter2.format(date2));
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

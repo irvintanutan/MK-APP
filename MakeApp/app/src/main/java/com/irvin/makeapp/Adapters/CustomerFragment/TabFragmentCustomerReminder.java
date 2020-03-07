@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,10 +183,10 @@ public class TabFragmentCustomerReminder extends Fragment {
                 String dateString = reminder.getKEY_DATE_TIME();
                 date = dateTimeFormat.parse(dateString);
                 mCalendar.setTime(date);
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                Logger.CreateNewEntry(e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
-                Log.e("ReminderEditActivity", e.getMessage(), e);
+                Logger.CreateNewEntry(getContext() , e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+
             }
 
             updateDateButtonText();
@@ -256,7 +255,7 @@ public class TabFragmentCustomerReminder extends Fragment {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Logger.CreateNewEntry(e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                            Logger.CreateNewEntry(getContext() , e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
                         }
 
                     }
@@ -272,7 +271,7 @@ public class TabFragmentCustomerReminder extends Fragment {
                     mRowId = null;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getContext() , e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
                 }
 
             }

@@ -139,8 +139,9 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if (intent.hasExtra("invoice"))
+        if (intent.hasExtra("invoice")) {
             ModGlobal.invoice = databaseInvoice.getInvoiceById(intent.getStringExtra("invoice")).get(0);
+        }
 
 
         init();
@@ -306,6 +307,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         if (finalCash < finalTotal) {
@@ -682,7 +684,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 }
             } else {
                 try {  Reminder reminder = databaseHelper.getAllRemindersByInvoice(invoice.getInvoiceId());
@@ -693,7 +695,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 }
             }
 
@@ -926,10 +928,10 @@ public class PaymentActivity extends AppCompatActivity {
 
         } catch (DocumentException dex) {
             dex.printStackTrace();
-            Logger.CreateNewEntry(dex, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , dex, new File(getExternalFilesDir(""), ModGlobal.logFile));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.CreateNewEntry(ex, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , ex, new File(getExternalFilesDir(""), ModGlobal.logFile));
         } finally {
             if (doc != null) {
                 //close the document

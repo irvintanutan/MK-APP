@@ -264,7 +264,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                     day = Integer.parseInt(splitDateValues[2]);
                 }catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                 }
 
                 if (customerModel.getSkinType().isEmpty()) {
@@ -301,7 +301,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
 
     }
@@ -462,7 +462,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
         } catch (Exception e) {
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -545,7 +545,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
             }
 
 

@@ -177,7 +177,7 @@ public class StockInActivity extends AppCompatActivity implements SearchView.OnQ
             loadList();
         }catch (Exception e){
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e , new File(getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

@@ -110,7 +110,7 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
 
 
@@ -201,7 +201,7 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
             i.setData(Uri.parse("smsto:" + customerModel.getContactNumber()));
             startActivity(i);
         } catch (Exception e) {
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() , e, new File(getExternalFilesDir(""), ModGlobal.logFile));
             Toast.makeText(this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
         }
     }

@@ -638,7 +638,7 @@ public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
                             dueDate + " 07:00:00", "", eventId, databaseInvoice.getLastInvoiceId()));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getApplicationContext() ,e, new File(getExternalFilesDir(""), ModGlobal.logFile));
                     Log.e("asd", e.getMessage());
                 }
             } else {

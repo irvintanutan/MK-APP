@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
+
+
+
             TextView version = findViewById(R.id.versionName);
             version.setText("PinkHeartV" + BuildConfig.VERSION_NAME);
 
@@ -257,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext() ,e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
     }
 
@@ -481,6 +484,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void month(View view) {
-    }
 }

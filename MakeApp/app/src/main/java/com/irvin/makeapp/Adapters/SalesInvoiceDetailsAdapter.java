@@ -139,7 +139,7 @@ public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoic
                     SalesInvoiceProductDetailsActivity.calculateTotal();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+                    Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
                 }
             }
         });

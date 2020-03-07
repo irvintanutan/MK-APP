@@ -77,10 +77,10 @@ public class StockInMainAdapter extends RecyclerView.Adapter<StockInMainAdapter.
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
-        } catch (ParseException e) {
+            Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
 

@@ -34,7 +34,6 @@ import com.white.progressview.HorizontalProgressView;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +102,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         total = convertView.findViewById(R.id.totalAmount);
 
         try {
+
+
+
             Date date, date2, now;
 
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(invoices.getDateCreated());
@@ -140,9 +142,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
             total.setText("₱ " + dec.format(Double.parseDouble(invoices.getTotalAmount())));
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(context.getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(context , e , new File(context.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
         return convertView;

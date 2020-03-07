@@ -96,10 +96,10 @@ public class TabFragmentStockInList extends Fragment {
                     startActivity(intent);
                     getActivity().finish();
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
 
-                    Logger.CreateNewEntry(e , new File(getActivity().getExternalFilesDir("") , ModGlobal.logFile));
+                    Logger.CreateNewEntry(getContext() , e , new File(getActivity().getExternalFilesDir("") , ModGlobal.logFile));
                 }
 
             }

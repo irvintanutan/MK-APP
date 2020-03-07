@@ -121,8 +121,9 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst())
+        if (cursor.moveToFirst()) {
             id = Integer.toString(cursor.getInt(0) + 1);
+        }
 
         return id;
 
@@ -235,8 +236,7 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
     }
 
 
-
-    public List<Invoice> getAllInvoicesByCustomer(int customerId , String status) {
+    public List<Invoice> getAllInvoicesByCustomer(int customerId, String status) {
         List<Invoice> products = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = '" + status + "' and  customerId = '" + customerId + "' ORDER BY dateCreated DESC";
@@ -277,11 +277,11 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
             Date date = Calendar.getInstance().getTime();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-            Log.e("asdasda" , formatter.format(date));
+            Log.e("asdasda", formatter.format(date));
 
             // Select All Query
             String selectQuery = "SELECT  * FROM " + tbl_invoice + " WHERE status = 'PENDING' " +
-                  " and date('" + formatter.format(date) + "') >= date(dueDate) " +
+                    " and date('" + formatter.format(date) + "') >= date(dueDate) " +
                     " ORDER BY dateCreated DESC";
 
             SQLiteDatabase db = this.getWritableDatabase();
@@ -320,6 +320,26 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         Double result = 0.00;
 
         String query = "select sum(" + totalAmount + ") from " + tbl_invoice + " where strftime('%Y-%m', " + dateCreated + ") = '" + date + "';";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                result = cursor.getDouble(0);
+
+            } while (cursor.moveToNext());
+        }
+        return "₱ " + dec.format(result);
+    }
+
+    public String getTodaySales() {
+        Double result = 0.00;
+
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        String query = "select sum(" + totalAmount + ") from " + tbl_invoice + " where date('" + formatter.format(date) + "') =                 date(dateCreated) ";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(query, null);
@@ -393,13 +413,13 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
         return db.delete(tbl_invoice, invoiceId + "=" + id, null) > 0;
     }
 
-    public void solution(){
+    public void solution() {
         try {
             List<Invoice> invoices = getAllInvoices();
             DatabasePayment databasePayment = new DatabasePayment(mContext);
 
             SQLiteDatabase db = this.getWritableDatabase();
-            for (Invoice invoice : invoices){
+            for (Invoice invoice : invoices) {
                 List<Payment> payments = databasePayment.getPaymentPerInvoice(invoice.getInvoiceId());
 
                 ContentValues values = new ContentValues();
@@ -416,14 +436,14 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
 
             SharedPreferences.Editor editor;
             editor = ModGlobal.settingPref.edit();
-            editor.putBoolean("solution" , true);
+            editor.putBoolean("solution", true);
             editor.apply();
 
 
             db.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(mContext.getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext , e, new File(mContext.getExternalFilesDir(""), ModGlobal.logFile));
         }
 
     }

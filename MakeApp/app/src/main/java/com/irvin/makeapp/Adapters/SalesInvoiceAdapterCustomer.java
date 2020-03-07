@@ -89,9 +89,9 @@ public class SalesInvoiceAdapterCustomer extends RecyclerView.Adapter<SalesInvoi
 
             viewHolder.total.setText("₱ " + dec.format(Double.parseDouble(invoice.getTotalAmount())));
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
     }
 

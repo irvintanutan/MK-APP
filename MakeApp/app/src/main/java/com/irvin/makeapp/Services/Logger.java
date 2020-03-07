@@ -1,5 +1,8 @@
 package com.irvin.makeapp.Services;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +14,15 @@ import java.io.StringWriter;
  */
 public class Logger {
 
-    public static void CreateNewEntry(Exception ex, File file) {
+    public static void CreateNewEntry(Context context , Exception ex, File file) {
 
 
         StringWriter sw = new StringWriter();
         ex.printStackTrace(new PrintWriter(sw));
 
         try {
+
+            Toast.makeText(context, "ERROR " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             if (!file.exists()) {
                 file.createNewFile();

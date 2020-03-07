@@ -14,7 +14,6 @@ import com.irvin.makeapp.Services.Logger;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +42,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
     public void onBindViewHolder(PaymentAdapter.ViewHolder viewHolder, int position) {
         try {
 
-
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(payments.get(position).getDateCreated());
 
             DateFormat formatter = new SimpleDateFormat("E. MMM dd, yyyy HH:mm:ss");
@@ -57,9 +55,9 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
             viewHolder.amount.setText("₱ " + dec.format(Double.parseDouble(payments.get(position).getAmount())));
 
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
         }
 
     }

@@ -101,7 +101,7 @@ public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAd
                     notifyItemRangeChanged(position, getItemCount());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
+                    Logger.CreateNewEntry(mContext , e , new File(mContext.getExternalFilesDir("") , ModGlobal.logFile));
                 }
             }
         });

@@ -3,7 +3,6 @@ package com.irvin.makeapp.Activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -11,37 +10,17 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.anychart.APIlib;
-import com.anychart.AnyChart;
-import com.anychart.AnyChartView;
-import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.chart.common.listener.Event;
-import com.anychart.chart.common.listener.ListenersInterface;
-import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
-import com.anychart.core.cartesian.series.Column;
-import com.anychart.enums.Align;
-import com.anychart.enums.HoverMode;
-import com.anychart.enums.LegendLayout;
-import com.anychart.enums.Position;
-import com.anychart.enums.TooltipPositionMode;
-import com.anychart.graphics.vector.Anchor;
 import com.irvin.makeapp.Adapters.DataAdapter;
-import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerOrders;
-import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerProfile;
-import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerReminder;
-import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportCustomer;
+import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportInventory;
+import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportSales;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.Models.TopTenProductModel;
-import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
-import com.irvin.makeapp.Services.Logger;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +42,7 @@ public class ReportActivity extends AppCompatActivity {
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     List<TopTenProductModel> topTenProductModels = new ArrayList<>();
-    List<String> skuList = new ArrayList<> ();
+    List<String> skuList = new ArrayList<>();
     private List<MenuForm> form;
 
 
@@ -98,8 +77,6 @@ public class ReportActivity extends AppCompatActivity {
         form.add(new MenuForm("Inventory", R.drawable.box, "Manage Inventory"));
 
 
-
-
         RecyclerView.Adapter adapter = new DataAdapter(form, this);
         recyclerView.setAdapter(adapter);
 
@@ -127,9 +104,8 @@ public class ReportActivity extends AppCompatActivity {
                             break;
                         case 1:
                             customer();
-                            //tickets(true);
                             break;
-                        case 5:
+                        case 2:
                             inventory();
                             break;
 
@@ -152,107 +128,8 @@ public class ReportActivity extends AppCompatActivity {
             }
         });
 
+        sales();
 
-
-        productChart();
-        topCustomer();
-
-    }
-
-    void topCustomer() {
-
-        try {
-            AnyChartView anyChartView = findViewById(R.id.any_chart_view1);
-
-            APIlib.getInstance().setActiveAnyChartView(anyChartView);
-            Pie pie = AnyChart.pie();
-
-            pie.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
-                @Override
-                public void onClick(Event event) {
-                }
-            });
-
-            List<TransactionModel> transactionModels = databaseCustomer.getTop5Customer();
-
-            List<DataEntry> data = new ArrayList<>();
-            for (TransactionModel transactionModel : transactionModels) {
-
-                data.add(new ValueDataEntry(transactionModel.getCustomerName(), Integer.parseInt(transactionModel.getTotalAmount())));
-
-            }
-
-
-            pie.data(data);
-
-            pie.title("Top 5 Customers Base on Purchases");
-
-            pie.labels().position("outside");
-
-            pie.legend().title().enabled(true);
-            pie.legend().title()
-                    .text("Customers")
-                    .padding(0d, 0d, 10d, 0d);
-
-            pie.legend()
-                    .position("center-bottom")
-                    .itemsLayout(LegendLayout.HORIZONTAL)
-                    .align(Align.CENTER);
-            anyChartView.setChart(pie);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
-        }
-    }
-
-    void productChart() {
-        try {
-            AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-
-            APIlib.getInstance().setActiveAnyChartView(anyChartView);
-
-
-            Cartesian cartesian = AnyChart.column();
-
-
-            topTenProductModels = databaseHelper.getTopTenProduct();
-
-            List<DataEntry> data = new ArrayList<>();
-            for (int a = 0; a < topTenProductModels.size(); a++) {
-                TopTenProductModel topTenProductModel = topTenProductModels.get(a);
-                Log.e(topTenProductModel.getProductName() , Double.toString(topTenProductModel.getTotal()));
-                data.add(new ValueDataEntry(topTenProductModel.getProductName(), topTenProductModel.getTotal()));
-            }
-
-
-            Column column = cartesian.column(data);
-
-            column.tooltip()
-                    .titleFormat("{%X}")
-                    .position(Position.CENTER_BOTTOM)
-                    .anchor(String.valueOf(Anchor.CENTER_BOTTOM))
-                    .offsetX(0d)
-                    .offsetY(5d)
-                    .format("₱{%Value}{groupsSeparator: }");
-
-            cartesian.animation(true);
-            cartesian.title("Top 10 Products by Revenue");
-
-            cartesian.yScale().minimum(0d);
-
-            cartesian.yAxis(0).labels().format("₱{%Value}{groupsSeparator: }");
-
-            cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-            cartesian.interactivity().hoverMode(HoverMode.BY_X);
-
-            cartesian.xAxis(0).title("Product");
-            cartesian.yAxis(0).title("Revenue");
-            cartesian.xAxis(0).enabled(false);
-            anyChartView.setChart(cartesian);
-        }catch (Exception e){
-            e.printStackTrace();
-            Logger.CreateNewEntry(e, new File(getExternalFilesDir(""), ModGlobal.logFile));
-        }
     }
 
 
@@ -276,34 +153,40 @@ public class ReportActivity extends AppCompatActivity {
     }
 
 
-    public void sales(){
-        TabFragmentCustomerOrders tabFragmentCustomerOrders = new TabFragmentCustomerOrders();
+    public void sales() {
+        //Toast.makeText(getApplicationContext()  , "SALES" , Toast.LENGTH_LONG).show();
+        TabFragmentReportSales tabFragmentReportSales = new TabFragmentReportSales();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerOrders);
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentReportSales);
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();
     }
 
     public void inventory() {
-        TabFragmentCustomerProfile tabFragmentCustomerProfile = new TabFragmentCustomerProfile();
+
+        //Toast.makeText(getApplicationContext()  , "INVENTORY" , Toast.LENGTH_LONG).show();
+
+        TabFragmentReportInventory tabFragmentReportInventory = new TabFragmentReportInventory();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerProfile);
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentReportInventory);
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();
     }
 
     public void customer() {
-        TabFragmentCustomerReminder tabFragmentCustomerReminder = new TabFragmentCustomerReminder();
+
+        // Toast.makeText(getApplicationContext()  , "CUSTOMER" , Toast.LENGTH_LONG).show();
+        TabFragmentReportCustomer tabFragmentReportCustomer = new TabFragmentReportCustomer();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerReminder);
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentReportCustomer);
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();

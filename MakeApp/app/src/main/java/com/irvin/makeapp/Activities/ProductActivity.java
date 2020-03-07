@@ -349,7 +349,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Logger.CreateNewEntry(e , new File(getExternalFilesDir("") , ModGlobal.logFile));
+                Logger.CreateNewEntry(getApplicationContext() , e , new File(getExternalFilesDir("") , ModGlobal.logFile));
                 Log.e("asd", e.toString());
                 warning_indicator = false;
             }
