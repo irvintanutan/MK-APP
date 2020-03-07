@@ -254,21 +254,12 @@ public class SalesInvoiceProductActivity extends AppCompatActivity implements Se
             public void onClick(View view) {
                 if (ModGlobal.customerName.isEmpty()) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SalesInvoiceProductActivity.this);
-                    builder.setTitle("Alert");
-                    builder.setIcon(getResources().getDrawable(R.drawable.warning));
-                    builder.setMessage("No Customer Selected");
-
-                    builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    startActivity(new Intent(SalesInvoiceProductActivity.this, SalesInvoiceActivity.class));
+                    finish();
+                    ModGlobal.stockIns.clear();
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                    ModGlobal.customerName = "";
+                    ModGlobal.position = -1;
                 } else {
                     dialog.dismiss();
                 }
