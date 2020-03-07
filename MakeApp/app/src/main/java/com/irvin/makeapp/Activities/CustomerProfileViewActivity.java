@@ -9,12 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.hbb20.GThumb;
@@ -29,6 +23,10 @@ import com.irvin.makeapp.Services.Logger;
 
 import java.io.File;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomerProfileViewActivity extends AppCompatActivity {
@@ -126,18 +124,18 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
         final TabLayout.Tab profile = tabLayout.newTab();
         final TabLayout.Tab reminders = tabLayout.newTab();
         final TabLayout.Tab orders = tabLayout.newTab();
+        final TabLayout.Tab followUp = tabLayout.newTab();
 
         profile.setText("Profile");
         reminders.setText("Reminders");
         orders.setText("Orders");
+        followUp.setText("Magic222");
 
         tabLayout.addTab(profile, 0);
         tabLayout.addTab(reminders, 1);
         tabLayout.addTab(orders, 2);
+        tabLayout.addTab(followUp, 3);
 
-
-        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.colorAccent));
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorPrimary));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

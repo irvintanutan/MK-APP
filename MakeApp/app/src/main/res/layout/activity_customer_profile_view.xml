@@ -153,6 +153,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profileMainContainer"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextColor="@color/colorAccent"
+        app:tabIndicatorColor="@color/colorPrimary"
         tools:ignore="MissingConstraints" />
 
     <androidx.viewpager.widget.ViewPager

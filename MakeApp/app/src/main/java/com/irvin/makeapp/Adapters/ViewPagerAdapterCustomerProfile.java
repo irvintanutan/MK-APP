@@ -2,12 +2,12 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by irvin on 2/6/17.
@@ -32,6 +32,8 @@ public class ViewPagerAdapterCustomerProfile extends FragmentStatePagerAdapter {
             case 0:
                 return new TabFragmentCustomerProfile();
             case 2:
+                return new TabFragmentCustomerOrders();
+            case 3:
                 return new TabFragmentCustomerOrders();
             default:
                 return null;
@@ -69,7 +71,7 @@ public class ViewPagerAdapterCustomerProfile extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
         // As there are only 3 Tabs
     }
 }
