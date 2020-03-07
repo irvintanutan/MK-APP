@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
@@ -25,6 +24,9 @@ import java.util.List;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class StockInDetailsAdapter extends RecyclerView.Adapter<StockInDetailsAdapter.ViewHolder> {
     private List<StockIn> products;
     private Context mContext = null;

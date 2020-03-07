@@ -50,6 +50,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class SalesInvoiceProductDetailsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;

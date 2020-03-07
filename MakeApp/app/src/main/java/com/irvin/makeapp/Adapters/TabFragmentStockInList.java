@@ -33,7 +33,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by irvin on 2/7/17.
+ *
+ * @author irvin
+ * @date 2/7/17
  */
 public class TabFragmentStockInList extends Fragment {
     View view;

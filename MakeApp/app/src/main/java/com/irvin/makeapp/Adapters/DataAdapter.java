@@ -18,6 +18,9 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+/**
+ * @author irvin
+ */
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private List<MenuForm> form;
     private Context context;

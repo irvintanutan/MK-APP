@@ -76,6 +76,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class PaymentActivity extends AppCompatActivity {
 
     LinearLayout checkOut;

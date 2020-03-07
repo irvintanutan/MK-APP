@@ -29,6 +29,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * @author irvin
+ */
 public class PDFViewActivity extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
     PDFView pdfView;
     Integer pageNumber = 0;

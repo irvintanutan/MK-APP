@@ -4,14 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Payment;
-import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.Logger;
 
@@ -23,6 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHolder> {
     private List<Payment> payments;
     private Context mContext = null;

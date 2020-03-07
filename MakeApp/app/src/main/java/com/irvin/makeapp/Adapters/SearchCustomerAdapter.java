@@ -1,7 +1,6 @@
 package com.irvin.makeapp.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author irvin
+ */
 public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAdapter.ViewHolder> {
     private List<CustomerModel> customerModelList;
     private Context mContext = null;
@@ -39,12 +41,6 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
     @Override
     public void onBindViewHolder(SearchCustomerAdapter.ViewHolder viewHolder, int position) {
 
-/*
-        if(ModGlobal.position == position)
-            viewHolder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
-        else
-            viewHolder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
-*/
 
         if (!customerModelList.get(position).getPhotoUrl().isEmpty() && customerModelList.get(position).getPhotoUrl() != null) {
             Log.e("asd", customerModelList.get(position).getPhotoUrl());

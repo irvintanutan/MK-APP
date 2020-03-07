@@ -16,6 +16,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+/**
+ * @author irvin
+ */
 public class StockInMainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;

@@ -35,7 +35,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
- * Created by irvin on 2/6/17.
+ *
+ * @author irvin
+ * @date 2/6/17
  */
 public class TabFragmentPending extends Fragment {
 

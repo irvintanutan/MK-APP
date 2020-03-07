@@ -10,10 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.anychart.APIlib;
 import com.anychart.AnyChart;
@@ -45,6 +41,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+/**
+ * @author irvin
+ */
 public class ReportActivity extends AppCompatActivity {
 
     DecimalFormat dec = new DecimalFormat("#,##0.00");

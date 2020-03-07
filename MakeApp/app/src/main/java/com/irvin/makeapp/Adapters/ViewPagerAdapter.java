@@ -2,16 +2,17 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Created by irvin on 2/6/17.
+ *
+ * @author irvin
+ * @date 2/6/17
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

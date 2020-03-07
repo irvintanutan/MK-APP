@@ -47,6 +47,9 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class SalesInvoiceProductActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);

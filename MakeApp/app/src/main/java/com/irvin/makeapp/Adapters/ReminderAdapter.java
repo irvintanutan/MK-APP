@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Reminder;
 import com.irvin.makeapp.R;
@@ -20,6 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
     private List<Reminder> reminders;
     private Context mContext = null;

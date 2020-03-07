@@ -7,12 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.tabs.TabLayout;
 import com.irvin.makeapp.Adapters.ViewPagerAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -24,6 +18,15 @@ import com.irvin.makeapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
+/**
+ * @author irvin
+ */
 public class SalesInvoiceActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;

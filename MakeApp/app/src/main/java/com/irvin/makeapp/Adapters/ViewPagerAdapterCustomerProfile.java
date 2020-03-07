@@ -10,7 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 /**
- * Created by irvin on 2/6/17.
+ *
+ * @author irvin
+ * @date 2/6/17
  */
 public class ViewPagerAdapterCustomerProfile extends FragmentStatePagerAdapter {
 

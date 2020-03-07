@@ -12,16 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.hbb20.GThumb;
-import com.irvin.makeapp.Activities.CustomerProfileViewActivity;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -42,10 +34,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by irvin on 2/7/17.
+ *
+ * @author irvin
+ * @date 2/7/17
  */
 public class TabFragmentCustomerReminder extends Fragment {
     View view;

@@ -19,13 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
@@ -44,6 +37,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class ReminderActivity extends AppCompatActivity {
 
     FloatingActionButton fab;

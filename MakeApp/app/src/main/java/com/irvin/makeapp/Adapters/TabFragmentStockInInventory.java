@@ -24,7 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by irvin on 2/7/17.
+ *
+ * @author irvin
+ * @date 2/7/17
  */
 public class TabFragmentStockInInventory extends Fragment {
     View view;

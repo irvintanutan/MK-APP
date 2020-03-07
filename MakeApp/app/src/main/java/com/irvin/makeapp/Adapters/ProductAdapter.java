@@ -14,21 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
-import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Products;
-import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private List<Products> products;
     AlertDialog finalDialog = null;

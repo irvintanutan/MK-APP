@@ -11,14 +11,17 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import com.irvin.makeapp.Models.Reminder;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+/**
+ * @author irvin
+ */
 public class CalendarReminder {
 
     public CalendarReminder(Context context) {

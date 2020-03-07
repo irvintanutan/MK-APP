@@ -24,6 +24,9 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class SalesInvoiceAdapter extends RecyclerView.Adapter<SalesInvoiceAdapter.ViewHolder> {
     private List<Invoice> invoices;
     private Context mContext = null;

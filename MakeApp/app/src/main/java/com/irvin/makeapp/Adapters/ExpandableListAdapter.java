@@ -46,7 +46,9 @@ import androidx.core.app.NotificationManagerCompat;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by irvin on 8/30/17.
+ *
+ * @author irvin
+ * @date 8/30/17
  */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 

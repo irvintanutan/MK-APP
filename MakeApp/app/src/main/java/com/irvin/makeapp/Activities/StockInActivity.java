@@ -1,14 +1,5 @@
 package com.irvin.makeapp.Activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.irvin.makeapp.Adapters.CategoryAdapter;
-import com.irvin.makeapp.Adapters.ProductAdapter;
 import com.irvin.makeapp.Adapters.StockInAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
@@ -41,6 +31,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class StockInActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);

@@ -19,6 +19,9 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author irvin
+ */
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
     private List<CustomerModel> customerModelList;
     private Context mContext = null;

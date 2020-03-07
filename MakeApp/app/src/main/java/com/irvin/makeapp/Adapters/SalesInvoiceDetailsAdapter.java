@@ -13,9 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -27,6 +24,12 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class SalesInvoiceDetailsAdapter extends RecyclerView.Adapter<SalesInvoiceDetailsAdapter.ViewHolder> {
     private List<StockIn> products;
     private Context mContext = null;

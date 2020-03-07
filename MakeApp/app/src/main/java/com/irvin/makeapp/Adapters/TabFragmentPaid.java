@@ -9,13 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Activities.PaymentActivity;
-import com.irvin.makeapp.Activities.ReportActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -26,8 +20,14 @@ import com.irvin.makeapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
- * Created by irvin on 2/7/17.
+ *
+ * @author irvin
+ * @date 2/7/17
  */
 public class TabFragmentPaid extends Fragment {
     DatabaseHelper databaseHelper;

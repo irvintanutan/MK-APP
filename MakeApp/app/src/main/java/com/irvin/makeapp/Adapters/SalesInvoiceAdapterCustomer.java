@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;
@@ -26,6 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * @author irvin
+ */
 public class SalesInvoiceAdapterCustomer extends RecyclerView.Adapter<SalesInvoiceAdapterCustomer.ViewHolder> {
     private List<Invoice> invoices;
     private Context mContext = null;

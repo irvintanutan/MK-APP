@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.R;
 
@@ -16,6 +15,9 @@ import java.util.List;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class StockInAdapter extends RecyclerView.Adapter<StockInAdapter.ViewHolder> {
     private List<Products> products;
     private Context mContext = null;

@@ -53,6 +53,9 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author irvin
+ */
 public class MainActivity extends AppCompatActivity {
     private BillingClient billingClient;
     List<String> skuList = new ArrayList<> ();
@@ -356,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Are you sure you want to exit application ?");
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int which) {
 
 
@@ -395,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setMessage("Are you sure you want to exit application ?");
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+                @Override
                 public void onClick(DialogInterface dialog, int which) {
 
                     finish();

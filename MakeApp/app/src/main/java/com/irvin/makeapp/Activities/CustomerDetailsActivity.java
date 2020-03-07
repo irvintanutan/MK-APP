@@ -66,6 +66,9 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+/**
+ * @author irvin
+ */
 public class CustomerDetailsActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseCustomer databaseCustomer = new DatabaseCustomer(this);
@@ -186,7 +189,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             remarks = findViewById(R.id.remarks);
 
             CardView inv = findViewById(R.id.invoice);
-            if (ModGlobal.isCreateNew) inv.setVisibility(View.GONE);
+            if (ModGlobal.isCreateNew) {
+                inv.setVisibility(View.GONE);
+            }
 
             email.addTextChangedListener(new TextWatcher() {
 
@@ -204,7 +209,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
                                           int before, int count) {
                     if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
                         email.setError(null);
-                    } else email.setError("Invalid Email");
+                    } else {
+                        email.setError("Invalid Email");
+                    }
                 }
             });
 
@@ -308,6 +315,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
                 // Do nothing
@@ -350,10 +358,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (ModGlobal.isCreateNew)
+        if (ModGlobal.isCreateNew) {
             getMenuInflater().inflate(R.menu.customer_add, menu);
-        else
+        } else {
             getMenuInflater().inflate(R.menu.customer_view, menu);
+        }
 
 
         return true;
@@ -399,6 +408,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
             builder.setMessage("Are you sure you want to save customer data ?");
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+                @Override
                 public void onClick(DialogInterface dialog, int which) {
 
                     saveCustomer(ModGlobal.isCreateNew);
@@ -420,8 +430,9 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
         } else if (item.getItemId() == R.id.action_call) {
             if (!marshMallowPermission.checkPermissionForCallPhone()) {
                 marshMallowPermission.requestPermissionForCallPhone();
-            } else
+            } else {
                 callCustomer();
+            }
 
         } else if (item.getItemId() == R.id.action_message) {
 
@@ -699,8 +710,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     private String getImageFromFilePath(Intent data) {
         boolean isCamera = data == null || data.getData() == null;
 
-        if (isCamera) return getCaptureImageOutputUri().getPath();
-        else return getPathFromURI(data.getData());
+        if (isCamera) {
+            return getCaptureImageOutputUri().getPath();
+        } else {
+            return getPathFromURI(data.getData());
+        }
 
     }
 
