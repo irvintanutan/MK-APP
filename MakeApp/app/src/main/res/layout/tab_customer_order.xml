@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.SalesInvoiceActivity">
+    tools:context=".Activities.SalesInvoice.SalesInvoiceActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pending_card_recycler_view"

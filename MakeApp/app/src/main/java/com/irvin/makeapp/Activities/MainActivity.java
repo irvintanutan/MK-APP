@@ -24,6 +24,9 @@ import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.irvin.makeapp.Activities.Customer.CustomerActivity;
+import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceActivity;
+import com.irvin.makeapp.Activities.StockIn.StockInMainActivity;
 import com.irvin.makeapp.Adapters.DataAdapter;
 import com.irvin.makeapp.BuildConfig;
 import com.irvin.makeapp.Constant.CountDrawable;
@@ -110,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
             form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
             form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
 
-
-        /*form.add(new MenuForm("Site Survey", R.drawable.salesentry));
-        //form.add(new MenuForm("Edit Site", R.drawable.radiotower));*/
 
 
             RecyclerView.Adapter adapter = new DataAdapter(form, this);

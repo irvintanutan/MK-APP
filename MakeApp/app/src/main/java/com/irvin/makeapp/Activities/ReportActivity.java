@@ -1,15 +1,15 @@
 package com.irvin.makeapp.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.DatePicker;
 
 import com.anychart.APIlib;
 import com.anychart.AnyChart;
@@ -27,10 +27,15 @@ import com.anychart.enums.LegendLayout;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
+import com.irvin.makeapp.Adapters.DataAdapter;
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerOrders;
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerProfile;
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerReminder;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.Models.TopTenProductModel;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
@@ -43,6 +48,10 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author irvin
@@ -54,6 +63,9 @@ public class ReportActivity extends AppCompatActivity {
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     List<TopTenProductModel> topTenProductModels = new ArrayList<>();
+    List<String> skuList = new ArrayList<> ();
+    private List<MenuForm> form;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -73,6 +85,74 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     void init() {
+
+        RecyclerView recyclerView = findViewById(R.id.user_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(layoutManager);
+
+        form = new ArrayList<>();
+
+        form.add(new MenuForm("Sales", R.drawable.invoice, "Sales Report"));
+        form.add(new MenuForm("Customer", R.drawable.account, "Customer Report"));
+        form.add(new MenuForm("Inventory", R.drawable.box, "Manage Inventory"));
+
+
+
+
+        RecyclerView.Adapter adapter = new DataAdapter(form, this);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            GestureDetector gestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+            });
+
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && gestureDetector.onTouchEvent(e)) {
+                    int position = rv.getChildAdapterPosition(child);
+
+                    switch (position) {
+
+                        case 0:
+                            sales();
+                            break;
+                        case 1:
+                            customer();
+                            //tickets(true);
+                            break;
+                        case 5:
+                            inventory();
+                            break;
+
+                        default:
+                    }
+
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+
+
 
         productChart();
         topCustomer();
@@ -195,44 +275,39 @@ public class ReportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void inventory(View view) {
 
+    public void sales(){
+        TabFragmentCustomerOrders tabFragmentCustomerOrders = new TabFragmentCustomerOrders();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerOrders);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
     }
 
-    public void customer(View view) {
+    public void inventory() {
+        TabFragmentCustomerProfile tabFragmentCustomerProfile = new TabFragmentCustomerProfile();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerProfile);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
     }
 
-    public void statistic(View view) {
+    public void customer() {
+        TabFragmentCustomerReminder tabFragmentCustomerReminder = new TabFragmentCustomerReminder();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentCustomerReminder);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
     }
 
-    public void month(View view) {
 
-        createDialogWithoutDateField().show();
-    }
-
-    private DatePickerDialog createDialogWithoutDateField() {
-        DatePickerDialog dpd = new DatePickerDialog(this, null, 2014, 1, 24);
-        try {
-            java.lang.reflect.Field[] datePickerDialogFields = dpd.getClass().getDeclaredFields();
-            for (java.lang.reflect.Field datePickerDialogField : datePickerDialogFields) {
-                if (datePickerDialogField.getName().equals("mDatePicker")) {
-                    datePickerDialogField.setAccessible(true);
-                    DatePicker datePicker = (DatePicker) datePickerDialogField.get(dpd);
-                    java.lang.reflect.Field[] datePickerFields = datePickerDialogField.getType().getDeclaredFields();
-                    for (java.lang.reflect.Field datePickerField : datePickerFields) {
-                        Log.i("test", datePickerField.getName());
-                        if ("mDaySpinner".equals(datePickerField.getName())) {
-                            datePickerField.setAccessible(true);
-                            Object dayPicker = datePickerField.get(datePicker);
-                            ((View) dayPicker).setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex) {
-        }
-        return dpd;
-    }
 }

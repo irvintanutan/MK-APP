@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.Customer;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Adapters.CustomerAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;

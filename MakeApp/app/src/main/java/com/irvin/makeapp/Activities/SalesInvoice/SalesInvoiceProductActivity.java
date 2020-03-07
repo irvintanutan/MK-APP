@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.SalesInvoice;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irvin.makeapp.Activities.Customer.CustomerDetailsActivity;
 import com.irvin.makeapp.Adapters.CategoryAdapter;
 import com.irvin.makeapp.Adapters.SearchCustomerAdapter;
 import com.irvin.makeapp.Adapters.StockInAdapter;

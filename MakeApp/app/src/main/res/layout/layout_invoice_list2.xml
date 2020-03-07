@@ -11,7 +11,7 @@
     android:layout_marginLeft="@dimen/card_view_margin"
     android:layout_marginRight="@dimen/card_view_margin"
     android:foreground="?android:attr/selectableItemBackground"
-    tools:context=".Activities.SalesInvoiceActivity">
+    tools:context=".Activities.SalesInvoice.SalesInvoiceActivity">
 
 
     <LinearLayout

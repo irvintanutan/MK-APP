@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.StockIn;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
+import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Adapters.ViewPagerAdapterStockIn;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.R;

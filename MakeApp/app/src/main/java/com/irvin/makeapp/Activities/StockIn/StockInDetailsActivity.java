@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.StockIn;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -22,23 +21,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
-import com.irvin.makeapp.Adapters.StockInAdapter;
 import com.irvin.makeapp.Adapters.StockInDetailsAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseStockin;
-import com.irvin.makeapp.Models.Products;
 import com.irvin.makeapp.Models.StockIn;
 import com.irvin.makeapp.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author irvin

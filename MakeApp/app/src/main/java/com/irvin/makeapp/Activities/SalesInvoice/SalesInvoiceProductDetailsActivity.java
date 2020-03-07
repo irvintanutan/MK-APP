@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.SalesInvoice;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;

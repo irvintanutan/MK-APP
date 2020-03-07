@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Adapters;
+package com.irvin.makeapp.Adapters.InventoryFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.irvin.makeapp.Activities.StockInActivity;
-import com.irvin.makeapp.Activities.StockInDetailsActivity;
+import com.irvin.makeapp.Activities.StockIn.StockInActivity;
+import com.irvin.makeapp.Activities.StockIn.StockInDetailsActivity;
+import com.irvin.makeapp.Adapters.StockInMainAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.RecyclerTouchListener;

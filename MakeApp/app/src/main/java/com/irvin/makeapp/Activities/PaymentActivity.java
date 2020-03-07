@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.irvin.makeapp.Activities.Customer.CustomerProfileViewActivity;
+import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceActivity;
 import com.irvin.makeapp.Adapters.PaymentAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;

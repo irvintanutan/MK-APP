@@ -2,6 +2,10 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerOrders;
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerProfile;
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerReminder;
+
 import java.util.HashMap;
 import java.util.Map;
 

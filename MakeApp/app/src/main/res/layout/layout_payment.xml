@@ -8,7 +8,7 @@
     android:clickable="false"
     android:elevation="10dp"
     app:cardCornerRadius="@dimen/_10sdp"
-    tools:context=".Activities.SalesInvoiceProductDetailsActivity"
+    tools:context=".Activities.SalesInvoice.SalesInvoiceProductDetailsActivity"
     android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

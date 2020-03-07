@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Adapters;
+package com.irvin.makeapp.Adapters.InventoryFragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.irvin.makeapp.Adapters.CategoryAdapter;
+import com.irvin.makeapp.Adapters.ProductAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.Category;

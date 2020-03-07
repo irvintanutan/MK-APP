@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Adapters;
+package com.irvin.makeapp.Adapters.CustomerFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.irvin.makeapp.Activities.PaymentActivity;
-import com.irvin.makeapp.Activities.SalesInvoiceProductActivity;
+import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceProductActivity;
+import com.irvin.makeapp.Adapters.SalesInvoiceAdapterCustomer;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;

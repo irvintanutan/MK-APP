@@ -2,6 +2,9 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import com.irvin.makeapp.Adapters.InventoryFragment.TabFragmentStockInInventory;
+import com.irvin.makeapp.Adapters.InventoryFragment.TabFragmentStockInList;
+
 import java.util.HashMap;
 import java.util.Map;
 

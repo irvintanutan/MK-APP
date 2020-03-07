@@ -9,7 +9,7 @@
     android:clickable="false"
     android:orientation="horizontal"
     android:weightSum="11"
-    tools:context=".Activities.SalesInvoiceProductActivity">
+    tools:context=".Activities.SalesInvoice.SalesInvoiceProductActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"

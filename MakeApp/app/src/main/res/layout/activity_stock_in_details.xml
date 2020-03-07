@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.irvin.makeapp.Activities.StockInDetailsActivity">
+    tools:context="com.irvin.makeapp.Activities.StockIn.StockInDetailsActivity">
 
     <include
         android:id="@+id/app_bar"

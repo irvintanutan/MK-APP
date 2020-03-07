@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.StockIn;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;

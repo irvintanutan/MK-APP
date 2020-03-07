@@ -2,6 +2,9 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import com.irvin.makeapp.Adapters.SalesInvoiceFragment.TabFragmentPaid;
+import com.irvin.makeapp.Adapters.SalesInvoiceFragment.TabFragmentPending;
+
 import java.util.HashMap;
 import java.util.Map;
 

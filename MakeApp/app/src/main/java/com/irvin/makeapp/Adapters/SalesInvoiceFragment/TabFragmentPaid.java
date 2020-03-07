@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Adapters;
+package com.irvin.makeapp.Adapters.SalesInvoiceFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.irvin.makeapp.Activities.PaymentActivity;
+import com.irvin.makeapp.Adapters.SalesInvoiceAdapter;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Constant.TranStatus;
 import com.irvin.makeapp.Database.DatabaseHelper;

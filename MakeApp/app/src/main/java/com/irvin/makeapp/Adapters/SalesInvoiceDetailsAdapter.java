@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.irvin.makeapp.Activities.SalesInvoiceProductDetailsActivity;
+import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceProductDetailsActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Models.StockIn;

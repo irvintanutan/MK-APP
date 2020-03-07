@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Adapters;
+package com.irvin.makeapp.Adapters.CustomerFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.irvin.makeapp.Adapters.ReminderAdapter;
 import com.irvin.makeapp.Constant.ClickListener;
 import com.irvin.makeapp.Constant.MarshMallowPermission;
 import com.irvin.makeapp.Constant.ModGlobal;

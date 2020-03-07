@@ -1,4 +1,4 @@
-package com.irvin.makeapp.Activities;
+package com.irvin.makeapp.Activities.Customer;
 
 import android.Manifest;
 import android.content.Intent;
