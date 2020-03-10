@@ -1,50 +1,46 @@
 package com.irvin.makeapp.Adapters.ReportsFragment;
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
-import com.anychart.core.cartesian.series.Column;
 import com.anychart.core.cartesian.series.Line;
 import com.anychart.data.Mapping;
 import com.anychart.data.Set;
-import com.anychart.enums.HoverMode;
 import com.anychart.enums.MarkerType;
-import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
 import com.anychart.graphics.vector.Stroke;
 import com.archit.calendardaterangepicker.customviews.DateRangeCalendarView;
-import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Constant.ModGlobal;
+import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.Logger;
 import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog;
-import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.ParseException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
 /**
  * @author irvin
@@ -53,15 +49,19 @@ import androidx.fragment.app.Fragment;
 public class TabFragmentReportSales extends Fragment {
     View view;
     DatabaseInvoice mDatabaseInvoice;
-    Button today, monthly, gross, periodic;
-    TextView salesValue, salesLabel;
+    Button today, monthly, gross, periodic, filterByMonthCollectible;
+    TextView salesValue, salesLabel, salesLabelCollectible, salesValueCollectible;
     Calendar start = null, end = null;
+    DatabaseCustomer databaseCustomer;
+
+    DecimalFormat dec = new DecimalFormat("#,##0.00");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.report_tab_sales, container, false);
         mDatabaseInvoice = new DatabaseInvoice(getActivity());
+        databaseCustomer = new DatabaseCustomer(getActivity());
         init();
 
         return view;
@@ -75,6 +75,9 @@ public class TabFragmentReportSales extends Fragment {
         periodic = view.findViewById(R.id.periodicSales);
         salesValue = view.findViewById(R.id.salesValue);
         salesLabel = view.findViewById(R.id.label);
+        filterByMonthCollectible = view.findViewById(R.id.filterByMonthCollectible);
+        salesLabelCollectible = view.findViewById(R.id.labelThisMonthCollectible);
+        salesValueCollectible = view.findViewById(R.id.salesValueCollectible);
 
         monthly.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,9 +131,36 @@ public class TabFragmentReportSales extends Fragment {
             }
         });
 
+        filterByMonthCollectible.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFilterByMonthCollectible();
+            }
+        });
+
 
         salesValue.setText(mDatabaseInvoice.getTotalSales());
         monthlySalesPerYear();
+
+
+        try {
+            Calendar calendar = Calendar.getInstance();
+
+            String append = "";
+
+            if (calendar.get(Calendar.MONTH) < 9) {
+                append = "0";
+            }
+
+            String date = calendar.get(Calendar.YEAR) + "-" + append + (calendar.get(Calendar.MONTH) +1);
+            DateFormat formatter2 = new SimpleDateFormat("MMMM  yyyy");
+            Date d = new SimpleDateFormat("yyyy-MM").parse(date);
+
+            salesValueCollectible.setText(accountReceivable(date));
+            salesLabelCollectible.setText(formatter2.format(d) + "  Collectibles");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -210,8 +240,38 @@ public class TabFragmentReportSales extends Fragment {
                     DateFormat formatter2 = new SimpleDateFormat("MMMM  yyyy");
                     Date d = new SimpleDateFormat("yyyy-MM").parse(date);
 
-                    salesValue.setText(mDatabaseInvoice.getMonthlySales(date));
+                    salesValue.setText("₱ " + mDatabaseInvoice.getMonthlySales(date));
                     salesLabel.setText(formatter2.format(d) + "  Sales");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Logger.CreateNewEntry(getContext(), e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                }
+            }
+        });
+
+        yearMonthPickerDialog.show();
+    }
+
+    void showFilterByMonthCollectible() {
+
+        YearMonthPickerDialog yearMonthPickerDialog = new YearMonthPickerDialog(getContext(), new YearMonthPickerDialog.OnDateSetListener() {
+            @Override
+            public void onYearMonthSet(int year, int month) {
+                try {
+                    String append = "";
+                    if (month < 9) {
+                        append = "0";
+                    }
+                    String date = year + "-" + append + (month + 1);
+
+
+                    DateFormat formatter2 = new SimpleDateFormat("MMMM  yyyy");
+                    Date d = new SimpleDateFormat("yyyy-MM").parse(date);
+
+                    salesValueCollectible.setText(accountReceivable(date));
+                    salesLabelCollectible.setText(formatter2.format(d) + "  Collectibles");
 
 
                 } catch (Exception e) {
@@ -226,73 +286,80 @@ public class TabFragmentReportSales extends Fragment {
 
 
     void monthlySalesPerYear() {
-        AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
-        anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
+        try {
+            AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
+            anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
 
-        Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-        Cartesian cartesian = AnyChart.line();
+            Cartesian cartesian = AnyChart.line();
 
-        cartesian.animation(true);
+            cartesian.animation(true);
 
-        cartesian.padding(10d, 20d, 5d, 20d);
+            cartesian.padding(10d, 20d, 5d, 20d);
 
-        cartesian.crosshair().enabled(true);
-        cartesian.crosshair()
-                .yLabel(true)
-                // TODO ystroke
-                .yStroke((Stroke) null, null, null, (String) null, (String) null);
+            cartesian.crosshair().enabled(true);
+            cartesian.crosshair()
+                    .yLabel(true)
+                    // TODO ystroke
+                    .yStroke((Stroke) null, null, null, (String) null, (String) null);
 
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+            cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
-        cartesian.title("Annual Monthly Sales for year " + calendar.get(Calendar.YEAR));
+            cartesian.title("Annual Monthly Sales for year " + calendar.get(Calendar.YEAR));
 
-        cartesian.yAxis(0).title("Total Amount Sales PHP");
-        cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+            cartesian.yAxis(0).title("Total Amount Sales PHP");
+            cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
 
-        List<DataEntry> seriesData = new ArrayList<>();
-        String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+            List<DataEntry> seriesData = new ArrayList<>();
+            String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 
-        for (int a = 0; a < months.length; a++) {
-            String date = calendar.get(Calendar.YEAR) + "-" + months[a];
-            DateFormat formatter2 = new SimpleDateFormat("MMM");
-            try {
-                Date d = new SimpleDateFormat("yyyy-MM").parse(date);
+            for (int a = 0; a < months.length; a++) {
+                String date = calendar.get(Calendar.YEAR) + "-" + months[a];
+                DateFormat formatter2 = new SimpleDateFormat("MMM");
+                try {
+                    Date d = new SimpleDateFormat("yyyy-MM").parse(date);
 
-                seriesData.add(new CustomDataEntry(formatter2.format(d), Double.parseDouble(mDatabaseInvoice.getMonthlySales(date)
-                        .replace(",",""))));
+                    seriesData.add(new CustomDataEntry(formatter2.format(d), Double.parseDouble(mDatabaseInvoice.getMonthlySales(date)
+                            .replace(",", ""))));
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                Logger.CreateNewEntry(getContext(), e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Logger.CreateNewEntry(getContext(), e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                }
+
+
             }
 
 
+            Set set = Set.instantiate();
+            set.data(seriesData);
+            Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
+
+            Line series1 = cartesian.line(series1Mapping);
+            series1.name("Monthly Sales");
+            series1.hovered().markers().enabled(true);
+            series1.hovered().markers()
+                    .type(MarkerType.CIRCLE)
+                    .size(4d);
+            series1.tooltip()
+                    .position("right")
+                    .anchor(String.valueOf(Anchor.LEFT_CENTER))
+                    .offsetX(5d)
+                    .offsetY(5d);
+
+
+            cartesian.legend().enabled(true);
+            cartesian.legend().fontSize(13d);
+            cartesian.legend().padding(0d, 0d, 10d, 0d);
+
+            anyChartView.setChart(cartesian);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.CreateNewEntry(getContext(), e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
         }
 
-
-        Set set = Set.instantiate();
-        set.data(seriesData);
-        Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
-
-        Line series1 = cartesian.line(series1Mapping);
-        series1.name("Monthly Sales");
-        series1.hovered().markers().enabled(true);
-        series1.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series1.tooltip()
-                .position("right")
-                .anchor(String.valueOf(Anchor.LEFT_CENTER))
-                .offsetX(5d)
-                .offsetY(5d);
-
-
-        cartesian.legend().enabled(true);
-        cartesian.legend().fontSize(13d);
-        cartesian.legend().padding(0d, 0d, 10d, 0d);
-
-        anyChartView.setChart(cartesian);
     }
 
     private class CustomDataEntry extends ValueDataEntry {
@@ -301,6 +368,23 @@ public class TabFragmentReportSales extends Fragment {
             super(x, value);
         }
 
+    }
+
+
+    private String accountReceivable(String date) {
+        String result = "";
+        Double balance = 0.00;
+
+        List<TransactionModel> customerModels = databaseCustomer.getCollectibleByMonth(date);
+
+        for (TransactionModel customerModel : customerModels) {
+
+            balance += Double.parseDouble(mDatabaseInvoice.getAllDueInvoices(customerModel.getCustomerId(), false)) -
+                    Double.parseDouble(customerModel.getTotalAmountPaid());
+
+        }
+
+        return "₱ " + dec.format(balance);
     }
 
 

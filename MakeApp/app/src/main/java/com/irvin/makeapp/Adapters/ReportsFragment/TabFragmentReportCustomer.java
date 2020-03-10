@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.anychart.APIlib;
 import com.anychart.AnyChart;
@@ -52,6 +53,7 @@ public class TabFragmentReportCustomer extends Fragment {
     void topCustomer() {
 
         try {
+            TextView label = view.findViewById(R.id.label);
 
             AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
             anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
@@ -66,6 +68,10 @@ public class TabFragmentReportCustomer extends Fragment {
             });
 
             List<TransactionModel> transactionModels = databaseCustomer.getTop5Customer();
+
+            if (transactionModels.size() > 0){
+                label.setVisibility(View.GONE);
+            }
 
             List<DataEntry> data = new ArrayList<>();
             for (TransactionModel transactionModel : transactionModels) {

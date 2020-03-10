@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.anychart.APIlib;
 import com.anychart.AnyChart;
@@ -52,6 +53,7 @@ public class TabFragmentReportInventory extends Fragment {
 
     void productChart() {
         try {
+            TextView label = view.findViewById(R.id.label);
             AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
             anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
 
@@ -62,6 +64,11 @@ public class TabFragmentReportInventory extends Fragment {
 
 
             topTenProductModels = databaseHelper.getTopTenProduct();
+
+
+            if (topTenProductModels.size() > 0){
+                label.setVisibility(View.GONE);
+            }
 
             List<DataEntry> data = new ArrayList<>();
             for (int a = 0; a < topTenProductModels.size(); a++) {

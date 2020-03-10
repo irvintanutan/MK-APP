@@ -111,7 +111,7 @@
 
                     <TextView
                         style="@style/reportContentText"
-                        android:text="Collectibles" />
+                        android:text="Total Collectibles" />
 
                     <TextView
                         android:id="@+id/receivables"
