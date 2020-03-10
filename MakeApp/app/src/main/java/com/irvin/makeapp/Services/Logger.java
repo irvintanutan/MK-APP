@@ -22,7 +22,6 @@ public class Logger {
 
         try {
 
-            Toast.makeText(context, "ERROR " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -42,6 +41,8 @@ public class Logger {
                 fr.close();
 
             }
+
+            Toast.makeText(context, "ERROR " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
