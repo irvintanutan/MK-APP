@@ -8,6 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_view"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,11 +17,23 @@
         android:paddingRight="@dimen/_5sdp"
         android:scrollbars="none" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        android:theme="@style/BottomNavigationTheme"
+        app:menu="@menu/navigation" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_above="@id/user_view"
+        android:layout_above="@id/navigation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
+
 
 </RelativeLayout>

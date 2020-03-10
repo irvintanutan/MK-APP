@@ -93,29 +93,10 @@ public class CustomerDetailsActivity extends AppCompatActivity implements MultiS
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
 
-
-    private static final int DATE_PICKER_DIALOG = 0;
-    private static final int TIME_PICKER_DIALOG = 1;
-    List<CustomerModel> customerModelList;
-    List<CustomerModel> tempCust = new ArrayList<>();
     private Calendar mCalendar;
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final String TIME_FORMAT = "kk:mm";
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd kk:mm:ss";
 
-    private int mYear, mMonth, mDay, mHour, mMinute;
-
-    EditText editTextTopic, editTextBody;
-    ReminderAdapter reminderAdapter;
-    RecyclerView recyclerView;
-    List<Reminder> reminders;
-    Button date;
-    Button time;
-    Button customer;
-    String topic, body, strDate, strTime;
     String eventId = "";
     int day = 0 , month = 0 , year = 0;
-    private Long mRowId;
 
 
     @Override

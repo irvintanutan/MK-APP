@@ -1,5 +1,6 @@
 package com.irvin.makeapp.Adapters.ReportsFragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class TabFragmentReportSales extends Fragment {
     DatabaseInvoice mDatabaseInvoice;
     Button today, monthly, gross, periodic;
     TextView salesValue, salesLabel;
-
+    Calendar start = null, end = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,15 +115,45 @@ public class TabFragmentReportSales extends Fragment {
     void dateRange() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.date_range_skema, null);
+        final DateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
+
+        start = Calendar.getInstance();
+        end = Calendar.getInstance();
 
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         // this is set the view from XML inside AlertDialog
-        alert.setView(alertLayout);
+        builder.setView(alertLayout);
         // disallow cancel of AlertDialog on click of back button and outside touch
-        alert.setCancelable(false);
-        final AlertDialog dialog = alert.create();
-        dialog.show();
+        builder.setCancelable(false);
+
+
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Set", null);
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                salesValue.setText(mDatabaseInvoice.getPeriodicSales(start , end));
+                salesLabel.setText(formatter.format(start.getTime()) + "  TO  " + formatter.format(end.getTime()));
+
+            }
+        });
+
+        builder.show();
+
+
 
         final DateRangeCalendarView datePicker = alertLayout.findViewById(R.id.calendar);
 
@@ -134,13 +165,9 @@ public class TabFragmentReportSales extends Fragment {
 
             @Override
             public void onDateRangeSelected(Calendar startDate, Calendar endDate) {
+                    start  = startDate;
+                    end = endDate;
 
-                salesValue.setText(mDatabaseInvoice.getPeriodicSales(startDate , endDate));
-                DateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
-
-                salesLabel.setText(formatter.format(startDate.getTime()) + "  TO  " + formatter.format(endDate.getTime()));
-
-                dialog.dismiss();
             }
         });
 
