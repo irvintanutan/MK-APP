@@ -355,7 +355,7 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
-        return "₱ " + dec.format(result);
+        return dec.format(result);
     }
 
     public String getTodaySales() {

@@ -53,6 +53,7 @@ public class TabFragmentReportInventory extends Fragment {
     void productChart() {
         try {
             AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
+            anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
 
             APIlib.getInstance().setActiveAnyChartView(anyChartView);
 

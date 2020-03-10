@@ -24,6 +24,12 @@ import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.irvin.makeapp.Activities.Customer.CustomerActivity;
 import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceActivity;
 import com.irvin.makeapp.Activities.StockIn.StockInMainActivity;
@@ -35,6 +41,7 @@ import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
@@ -44,6 +51,7 @@ import com.irvin.makeapp.Services.Logger;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +69,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MainActivity extends AppCompatActivity {
     private BillingClient billingClient;
-    List<String> skuList = new ArrayList<> ();
+    List<String> skuList = new ArrayList<>();
     private List<MenuForm> form;
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
@@ -75,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-
 
 
             TextView version = findViewById(R.id.versionName);
@@ -115,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             form.add(new MenuForm("Reminder", R.drawable.calendar, "Manage Reminders"));
             form.add(new MenuForm("Group Sales", R.drawable.group_sale, "Manage Group Sales"));
             form.add(new MenuForm("Settings", R.drawable.power, "Manage Settings"));
-
 
 
             RecyclerView.Adapter adapter = new DataAdapter(form, this);
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             receivables.setText(accountReceivable());
             Date date = Calendar.getInstance().getTime();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM");
-            thisMonth.setText(databaseInvoice.getMonthlySales(formatter.format(date)));
+            thisMonth.setText("₱ " + databaseInvoice.getMonthlySales(formatter.format(date)));
             totalSales.setText(databaseInvoice.getTotalSales());
 
 
@@ -258,9 +264,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }*/
+
+
+////Enable this part to supply test data
+ /*           if (databaseCustomer.getAllCustomer().size() == 0) {
+                initializeValuesForTesting();
+            }*/
+
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(getApplicationContext() ,e, new File(getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(getApplicationContext(), e, new File(getExternalFilesDir(""), ModGlobal.logFile));
         }
     }
 
@@ -465,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
             // Grant entitlement to the user.
             SharedPreferences.Editor editor;
             editor = ModGlobal.settingPref.edit();
-            editor.putBoolean("license" , true);
+            editor.putBoolean("license", true);
             editor.apply();
 
             // Acknowledge the purchase if it hasn't already been acknowledged.
@@ -484,4 +497,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    void initializeValuesForTesting() {
+
+        CustomerModel customerModel = new CustomerModel();
+        customerModel.setFirstName("IrvinTest");
+        customerModel.setMiddleName(" ");
+        customerModel.setLastName("TanutanTest");
+        customerModel.setAddress("Toril Davao City");
+        customerModel.setBirthday("1992-10-22");
+        customerModel.setAge(" ");
+        customerModel.setOccupation(" ");
+        customerModel.setEmail("vintot222@gmail.com");
+        customerModel.setContactNumber("09453429701");
+        customerModel.setBestTimeToBeContacted(" ");
+        customerModel.setReferredBy(" ");
+        customerModel.setSkinType(" ");
+        customerModel.setSkinConcern(" ");
+        customerModel.setSkinTone(" ");
+        customerModel.setInterests(" ");
+        customerModel.setPhotoUrl("");
+        customerModel.setRemarks(" ");
+
+
+        databaseCustomer.addCustomer(customerModel);
+
+    }
 }

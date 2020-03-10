@@ -98,7 +98,7 @@
 
     <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:textColorSecondary">@android:color/darker_gray</item>
+        <item name="android:textColorSecondary">@color/cashier_green</item>
     </style>
 
 

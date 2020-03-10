@@ -9,7 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <TextView
+
+            android:text="GOAL TRACKER IS UNDER DEVELOPMENT"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/_20sdp"
+            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+       <!-- <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,7 +44,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </ScrollView>
 
 </LinearLayout>

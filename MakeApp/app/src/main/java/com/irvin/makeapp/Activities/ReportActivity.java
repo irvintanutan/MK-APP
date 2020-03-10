@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportCustomer;
+import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportGoal;
 import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportInventory;
 import com.irvin.makeapp.Adapters.ReportsFragment.TabFragmentReportSales;
 import com.irvin.makeapp.Models.MenuForm;
@@ -68,7 +69,8 @@ public class ReportActivity extends AppCompatActivity {
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.action_sales:
                             sales();
@@ -78,6 +80,9 @@ public class ReportActivity extends AppCompatActivity {
                             return true;
                         case R.id.action_inventory:
                             inventory();
+                            return true;
+                        case R.id.action_goal:
+                            goal();
                             return true;
                     }
                     return false;
@@ -142,6 +147,20 @@ public class ReportActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();
+    }
+
+
+    private void goal() {
+        // Toast.makeText(getApplicationContext()  , "CUSTOMER" , Toast.LENGTH_LONG).show();
+        TabFragmentReportGoal tabFragmentReportGoal = new TabFragmentReportGoal();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout, tabFragmentReportGoal);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+
     }
 
 

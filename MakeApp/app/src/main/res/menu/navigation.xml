@@ -21,4 +21,10 @@
         android:icon="@drawable/baseline_layers_24"
         app:showAsAction="always"/>
 
+
+    <item android:id="@+id/action_goal"
+        android:title="Goal"
+        android:icon="@drawable/baseline_style_24"
+        app:showAsAction="always"/>
+
 </menu>

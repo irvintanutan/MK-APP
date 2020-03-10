@@ -45,6 +45,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
     //implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.google.android.play:core:1.6.5'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
@@ -72,8 +73,8 @@ dependencies {
     // Add the Firebase SDK for Crashlytics.
     implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
     implementation 'com.github.twinkle942910:monthyearpicker:0.0.1'
-
     implementation 'com.archit.calendar:awesome-calendar:1.1.6'
+    implementation 'com.whiteelephant:monthandyearpicker:1.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
