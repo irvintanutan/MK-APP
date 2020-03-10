@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.archit.calendardaterangepicker.customviews.DateRangeCalendarView;
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseInvoice;
 import com.irvin.makeapp.R;
@@ -14,8 +15,12 @@ import com.irvin.makeapp.Services.Logger;
 import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -66,6 +71,8 @@ public class TabFragmentReportSales extends Fragment {
             @Override
             public void onClick(View v) {
                 salesValue.setText(mDatabaseInvoice.getTodaySales());
+                salesLabel.setText("Daily Sales");
+
                 today.setBackgroundResource(R.drawable.round3);
                 monthly.setBackgroundResource(R.drawable.round_quantity);
                 periodic.setBackgroundResource(R.drawable.round_quantity);
@@ -77,6 +84,8 @@ public class TabFragmentReportSales extends Fragment {
             @Override
             public void onClick(View v) {
                 salesValue.setText(mDatabaseInvoice.getTotalSales());
+                salesLabel.setText("Gross Sales");
+
                 gross.setBackgroundResource(R.drawable.round3);
                 monthly.setBackgroundResource(R.drawable.round_quantity);
                 periodic.setBackgroundResource(R.drawable.round_quantity);
@@ -91,11 +100,49 @@ public class TabFragmentReportSales extends Fragment {
                 monthly.setBackgroundResource(R.drawable.round_quantity);
                 today.setBackgroundResource(R.drawable.round_quantity);
                 gross.setBackgroundResource(R.drawable.round_quantity);
+
+                dateRange();
             }
         });
 
 
         salesValue.setText(mDatabaseInvoice.getTotalSales());
+
+    }
+
+
+    void dateRange() {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.date_range_skema, null);
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        final AlertDialog dialog = alert.create();
+        dialog.show();
+
+        final DateRangeCalendarView datePicker = alertLayout.findViewById(R.id.calendar);
+
+
+        datePicker.setCalendarListener(new DateRangeCalendarView.CalendarListener() {
+            @Override
+            public void onFirstDateSelected(Calendar startDate) {
+            }
+
+            @Override
+            public void onDateRangeSelected(Calendar startDate, Calendar endDate) {
+
+                salesValue.setText(mDatabaseInvoice.getPeriodicSales(startDate , endDate));
+                DateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
+
+                salesLabel.setText(formatter.format(startDate.getTime()) + "  TO  " + formatter.format(endDate.getTime()));
+
+                dialog.dismiss();
+            }
+        });
 
     }
 
@@ -107,11 +154,23 @@ public class TabFragmentReportSales extends Fragment {
             @Override
             public void onYearMonthSet(int year, int month) {
                 try {
-                    String date = year + "-" + (month+1);
+                    String append = "";
+                    if (month < 9) {
+                        append = "0";
+                    }
+                    String date = year + "-" + append + (month + 1);
+
+
+                    DateFormat formatter2 = new SimpleDateFormat("MMMM  yyyy");
+                    Date d = new SimpleDateFormat("yyyy-MM").parse(date);
+
                     salesValue.setText(mDatabaseInvoice.getMonthlySales(date));
+                    salesLabel.setText(formatter2.format(d) + "  Sales");
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Logger.CreateNewEntry(getContext() ,e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
+                    Logger.CreateNewEntry(getContext(), e, new File(getActivity().getExternalFilesDir(""), ModGlobal.logFile));
                 }
             }
         });

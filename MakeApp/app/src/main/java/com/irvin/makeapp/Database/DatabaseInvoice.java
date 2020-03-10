@@ -316,6 +316,31 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
     }
 
 
+    public String getPeriodicSales(Calendar from , Calendar to) {
+
+        Double result = 0.00;
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Select All Query
+
+        String selectQuery = "Select sum(totalAmount) from tbl_invoice where  date(dateCreated) >= date('" + formatter.format(from.getTime()) + "') " +
+                "and   date(dateCreated) <= date('" + formatter.format(to.getTime()) + "')";
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                result = cursor.getDouble(0);
+
+            } while (cursor.moveToNext());
+        }
+        return "₱ " + dec.format(result);
+    }
+
     public String getMonthlySales(String date) {
         Double result = 0.00;
 
@@ -443,7 +468,7 @@ public class DatabaseInvoice extends SQLiteOpenHelper {
             db.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.CreateNewEntry(mContext , e, new File(mContext.getExternalFilesDir(""), ModGlobal.logFile));
+            Logger.CreateNewEntry(mContext, e, new File(mContext.getExternalFilesDir(""), ModGlobal.logFile));
         }
 
     }

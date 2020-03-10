@@ -1,0 +1,5 @@
+<com.archit.calendardaterangepicker.customviews.DateRangeCalendarView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendar"
+    style="@style/MyCustomRangePickerStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></com.archit.calendardaterangepicker.customviews.DateRangeCalendarView>
