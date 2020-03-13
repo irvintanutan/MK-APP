@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.SalesInvoice.SalesInvoiceActivity">
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/nothing"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+
+            android:text="222 FOLLOW UP IS UNDER DEVELOPMENT"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/_20sdp"
+            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/start222"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/_15sdp"
+        android:background="@drawable/round_customer_button"
+        android:text="Activate Magic 222 Follow Up"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>

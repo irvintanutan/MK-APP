@@ -84,7 +84,7 @@ public class TabFragmentCustomerOrders extends Fragment {
                     if (child != null && gestureDetector.onTouchEvent(e)) {
                         int position = rv.getChildAdapterPosition(child);
 
-
+                        ModGlobal.InvoiceOriginView = "SALES_INVOICE_CUSTOMER";
                         ModGlobal.invoice = new Invoice();
                         ModGlobal.invoice = invoices.get(position);
 

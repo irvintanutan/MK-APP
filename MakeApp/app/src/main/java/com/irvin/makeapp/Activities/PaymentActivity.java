@@ -764,11 +764,11 @@ public class PaymentActivity extends AppCompatActivity {
 
         if (item.getItemId() == android.R.id.home) {
             if (ModGlobal.InvoiceOriginView.equals("SALES_INVOICE_CUSTOMER")) {
-                startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
+                startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
                 finish();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
             } else {
-                startActivity(new Intent(PaymentActivity.this, CustomerProfileViewActivity.class));
+                startActivity(new Intent(PaymentActivity.this, SalesInvoiceActivity.class));
                 finish();
                 overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
             }

@@ -2,6 +2,7 @@ package com.irvin.makeapp.Adapters;
 
 import android.view.ViewGroup;
 
+import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomer222;
 import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerOrders;
 import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerProfile;
 import com.irvin.makeapp.Adapters.CustomerFragment.TabFragmentCustomerReminder;
@@ -40,7 +41,7 @@ public class ViewPagerAdapterCustomerProfile extends FragmentStatePagerAdapter {
             case 2:
                 return new TabFragmentCustomerOrders();
             case 3:
-                return new TabFragmentCustomerOrders();
+                return new TabFragmentCustomer222();
             default:
                 return null;
         }

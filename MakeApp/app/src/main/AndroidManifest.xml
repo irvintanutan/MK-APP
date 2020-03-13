@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -29,18 +29,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <service
+            android:name=".Services.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".Activities.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity android:name=".Activities.Customer.CustomerProfileViewActivity" />
         <activity
             android:name=".Activities.NavigationDrawerActivity"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.ReminderActivity" />
-        <activity android:name=".Activities.ReportActivity" />
-        <activity android:name=".Activities.PaymentActivity" />
-        <activity android:name=".Activities.SalesInvoice.SalesInvoiceProductDetailsActivity" />
+        <activity
+            android:name=".Activities.ReminderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.ReportActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.SalesInvoice.SalesInvoiceProductDetailsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SalesInvoice.SalesInvoiceProductActivity"
             android:screenOrientation="portrait" />
@@ -87,6 +100,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

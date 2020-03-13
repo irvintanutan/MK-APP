@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
@@ -19,17 +21,25 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Activities.Customer.CustomerActivity;
 import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceActivity;
 import com.irvin.makeapp.Activities.StockIn.StockInMainActivity;
@@ -41,33 +51,27 @@ import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Database.DatabaseCustomer;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
-import com.irvin.makeapp.Models.CustomerModel;
 import com.irvin.makeapp.Models.MenuForm;
 import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
 import com.irvin.makeapp.Services.Logger;
+import com.irvin.makeapp.Services.MyService;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * @author irvin
  */
 public class MainActivity extends AppCompatActivity {
+    int versionCode = 0;
     private BillingClient billingClient;
     List<String> skuList = new ArrayList<>();
     private List<MenuForm> form;
@@ -83,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-
 
             TextView version = findViewById(R.id.versionName);
             version.setText("PinkHeartV" + BuildConfig.VERSION_NAME);
@@ -202,13 +205,13 @@ public class MainActivity extends AppCompatActivity {
             totalSales.setText(databaseInvoice.getTotalSales());
 
 
-            if (!ModGlobal.settingPref.getBoolean("solution", false)) {
+/*            if (!ModGlobal.settingPref.getBoolean("solution", false)) {
 
                 databaseInvoice.solution();
 
                 Toast.makeText(this, "YEHAY!!!!", Toast.LENGTH_SHORT).show();
 
-            }
+            }*/
 
 /*
         if (!ModGlobal.settingPref.getBoolean("license", false)) {
@@ -266,10 +269,40 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
 
-////Enable this part to supply test data
- /*           if (databaseCustomer.getAllCustomer().size() == 0) {
-                initializeValuesForTesting();
-            }*/
+            FirebaseApp.initializeApp(getApplicationContext()
+            );
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("version_code");
+            Query query = ref.orderByChild("version_code");
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    int versionCode = Integer.parseInt(dataSnapshot.getValue().toString());
+                    if (BuildConfig.VERSION_CODE < versionCode) {
+
+                        Snackbar snackbar = Snackbar
+                                .make(findViewById(R.id.container), "Software Update Is Available", Snackbar.LENGTH_LONG);
+
+                        snackbar.setAction("CLICK HERE", new SnackBarListener());
+                        snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+                        snackbar.setDuration(20000);
+                        snackbar.show();
+
+
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("aaa", "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -342,6 +375,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
+     /*   final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }*/
     }
 
     private void setting() {
@@ -497,30 +536,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    void initializeValuesForTesting() {
-
-        CustomerModel customerModel = new CustomerModel();
-        customerModel.setFirstName("IrvinTest");
-        customerModel.setMiddleName(" ");
-        customerModel.setLastName("TanutanTest");
-        customerModel.setAddress("Toril Davao City");
-        customerModel.setBirthday("1992-10-22");
-        customerModel.setAge(" ");
-        customerModel.setOccupation(" ");
-        customerModel.setEmail("vintot222@gmail.com");
-        customerModel.setContactNumber("09453429701");
-        customerModel.setBestTimeToBeContacted(" ");
-        customerModel.setReferredBy(" ");
-        customerModel.setSkinType(" ");
-        customerModel.setSkinConcern(" ");
-        customerModel.setSkinTone(" ");
-        customerModel.setInterests(" ");
-        customerModel.setPhotoUrl("");
-        customerModel.setRemarks(" ");
+    public class SnackBarListener implements View.OnClickListener {
 
 
-        databaseCustomer.addCustomer(customerModel);
 
+        public SnackBarListener() {
+        }
+
+        @Override
+        public void onClick(View v) {
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+        }
     }
 }
