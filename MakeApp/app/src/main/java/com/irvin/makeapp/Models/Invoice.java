@@ -75,8 +75,17 @@ public class Invoice {
         this.dueDate = dueDate;
     }
 
+    public String getGroupSalesId() {
+        return groupSalesId;
+    }
+
+    public void setGroupSalesId(String groupSalesId) {
+        this.groupSalesId = groupSalesId;
+    }
+
+
     public Invoice(String invoiceId, String customerId, String customerName, String totalAmount, String disCount, String status, String invoiceDetail,
-                   String dateCreated , String dueDate) {
+                   String dateCreated , String dueDate ,  String groupSalesId) {
 
         this.invoiceId = invoiceId;
         this.customerId = customerId;
@@ -87,6 +96,7 @@ public class Invoice {
         this.invoiceDetail = invoiceDetail;
         this.dateCreated = dateCreated;
         this.dueDate = dueDate;
+        this.groupSalesId = groupSalesId;
 
     }
 
@@ -103,5 +113,6 @@ public class Invoice {
     String invoiceDetail;
     String dateCreated;
     String dueDate;
+    String groupSalesId;
 
 }

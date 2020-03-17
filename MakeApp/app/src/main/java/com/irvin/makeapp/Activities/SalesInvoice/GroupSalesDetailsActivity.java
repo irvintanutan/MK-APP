@@ -1,6 +1,7 @@
 package com.irvin.makeapp.Activities.SalesInvoice;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.irvin.makeapp.Database.DatabaseGroupSales;
+import com.irvin.makeapp.Models.GroupSalesModel;
 import com.irvin.makeapp.R;
 
 import java.util.ArrayList;
@@ -19,8 +24,10 @@ import java.util.List;
 import java.util.Set;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import co.lujun.androidtagview.TagContainerLayout;
 import co.lujun.androidtagview.TagView;
 
@@ -35,7 +42,8 @@ public class GroupSalesDetailsActivity extends AppCompatActivity {
     public static final String PREFS_SEARCH_HISTORY = "SearchHistory";
     private SharedPreferences settings;
     private Set<String> history;
-
+    EditText groupSalesName;
+    DatabaseGroupSales databaseGroupSales = new DatabaseGroupSales(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +70,11 @@ public class GroupSalesDetailsActivity extends AppCompatActivity {
     private void init() {
 
         mTagContainerLayout = findViewById(R.id.tagContainer);
-
+        groupSalesName = findViewById(R.id.groupsalesName);
         settings = getSharedPreferences(PREFS_NAME, 0);
         history = new HashSet<>(settings.getStringSet(PREFS_SEARCH_HISTORY, new HashSet<String>()));
 
-        Log.e("history1" , history.toString());
+        Log.e("history1", history.toString());
 
         setAutoCompleteSource();
 
@@ -101,7 +109,7 @@ public class GroupSalesDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSelectedTagDrag(int position, String text){
+            public void onSelectedTagDrag(int position, String text) {
                 // ...
             }
 
@@ -147,7 +155,7 @@ public class GroupSalesDetailsActivity extends AppCompatActivity {
     private void savePrefs() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        Log.e("history2" , history.toString());
+        Log.e("history2", history.toString());
         editor.putStringSet(PREFS_SEARCH_HISTORY, history);
 
         editor.commit();
@@ -176,7 +184,41 @@ public class GroupSalesDetailsActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setTitle("Confirm");
+        builder.setIcon(getResources().getDrawable(R.drawable.confirmation));
+        builder.setMessage("Are you sure you want to proceed on group sales creation ?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                GroupSalesModel groupSalesModel = new GroupSalesModel();
+
+                groupSalesModel.setConsultants(tags.toString());
+                groupSalesModel.setName(groupSalesName.getText().toString());
+
+                databaseGroupSales.addGroupSales(groupSalesModel);
+
+                startActivity(new Intent(GroupSalesDetailsActivity.this, GroupSalesActivity.class));
+                finish();
+                overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+
+            }
+
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
 
     }
 

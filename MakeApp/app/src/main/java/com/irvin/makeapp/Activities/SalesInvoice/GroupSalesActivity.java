@@ -9,8 +9,10 @@ import android.widget.LinearLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.irvin.makeapp.Activities.MainActivity;
 import com.irvin.makeapp.Adapters.GroupSalesFragment.ViewPagerAdapterGroupSales;
+import com.irvin.makeapp.Database.DatabaseGroupSales;
 import com.irvin.makeapp.Database.DatabaseHelper;
 import com.irvin.makeapp.Database.DatabaseInvoice;
+import com.irvin.makeapp.Models.GroupSalesModel;
 import com.irvin.makeapp.Models.Invoice;
 import com.irvin.makeapp.R;
 
@@ -31,9 +33,8 @@ public class GroupSalesActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPagerAdapterGroupSales viewPagerAdapter;
 
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    DatabaseInvoice databaseInvoice = new DatabaseInvoice(this);
-    List<Invoice> invoices;
+    DatabaseGroupSales databaseGroupSales = new DatabaseGroupSales(this);
+    List<GroupSalesModel> groupSalesModels;
     LinearLayout nothing;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,10 @@ public class GroupSalesActivity extends AppCompatActivity {
 
     private void init() {
         nothing = findViewById(R.id.nothing);
-        invoices = new ArrayList<>();
-        invoices = databaseInvoice.getAllInvoices();
+        groupSalesModels = new ArrayList<>();
+        groupSalesModels = databaseGroupSales.getGroupSales("");
 
-        if (invoices.size() > 0) {
+        if (groupSalesModels.size() > 0) {
             nothing.setVisibility(View.GONE);
         }
         tabLayout = findViewById(R.id.tabs);

@@ -79,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String status = "status";
     private static final String invoiceDetail = "invoiceDetail";
     private static final String dueDate = "dueDate";
+    private static final String groupSalesId = "groupSalesId";
 
 
     //table name
@@ -96,6 +97,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_EVENT_ID = "event_id";
     public static final String KEY_INVOICE_ID = "invoice_id";
+
+
+    //table name
+    private static final String tbl_group_sales = "tbl_group_sales";
+    private static final String groupSalesName = "paymentId";
+    private static final String groupSalesConsultantDetails = "groupSalesConsultantDetails";
 
 
 
@@ -149,7 +156,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + status + " TEXT , "
                 + invoiceDetail + " TEXT , "
                 + dateCreated + " TEXT , "
-                + dueDate + " TEXT );";
+                + dueDate + " TEXT , "
+                + groupSalesId + " TEXT );";
         db.execSQL(CREATE_INVOICE_TABLE);
 
         String CREATE_PAYMENT_TABLE = "CREATE TABLE " + tbl_payment + "( paymentId integer primary key autoincrement , "
@@ -170,6 +178,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         + KEY_EVENT_ID + " text not null, "
                         + KEY_INVOICE_ID + " text not null);";
         db.execSQL(DATABASE_CREATE_REMINDER);
+
+
+        String CREATE_GROUP_SALE_TABLE = "CREATE TABLE " + tbl_group_sales + "( id integer primary key autoincrement , "
+                + groupSalesName + " TEXT , "
+                + groupSalesConsultantDetails + " TEXT , "
+                + dateCreated + " TEXT );";
+        db.execSQL(CREATE_GROUP_SALE_TABLE);
 
     }
 
@@ -194,6 +209,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TOTAL_PURCHASE_QUANTITY = "ALTER TABLE " + tbl_product +
             " ADD COLUMN " + productTotalPurchaseQuantity + " TEXT DEFAULT '0'";
 
+    private static final String ADD_GROUP_SALES_ID_COLUMN = "ALTER TABLE " + tbl_invoice +
+            " ADD COLUMN " + groupSalesId + " TEXT DEFAULT ''";
+
+    private static final String CREATE_GROUP_SALE_TABLE = "CREATE TABLE " + tbl_group_sales + "( id integer primary key autoincrement , "
+            + groupSalesName + " TEXT , "
+            + groupSalesConsultantDetails + " TEXT , "
+            + dateCreated + " TEXT );";
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -210,6 +233,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(TOTAL_PURCHASE_QUANTITY);
         }
 
+        if (oldVersion < 5) {
+            db.execSQL(ADD_GROUP_SALES_ID_COLUMN);
+            db.execSQL(CREATE_GROUP_SALE_TABLE);
+        }
 
     }
 

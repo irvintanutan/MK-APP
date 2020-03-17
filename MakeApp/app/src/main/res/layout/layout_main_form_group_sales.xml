@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv"
+    android:layout_marginBottom="@dimen/_5sdp"
+    app:contentPadding="@dimen/_10sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/corner_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <TextView
+                    android:id="@+id/fullName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="left"
+                    android:text="SAMPLE TITLE"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/totalAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="right|bottom"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="SAMPLE TITLE"  />
+            </LinearLayout>
+
+            <com.white.progressview.HorizontalProgressView
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_12sdp"
+                android:progress="100"
+                app:progressReachColor="#FFAB00"
+                app:progressReachSize="@dimen/_3sdp"
+                app:progressTextColor="#FFAB00"
+                app:progressTextVisible="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <TextView
+                    android:id="@+id/totalAmountPaid"
+                    android:layout_weight="3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="SAMPLE TITLE"
+                    android:textStyle="bold"
+                    android:textColor="#FFAB00"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+                <TextView
+                    android:id="@+id/totalBalance"
+                    android:layout_weight="3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="SAMPLE TITLE"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:gravity="right|top"  />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
