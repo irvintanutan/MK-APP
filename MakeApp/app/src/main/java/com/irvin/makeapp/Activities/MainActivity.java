@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
@@ -19,13 +17,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -41,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.irvin.makeapp.Activities.Customer.CustomerActivity;
+import com.irvin.makeapp.Activities.SalesInvoice.GroupSalesActivity;
 import com.irvin.makeapp.Activities.SalesInvoice.SalesInvoiceActivity;
 import com.irvin.makeapp.Activities.StockIn.StockInMainActivity;
 import com.irvin.makeapp.Adapters.DataAdapter;
@@ -56,7 +48,6 @@ import com.irvin.makeapp.Models.TransactionModel;
 import com.irvin.makeapp.R;
 import com.irvin.makeapp.Services.GetProductTask;
 import com.irvin.makeapp.Services.Logger;
-import com.irvin.makeapp.Services.MyService;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -66,6 +57,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author irvin
@@ -371,16 +368,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void groupSales() {
-     /*   Intent i = new Intent(MainActivity.this, AttendanceActivity.class);
+        Intent i = new Intent(MainActivity.this, GroupSalesActivity.class);
         startActivity(i);
         finish();
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);*/
-     /*   final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-        }*/
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     private void setting() {

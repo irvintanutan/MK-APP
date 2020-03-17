@@ -9,13 +9,49 @@
     <string name="channel_name">CUSTOMER</string>
     <string name="channel_description">REMINDER</string>
 
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Preference Titles -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+
+    <!-- Messages Preferences -->
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Sync Preferences -->
+    <string name="month">Month</string>
+    <string name="item_removed_message">Software Update Available</string>
+    <string name="undo">UPDATE</string>
     <string-array name="skin_tone">
         <item> </item>
         <item>Fair</item>
         <item>Natural</item>
         <item>Dark</item>
     </string-array>
-
     <string-array name="interest">
         <item>Product Purchase</item>
         <item>Hostess Program</item>
@@ -24,8 +60,6 @@
         <item>Beauty Class</item>
         <item>Skin Analyzer Device</item>
     </string-array>
-
-
     <string-array name="skin_type">
         <item> </item>
         <item>Dry Skin</item>
@@ -33,7 +67,6 @@
         <item>Oily Skin</item>
         <item>Combination Skin</item>
     </string-array>
-
     <string-array name="skin_concern">
         <item>Daily Care</item>
         <item>Acne / Breakouts</item>
@@ -45,39 +78,6 @@
         <item>Pores</item>
 
     </string-array>
-    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-    <string name="title_activity_settings">Settings</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="month">Month</string>
-    <string name="item_removed_message">Software Update Available</string>
-    <string name="undo">UPDATE</string>
 
 
     <string-array name="month">
@@ -95,6 +95,20 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+
+
+    <string-array name="countries_array">
+        <item>Afghanistan</item>
+        <item>Albania</item>
+        <item>Algeria</item>
+        <item>American Samoa</item>
+        <item>American Samoa1</item>
+        <item>Andorra</item>
+        <item>Angola</item>
+        <item>Anguilla</item>
+        <item>Antarctica</item>
+    </string-array>
+
 
 </resources>
 

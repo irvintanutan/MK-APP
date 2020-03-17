@@ -215,7 +215,8 @@ public class CustomerProfileViewActivity extends AppCompatActivity {
     public void call(View view) {
         if (!marshMallowPermission.checkPermissionForCallPhone()) {
             marshMallowPermission.requestPermissionForCallPhone();
-        } else
+        } else {
             callCustomer();
+        }
     }
 }

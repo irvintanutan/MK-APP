@@ -144,6 +144,7 @@ public class ProductActivity extends AppCompatActivity implements SearchView.OnQ
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         loadList();
+
     }
 
     private void updateCategory(int position) {

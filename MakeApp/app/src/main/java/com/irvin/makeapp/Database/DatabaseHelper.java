@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.irvin.makeapp.Constant.ModGlobal;
 import com.irvin.makeapp.Models.Products;
@@ -97,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_EVENT_ID = "event_id";
     public static final String KEY_INVOICE_ID = "invoice_id";
+
 
 
     public DatabaseHelper(Context context) {

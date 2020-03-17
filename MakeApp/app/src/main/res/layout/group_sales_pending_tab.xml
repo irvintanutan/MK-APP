@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/divider"
+    android:padding="@dimen/_5sdp">
+   <androidx.appcompat.widget.SearchView
+       android:id="@+id/searchLayout"
+       android:background="@drawable/round_quantity4"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:iconifiedByDefault="false"
+       android:layout_marginBottom="@dimen/_5sdp"
+       />
+    <ExpandableListView
+        android:layout_below="@id/searchLayout"
+        android:id="@+id/expandableListView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:divider="@color/divider"
+        android:childDivider="@color/divider"
+        android:groupIndicator="@null"
+        android:dividerHeight="@dimen/_7sdp"
+        android:animateLayoutChanges="true"
+        android:scrollbars="none"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F5F5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.SalesInvoice.GroupSalesDetailsActivity">
+
+    <Button
+        android:id="@+id/reminders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/_15sdp"
+        android:background="@drawable/round_customer_button"
+        android:onClick="save"
+        android:text="Create Group Sale"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/reminders"
+        android:layout_below="@id/app_bar"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:text="Group Sales Name" />
+
+        <EditText
+            android:id="@+id/groupsalesName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/reminder"
+            android:inputType="text"
+            android:padding="@dimen/_5sdp" />
+
+        <LinearLayout
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:gravity="center"
+            android:weightSum="5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/textInput"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_quantity4"
+                android:hint="Enter Consultant Name"
+                android:paddingLeft="@dimen/_10sdp"
+                />
+
+            <Button
+                android:id="@+id/addBc"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:onClick="addBeautyConsultant"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/round_quantity"
+                android:text="add"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <co.lujun.androidtagview.TagContainerLayout
+            android:id="@+id/tagContainer"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="10dp"
+            app:container_border_radius="0dp"
+            app:container_background_color="@color/white"
+            app:container_enable_drag="true"
+            app:horizontal_interval="10dp"
+            app:vertical_interval="10dp"
+            app:tag_clickable="true"
+            app:tag_enable_cross="true"
+            app:tag_theme="pure_teal" />
+
+
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar2" />
+
+</RelativeLayout>

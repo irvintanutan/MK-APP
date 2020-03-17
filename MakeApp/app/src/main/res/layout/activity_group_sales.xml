@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.SalesInvoice.SalesInvoiceActivity">
+    tools:context=".Activities.SalesInvoice.GroupSalesActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -66,7 +66,8 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
             android:onClick="stockIn"
-            android:src="@drawable/plus" />
+            android:src="@drawable/plus"
+            tools:ignore="OnClick" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
